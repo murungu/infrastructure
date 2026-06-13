@@ -198,21 +198,21 @@ Expected output — all services show `(healthy)` or `Up`:
 | `db-infra-postgres` | `Up (healthy)` |
 | `db-infra-sqlserver` | `Up (healthy)` |
 | `db-infra-redis` | `Up (healthy)` |
-| `db-infra-nopcommerce` | `Up` |
+| `db-infra-nopcommerce` | `Up` or `Up (healthy)` |
 
 ### 2. Verify Databases Are Reachable
 
 ```bash
-# PostgreSQL
-docker exec db-infra-postgres psql -U appuser -d appdb -c "SELECT 'OK' as status;"
+# PostgreSQL (passwords read from .env automatically)
+docker exec db-infra-postgres psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -c "SELECT 'OK' as status;"
 # → OK
 
-# SQL Server
+# SQL Server (password from .env)
 docker exec db-infra-sqlserver sh -c '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -Q "SELECT '\''OK'\''" -C'
 # → OK
 
-# Redis
-docker exec db-infra-redis redis-cli -a DevRedis123! ping
+# Redis (password from .env)
+docker exec db-infra-redis redis-cli -a "$REDIS_PASSWORD" ping
 # → PONG
 
 # nopCommerce web
@@ -243,7 +243,7 @@ You should see **"nopCommerce installation"**. Fill in:
 | **Server name** | `db-infra-sqlserver` |
 | **Database name** | `nopcommerce` |
 | **SQL Username** | `sa` |
-| **SQL Password** | `DevPassword123!` |
+| **SQL Password** | `${MSSQL_SA_PASSWORD}` from `.env` |
 | **Create database if it doesn't exist** | ✅ Checked |
 
 > **Why `db-infra-sqlserver`?** Inside the Docker network, containers reach each other by **container name**, not `localhost`.
@@ -255,8 +255,8 @@ You should see **"nopCommerce installation"**. Fill in:
 | **Database** | PostgreSQL |
 | **Server name** | `db-infra-postgres` |
 | **Database name** | `nopcommerce` |
-| **SQL Username** | `appuser` |
-| **SQL Password** | `DevPassword123!` |
+| **SQL Username** | `${POSTGRES_USER}` from `.env` |
+| **SQL Password** | `${POSTGRES_PASSWORD}` from `.env` |
 | **Create database if it doesn't exist** | ✅ Checked |
 
 Click **Install**. This takes **2–5 minutes**. You'll see a progress bar.
@@ -287,9 +287,22 @@ Then open your browser:
 | URL | Expected |
 |-----|----------|
 | `http://localhost:8080` | **Storefront** with demo products |
-| `http://localhost:8080/admin` | **Admin login** — use `admin@example.com` / `Admin123!` |
+| `http://localhost:8080/admin` | **Admin login** — use the credentials you set in the install wizard |
 
-### 5. If Something Goes Wrong
+### 5. Re-enable Redis (optional)
+
+After installation completes, Redis distributed caching can be enabled. Edit `docker-compose.yml` and uncomment the `environment` section under `nopcommerce:`:
+
+```yaml
+    environment:
+      DistributedCacheConfig__Enabled: "true"
+      DistributedCacheConfig__DistributedCacheType: "Redis"
+      DistributedCacheConfig__ConnectionString: "db-infra-redis:6379,password=${REDIS_PASSWORD},ssl=False"
+```
+
+Then `make down && make up` to restart with caching enabled.
+
+### 6. If Something Goes Wrong
 
 | Symptom | Likely Cause | Fix |
 |---------|-------------|-----|
@@ -431,6 +444,9 @@ make use-prebuilt
 | `make psql` | Open PostgreSQL shell |
 | `make sqlcmd` | Open SQL Server shell |
 | `make redis-cli` | Open Redis shell |
+| `make tag IMAGE_TAG=v1.0` | Tag current image for rollback |
+| `make rollback IMAGE_TAG=v1.0` | Roll back to tagged image |
+| `make list-tags` | Show all tagged images |
 
 ---
 
@@ -441,21 +457,21 @@ If you're building a separate app that needs to connect to these databases:
 ```bash
 # Your app connects via localhost (if also running in Docker, use service names)
 # PostgreSQL
-psql postgresql://appuser:DevPassword123!@localhost:5432/appdb
+psql postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}
 
 # SQL Server
-sqlcmd -S localhost,1433 -U sa -P 'DevPassword123!'
+sqlcmd -S localhost,1433 -U sa -P '${MSSQL_SA_PASSWORD}'
 
 # Redis
-redis-cli -a DevRedis123! -p 6379
+redis-cli -a ${REDIS_PASSWORD} -p 6379
 ```
 
 From inside Docker network (another container):
 ```bash
 # Use Docker service names instead of localhost
-postgresql://appuser:DevPassword123!@db-infra-postgres:5432/appdb
-sqlcmd -S db-infra-sqlserver,1433 -U sa -P 'DevPassword123!'
-redis-cli -h db-infra-redis -a DevRedis123!
+postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db-infra-postgres:5432/${POSTGRES_DB}
+sqlcmd -S db-infra-sqlserver,1433 -U sa -P '${MSSQL_SA_PASSWORD}'
+redis-cli -h db-infra-redis -a ${REDIS_PASSWORD}
 ```
 
 ---
@@ -511,7 +527,10 @@ cd /opt/nopcommerce
 # 4. Clone your nopCommerce fork
 make clone-nopcommerce
 
-# 5. Update passwords in docker-compose.yml (use strong passwords!)
+# 5. Update passwords in .env (use strong passwords!)
+cp .env.example .env
+nano .env
+
 # 6. Change port from 8080:80 to 80:80 (or keep 8080 and proxy via Nginx)
 
 # 7. Start everything
@@ -586,10 +605,10 @@ Your app only changes the connection string. Nothing else.
 ### Docker Volumes (local dev)
 
 ```bash
-# Backup all data
-docker exec db-infra-postgres pg_dump -U appuser appdb > backup-postgres.sql
+# Backup all data (passwords read from .env automatically)
+docker exec db-infra-postgres pg_dump -U "${POSTGRES_USER}" "${POSTGRES_DB}" > backup-postgres.sql
 docker exec db-infra-sqlserver sh -c '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -Q "BACKUP DATABASE [nopcommerce] TO DISK = N/var/opt/mssql/backup/nopcommerce.bak"' -C
-docker exec db-infra-redis redis-cli -a DevRedis123! SAVE
+docker exec db-infra-redis redis-cli -a "${REDIS_PASSWORD}" SAVE
 ```
 
 ### Production
@@ -680,6 +699,14 @@ For a conflict-free workflow when pulling upstream nopCommerce updates, see [`do
 ---
 
 ## Troubleshooting
+
+### Redis causes SIGSEGV (exit code 139) during installation
+
+**Symptom:** Container crashes during nopCommerce install with exit code 139.
+
+**Cause:** The `StackExchange.Redis.FlushDatabaseAsync` call during installation crashes under Rosetta 2 on Apple Silicon.
+
+**Fix:** Redis distributed caching is **disabled by default** in `docker-compose.yml`. After installation completes, uncomment the `environment` section under `nopcommerce` to enable it. See [Re-enable Redis](#5-re-enable-redis-optional).
 
 ### nopCommerce shows "Installation" page after restart
 
