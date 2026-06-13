@@ -78,11 +78,12 @@ services:
     container_name: db-infra-nopcommerce
     ports:
       - "8080:80"
-    environment:
-      # Redis for distributed caching (optional — remove if not wanted)
-      DistributedCacheConfig__Enabled: "true"
-      DistributedCacheConfig__DistributedCacheType: "Redis"
-      DistributedCacheConfig__ConnectionString: "db-infra-redis:6379,password=DevRedis123!,ssl=False"
+    # Redis disabled during installation to avoid FlushDatabaseAsync crash
+    # After installation completes, you can re-enable Redis caching
+    # environment:
+    #   DistributedCacheConfig__Enabled: "true"
+    #   DistributedCacheConfig__DistributedCacheType: "Redis"
+    #   DistributedCacheConfig__ConnectionString: "db-infra-redis:6379,password=DevRedis123!,ssl=False"
     depends_on:
       sqlserver:
         condition: service_healthy
