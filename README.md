@@ -558,7 +558,8 @@ make up           # fresh start
 | `sqlserver_data` | SQL Server database files |
 | `redis_data` | Redis RDB snapshots |
 | `nopcommerce_data` | nopCommerce App_Data (plugins, uploads, settings) |
-| `nopcommerce_wwwroot` | nopCommerce static files |
+
+> **Note:** `wwwroot` is **not** mounted as a volume. It contains the built static files (CSS, JS, images) and must come from the Docker image. Mounting it as a volume would overwrite the image contents with an empty directory on first run.
 
 ---
 

@@ -80,7 +80,6 @@ services:
       - "8080:80"
     volumes:
       - nopcommerce_data:/app/App_Data
-      - nopcommerce_wwwroot:/app/wwwroot
     environment:
       # Redis for distributed caching (optional — remove if not wanted)
       DistributedCacheConfig__Enabled: "true"
@@ -101,6 +100,4 @@ volumes:
   redis_data:
     driver: local
   nopcommerce_data:
-    driver: local
-  nopcommerce_wwwroot:
     driver: local

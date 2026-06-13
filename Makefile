@@ -10,7 +10,7 @@
 # Default: official repo (read-only). You can still build, but you
 # can't push your own plugins. Fork to customize.
 # ════════════════════════════════════════════════════════
-NOPCOMMERCE_REPO ?= https://github.com/nopSolutions/nopCommerce.git
+NOPCOMMERCE_REPO ?= https://github.com/Arity-Solutions/nopCommerce.shop.git
 
 ## Start/Stop (builds from source)
 up:

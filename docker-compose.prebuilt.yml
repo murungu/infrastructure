@@ -67,7 +67,6 @@ services:
       - "8080:80"
     volumes:
       - nopcommerce_data:/app/App_Data
-      - nopcommerce_wwwroot:/app/wwwroot
     environment:
       DistributedCacheConfig__Enabled: "true"
       DistributedCacheConfig__DistributedCacheType: "Redis"
@@ -87,6 +86,4 @@ volumes:
   redis_data:
     driver: local
   nopcommerce_data:
-    driver: local
-  nopcommerce_wwwroot:
     driver: local
