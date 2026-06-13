@@ -1,7 +1,8 @@
+# Alternative: use the pre-built nopCommerce image from Docker Hub.
+# Run with: make use-prebuilt
+# This skips the source build entirely. You CANNOT customize plugins or themes.
+
 services:
-  # ═══════════════════════════════════════════════════════
-  #  DATABASES
-  # ═══════════════════════════════════════════════════════
   postgres:
     image: postgres:16-alpine
     container_name: db-infra-postgres
@@ -59,22 +60,8 @@ services:
       retries: 5
     restart: unless-stopped
 
-  # ═══════════════════════════════════════════════════════
-  #  APPLICATION: nopCommerce (built from YOUR FORK)
-  # ═══════════════════════════════════════════════════════
-  #
-  #  This builds from ./nopcommerce-src/ — your fork of the
-  #  nopCommerce repo. Clone it first:
-  #
-  #     make clone-nopcommerce
-  #
-  #  Then customize: add plugins to src/Plugins/ and themes
-  #  to src/Presentation/Nop.Web/Themes/
-  #
   nopcommerce:
-    build:
-      context: ./nopcommerce-src
-      dockerfile: Dockerfile
+    image: nopcommerceteam/nopcommerce:4.90.4
     container_name: db-infra-nopcommerce
     ports:
       - "8080:80"
@@ -82,7 +69,6 @@ services:
       - nopcommerce_data:/app/App_Data
       - nopcommerce_wwwroot:/app/wwwroot
     environment:
-      # Redis for distributed caching (optional — remove if not wanted)
       DistributedCacheConfig__Enabled: "true"
       DistributedCacheConfig__DistributedCacheType: "Redis"
       DistributedCacheConfig__ConnectionString: "db-infra-redis:6379,password=DevRedis123!,ssl=False"

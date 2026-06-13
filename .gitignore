@@ -1,3 +1,6 @@
+# nopCommerce source (forked by user, not part of this repo)
+nopcommerce-src/
+
 # OS
 .DS_Store
 Thumbs.db
@@ -14,4 +17,3 @@ Thumbs.db
 # Temporary
 *.tmp
 /tmp/
-.pi/

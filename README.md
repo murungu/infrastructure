@@ -1,46 +1,127 @@
-# Database Infrastructure + nopCommerce
+# Database Infrastructure + nopCommerce (Source Build)
 
-Local PostgreSQL, SQL Server, Redis, and [nopCommerce](https://www.nopcommerce.com) via Docker Compose.
+Local PostgreSQL, SQL Server, Redis, and **[nopCommerce](https://www.nopcommerce.com) built from YOUR FORK** via Docker Compose.
 
-## Quick Start
+> **Why source build?** So you can add your own plugins and themes, while still pulling updates from the main nopCommerce repo.
+>
+> **Not customizing?** Use the pre-built image instead: [`make use-prebuilt`](#quick-start-with-pre-built-image).
+
+---
+
+## Table of Contents
+
+1. [Quick Start (Source Build)](#quick-start-source-build)
+2. [Architecture](#architecture)
+3. [The nopCommerce Fork Workflow](#the-nopcommerce-fork-workflow)
+4. [Testing & Verification](#testing--verification)
+5. [Adding Custom Plugins & Themes](#adding-custom-plugins--themes)
+6. [Pulling Upstream Updates](#pulling-upstream-updates)
+7. [Commands](#commands)
+8. [Connecting Your Own Application](#connecting-your-own-application)
+9. [Production Self-Hosting](#production-self-hosting)
+10. [Troubleshooting](#troubleshooting)
+
+---
+
+## Quick Start (Source Build)
+
+### Step 1 — Fork nopCommerce on GitHub
+
+1. Go to [github.com/nopSolutions/nopCommerce](https://github.com/nopSolutions/nopCommerce)
+2. Click **Fork** → creates `github.com/YOUR_USERNAME/nopCommerce`
+
+### Step 2 — Clone Your Fork
 
 ```bash
-# Start everything (databases + nopCommerce)
-make up
+# Edit Makefile: replace with YOUR fork URL
+# Change line 10 from:
+#   NOPCOMMERCE_REPO = https://github.com/nopSolutions/nopCommerce.git
+# To:
+#   NOPCOMMERCE_REPO = https://github.com/YOUR_USERNAME/nopCommerce.git
 
-# Check status
-make status
-
-# Open nopCommerce in browser
-open http://localhost:8080
+# Then clone
+make clone-nopcommerce
 ```
 
-## What's Running
+This creates `nopcommerce-src/` — a full clone of nopCommerce ready for your customizations.
 
-| Service | Image | Host Port | Purpose |
-|---------|-------|-----------|---------|
-| **nopCommerce** | `nopcommerceteam/nopcommerce:4.90.4` | `localhost:8080` | E-commerce platform |
-| **PostgreSQL** | `postgres:16-alpine` | `localhost:5432` | Database option #1 |
-| **SQL Server** | `mcr.microsoft.com/mssql/server:2022-latest` | `localhost:1433` | Database option #2 (default for nopCommerce) |
-| **Redis** | `redis:7-alpine` | `localhost:6379` | Caching & session store |
+### Step 3 — Start Everything
 
-## Database Connection Details
+```bash
+make up
+```
 
-### PostgreSQL
-- **Host:** `localhost:5432` (or `db-infra-postgres` from inside Docker network)
-- **User:** `appuser`
-- **Password:** `DevPassword123!`
-- **Database:** `appdb`
+This **builds nopCommerce from your source** (takes 5–10 minutes the first time), then starts all services.
 
-### SQL Server
-- **Host:** `localhost:1433` (or `db-infra-sqlserver` from inside Docker network)
-- **User:** `sa`
-- **Password:** `DevPassword123!`
-- **Note:** nopCommerce uses this by default
+### Step 4 — Complete Installation
 
-### Redis
-- **Host:** `localhost:6379` (or `db-infra-redis` from inside Docker network)
-- **Password:** `DevRedis123!`
+Open `http://localhost:8080` and complete the [installation wizard](#step-3--complete-nopcommerce-installation-wizard).
+
+---
+
+## Architecture
+
+```
+infrastructure/                 ← This repo (Docker Compose, docs, automation)
+├── docker-compose.yml         ← Builds from ./nopcommerce-src/
+├── docker-compose.prebuilt.yml ← Uses official image (no source needed)
+├── Makefile                    ← clone-nopcommerce, update-nopcommerce, up, down
+└── README.md                   ← This file
+
+nopcommerce-src/               ← YOUR FORK (gitignored, not in this repo)
+├── src/
+│   ├── Plugins/
+│   │   └── YourCompany.YourPlugin/      ← Your custom plugin
+│   └── Presentation/Nop.Web/Themes/
+│       └── YourCompanyTheme/             ← Your custom theme
+├── Dockerfile                  ← Official build file
+└── ...
+```
+
+**Why two repos?**
+- `infrastructure/` = deployment config. Small, focused, easy to review.
+- `nopcommerce-src/` = application source. Large, forked, contains your custom code.
+
+**Separation of concerns:** Your deployment setup doesn't change when you add a plugin. Your plugin code doesn't get mixed with Docker config.
+
+---
+
+## The nopCommerce Fork Workflow
+
+### Daily Development Workflow
+
+```bash
+# Day 1: set up (one-time)
+make clone-nopcommerce          # Clone your fork
+cd nopcommerce-src
+    git remote add upstream https://github.com/nopSolutions/nopCommerce.git
+cd ..
+
+# Day 2+: develop
+make up                          # Build from source & start
+# ... edit plugins in nopcommerce-src/src/Plugins/ ...
+# ... edit themes in nopcommerce-src/src/Presentation/Nop.Web/Themes/ ...
+cd nopcommerce-src && git add -A && git commit -m "feat: add my plugin"
+cd nopcommerce-src && git push origin develop
+
+# Pull latest upstream changes (weekly/monthly)
+make update-nopcommerce          # Fetches upstream, merges into your fork
+# Resolve any merge conflicts
+cd nopcommerce-src && git push origin develop
+make up                          # Rebuild with latest upstream + your changes
+```
+
+### What Goes Where
+
+| File / Directory | Repo | Why |
+|------------------|------|-----|
+| `docker-compose.yml` | `infrastructure` | Deployment config doesn't belong in app source |
+| `Makefile` | `infrastructure` | Automation scripts are infrastructure |
+| `src/Plugins/YourPlugin/` | `nopcommerce-src` (your fork) | Plugin is application code |
+| `src/Presentation/Nop.Web/Themes/YourTheme/` | `nopcommerce-src` (your fork) | Theme is application code |
+| `src/NopCommerce.sln` | `nopcommerce-src` (your fork) | Modified to include your plugin |
+
+---
 
 ## Testing & Verification
 
@@ -158,6 +239,7 @@ Then open your browser:
 | "Login failed for user 'sa'" | SQL Server not healthy | `make status`, check SQL Server logs |
 | Installation wizard repeats | Volume was deleted | That's normal — completes once per volume |
 | Red error in wizard | Wrong server name | Use container name (`db-infra-sqlserver`), not `localhost` |
+| Build fails with .NET errors | Outdated fork | `make update-nopcommerce` then `make up` |
 
 ```bash
 # Check logs for specific errors
@@ -165,51 +247,134 @@ docker compose logs nopcommerce --tail=50
 docker compose logs sqlserver --tail=20
 ```
 
-## nopCommerce Setup
+---
 
-On first run, nopCommerce shows the **installation wizard**. Complete it once and the store is ready.
+## Adding Custom Plugins & Themes
 
-### SQL Server (recommended)
+All customization happens in your fork at `nopcommerce-src/`.
 
-Open `http://localhost:8080` and enter:
+### Add a Plugin
 
-| Field | Value |
-|-------|-------|
-| **Database** | Microsoft SQL Server |
-| **Server name** | `db-infra-sqlserver` |
-| **Database name** | `nopcommerce` |
-| **SQL Username** | `sa` |
-| **SQL Password** | `DevPassword123!` |
-| **Create database if it doesn't exist** | ✅ Checked |
+```bash
+cd nopcommerce-src
 
-### PostgreSQL
+# Create plugin directory
+mkdir -p src/Plugins/YourCompany.YourPlugin
 
-Open `http://localhost:8080` and enter:
+# Copy a built-in plugin as a template
+cp -r src/Plugins/Nop.Plugin.Misc.News src/Plugins/YourCompany.YourPlugin
 
-| Field | Value |
-|-------|-------|
-| **Database** | PostgreSQL |
-| **Server name** | `db-infra-postgres` |
-| **Database name** | `nopcommerce` |
-| **SQL Username** | `appuser` |
-| **SQL Password** | `DevPassword123!` |
-| **Create database if it doesn't exist** | ✅ Checked |
+# Rename .csproj and update namespace
+# Edit src/NopCommerce.sln to add your plugin project
+# (Right-click in Visual Studio, or edit .sln file manually)
 
-> **Note:** nopCommerce stores your configuration in `App_Data/dataSettings.json` inside the container. The volume `nopcommerce_data` persists this, so you only complete the wizard once.
+# Commit
+git add -A
+git commit -m "feat: add YourCompany.YourPlugin"
+git push origin develop
+
+# Rebuild
+cd ..
+make up
+```
+
+### Add a Theme
+
+```bash
+cd nopcommerce-src
+
+# Create theme directory
+mkdir -p src/Presentation/Nop.Web/Themes/YourCompanyTheme
+
+# Copy the default theme as a template
+cp -r src/Presentation/Nop.Web/Themes/DefaultClean/* src/Presentation/Nop.Web/Themes/YourCompanyTheme/
+
+# Edit views, CSS, JS in YourCompanyTheme/
+# No .sln changes needed for themes
+
+# Commit
+git add -A
+git commit -m "feat: add YourCompanyTheme"
+git push origin develop
+
+# Rebuild
+cd ..
+make up
+```
+
+### Where Custom Files Live
+
+| Type | Location in `nopcommerce-src/` | Needs `.sln` Update? |
+|------|-------------------------------|---------------------|
+| Plugin (C#) | `src/Plugins/YourCompany.PluginName/` | ✅ Yes |
+| Theme (Razor/CSS/JS) | `src/Presentation/Nop.Web/Themes/YourThemeName/` | ❌ No |
+| Static files (images, uploads) | `src/Presentation/Nop.Web/wwwroot/` | ❌ No |
+
+---
+
+## Pulling Upstream Updates
+
+When nopCommerce releases a new version, pull it into your fork:
+
+```bash
+# Fetch and merge upstream changes
+make update-nopcommerce
+
+# If merge conflicts occur, resolve them in your IDE:
+cd nopcommerce-src
+# ... edit files to resolve conflicts ...
+git add -A
+git commit -m "merge: upstream release-4.90.5"
+git push origin develop
+
+# Rebuild with latest upstream + your customizations
+cd ..
+make up
+```
+
+**What conflicts to expect:**
+- **None** if you only added new files (plugins/themes in new directories)
+- **Minor** if you modified existing files (rare, document your changes)
+- **None** if upstream didn't touch your files
+
+**Best practice:** Don't modify core nopCommerce files. Add files, don't edit existing ones. This keeps merges conflict-free.
+
+---
+
+## Quick Start with Pre-built Image
+
+If you don't need to customize plugins/themes, skip the source build:
+
+```bash
+# No fork needed. No build needed.
+make use-prebuilt
+
+# Complete the wizard at http://localhost:8080
+# Uses the official nopCommerce image from Docker Hub
+```
+
+> **Note:** `make use-prebuilt` uses `docker-compose.prebuilt.yml` which pulls the official image. You cannot add custom plugins or themes with this method.
+
+---
 
 ## Commands
 
 | Command | What it does |
 |---------|-------------|
-| `make up` | Start all services |
+| `make clone-nopcommerce` | Clone your fork to `./nopcommerce-src/` (run once) |
+| `make up` | **Build from source** & start all services |
+| `make use-prebuilt` | Start with official image (no source build) |
 | `make down` | Stop all services (data preserved) |
-| `make clean` | Stop and **delete all data** |
+| `make clean` | Stop and **delete all data** (volumes) |
+| `make update-nopcommerce` | Pull upstream changes into your fork |
 | `make status` | Show running containers |
 | `make logs` | Follow all logs |
 | `make nop-logs` | Follow nopCommerce logs only |
 | `make psql` | Open PostgreSQL shell |
 | `make sqlcmd` | Open SQL Server shell |
 | `make redis-cli` | Open Redis shell |
+
+---
 
 ## Connecting Your Own Application
 
@@ -235,7 +400,9 @@ sqlcmd -S db-infra-sqlserver,1433 -U sa -P 'DevPassword123!'
 redis-cli -h db-infra-redis -a DevRedis123!
 ```
 
-## Production Self-Hosting Recommendations
+---
+
+## Production Self-Hosting
 
 ### Recommended: VPS + Docker Compose + Nginx
 
@@ -280,22 +447,25 @@ Internet
 curl -fsSL https://get.docker.com | sh
 
 # 3. Clone this repo
-git clone <your-repo> /opt/nopcommerce
+git clone <your-infrastructure-repo> /opt/nopcommerce
 cd /opt/nopcommerce
 
-# 4. Update passwords in docker-compose.yml (use strong passwords!)
-# 5. Change port from 8080:80 to 80:80 (or keep 8080 and proxy via Nginx)
+# 4. Clone your nopCommerce fork
+make clone-nopcommerce
 
-# 6. Start everything
-docker compose up -d
+# 5. Update passwords in docker-compose.yml (use strong passwords!)
+# 6. Change port from 8080:80 to 80:80 (or keep 8080 and proxy via Nginx)
 
-# 7. Install Nginx + Certbot for SSL
+# 7. Start everything
+make up
+
+# 8. Install Nginx + Certbot for SSL
 sudo apt install nginx certbot python3-certbot-nginx
 
-# 8. Configure Nginx reverse proxy
+# 9. Configure Nginx reverse proxy
 # See: nginx/nopcommerce.conf example below
 
-# 9. Get SSL certificate
+# 10. Get SSL certificate
 sudo certbot --nginx -d yourdomain.com
 ```
 
@@ -351,6 +521,8 @@ When you're ready to go live:
 
 Your app only changes the connection string. Nothing else.
 
+---
+
 ## Backups
 
 ### Docker Volumes (local dev)
@@ -369,6 +541,8 @@ Use your cloud provider's automated backup:
 - AWS RDS: Automated daily backups + snapshots
 - PostgreSQL: `pg_dump` via cron + object storage (S3)
 
+---
+
 ## Persistent Data
 
 Data survives `make down`. To wipe everything:
@@ -385,6 +559,8 @@ make up           # fresh start
 | `redis_data` | Redis RDB snapshots |
 | `nopcommerce_data` | nopCommerce App_Data (plugins, uploads, settings) |
 | `nopcommerce_wwwroot` | nopCommerce static files |
+
+---
 
 ## Troubleshooting
 
@@ -415,12 +591,30 @@ lsof -i :8080
 # Example: change "8080:80" to "8090:80"
 ```
 
+### Build fails with .NET SDK errors
+
+```bash
+# Check that nopcommerce-src/ exists and has the Dockerfile
+ls nopcommerce-src/Dockerfile
+
+# If missing, re-clone
+rm -rf nopcommerce-src
+make clone-nopcommerce
+
+# If the build fails due to plugin compilation errors,
+# check your plugin code and fix any compilation issues
+make nop-logs
+```
+
+---
+
 ## Project Layout
 
 ```
 .
-├── docker-compose.yml    # All services (databases + nopCommerce)
-├── Makefile              # Convenience commands
-├── README.md             # This file
-└── .gitignore
+├── docker-compose.yml              # Builds from ./nopcommerce-src/
+├── docker-compose.prebuilt.yml   # Uses official image (no source)
+├── Makefile                        # clone, update, build, up, down
+├── README.md                       # This file
+└── .gitignore                      # Ignores nopcommerce-src/
 ```
