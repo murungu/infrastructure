@@ -449,6 +449,9 @@ make use-prebuilt
 | `make tag IMAGE_TAG=v1.0` | Tag current image for rollback |
 | `make rollback IMAGE_TAG=v1.0` | Roll back to tagged image |
 | `make list-tags` | Show all tagged images |
+| `make build-image` | Build Docker image only (no start) |
+| `make push` | Push image to private registry |
+| `make up-external` | Start with external database (production) |
 
 ---
 
