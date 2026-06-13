@@ -24,19 +24,19 @@ deploy-all: deploy-postgres deploy-sqlserver deploy-redis
 
 deploy-postgres:
 	@echo "Deploying PostgreSQL..."
-	@$(KUSTOMIZE) build databases/postgres/overlays/dev | $(KUBECTL) apply -f -
+	@$(KUBECTL) apply -k databases/postgres/overlays/dev
 	@echo "Waiting for PostgreSQL to be ready..."
 	@$(KUBECTL) wait --for=condition=Ready pod -l app=postgres -n databases --timeout=120s || true
 
 deploy-sqlserver:
 	@echo "Deploying SQL Server..."
-	@$(KUSTOMIZE) build databases/sqlserver/overlays/dev | $(KUBECTL) apply -f -
+	@$(KUBECTL) apply -k databases/sqlserver/overlays/dev
 	@echo "Waiting for SQL Server to be ready..."
 	@$(KUBECTL) wait --for=condition=Ready pod -l app=sqlserver -n databases --timeout=180s || true
 
 deploy-redis:
 	@echo "Deploying Redis..."
-	@$(KUSTOMIZE) build databases/redis/overlays/dev | $(KUBECTL) apply -f -
+	@$(KUBECTL) apply -k databases/redis/overlays/dev
 	@echo "Waiting for Redis to be ready..."
 	@$(KUBECTL) wait --for=condition=Ready pod -l app=redis -n databases --timeout=120s || true
 

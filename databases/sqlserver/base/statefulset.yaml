@@ -46,15 +46,9 @@ spec:
           readinessProbe:
             exec:
               command:
-                - /opt/mssql-tools/bin/sqlcmd
-                - -S
-                - localhost
-                - -U
-                - sa
-                - -P
-                - $(MSSQL_SA_PASSWORD)
-                - -Q
-                - "SELECT 1"
+                - sh
+                - -c
+                - /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -Q "SELECT 1" -C
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -62,15 +56,9 @@ spec:
           livenessProbe:
             exec:
               command:
-                - /opt/mssql-tools/bin/sqlcmd
-                - -S
-                - localhost
-                - -U
-                - sa
-                - -P
-                - $(MSSQL_SA_PASSWORD)
-                - -Q
-                - "SELECT 1"
+                - sh
+                - -c
+                - /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -Q "SELECT 1" -C
             initialDelaySeconds: 60
             periodSeconds: 15
             timeoutSeconds: 5

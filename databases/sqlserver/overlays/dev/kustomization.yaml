@@ -30,3 +30,17 @@ patches:
       - op: replace
         path: /spec/template/spec/containers/0/resources/limits/cpu
         value: "1000m"
+      # Remove amd64 node selector for Apple Silicon local dev
+      # Docker Desktop with Rosetta 2 can emulate amd64 images
+      - op: remove
+        path: /spec/template/spec/nodeSelector
+      # Increase probe delays for slow Rosetta emulation startup
+      - op: replace
+        path: /spec/template/spec/containers/0/readinessProbe/initialDelaySeconds
+        value: 60
+      - op: replace
+        path: /spec/template/spec/containers/0/livenessProbe/initialDelaySeconds
+        value: 180
+      - op: replace
+        path: /spec/template/spec/containers/0/livenessProbe/periodSeconds
+        value: 30
