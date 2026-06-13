@@ -151,13 +151,13 @@ logs:
 
 ## Quick Connect (no local clients needed)
 psql:
-	@docker exec -it db-infra-postgres psql -U appuser -d appdb
+	@docker exec -it db-infra-postgres psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
 
 sqlcmd:
 	@docker exec -it db-infra-sqlserver sh -c '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -C || /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD"'
 
 redis-cli:
-	@docker exec -it db-infra-redis redis-cli -a DevRedis123!
+	@docker exec -it db-infra-redis redis-cli -a "$$REDIS_PASSWORD"
 
 nop-logs:
 	@docker compose logs -f nopcommerce
@@ -168,6 +168,9 @@ help:
 	@echo ""
 	@echo "SETUP (run once):"
 	@echo "  make clone-nopcommerce   Clone nopCommerce source to ./nopcommerce-src/"
+	@echo ""
+	@echo "CONFIGURATION:"
+	@echo "  cp .env.example .env   Create your local env file (edit passwords)"
 	@echo ""
 	@echo "DAILY USE:"
 	@echo "  make up                  Build from source & start all services"

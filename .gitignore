@@ -1,3 +1,6 @@
+# Environment variables — NEVER commit real passwords
+.env
+
 # nopCommerce source (forked by user, not part of this repo)
 nopcommerce-src/
 

@@ -11,15 +11,16 @@ Local PostgreSQL, SQL Server, Redis, and **[nopCommerce](https://www.nopcommerce
 ## Table of Contents
 
 1. [Quick Start (Source Build)](#quick-start-source-build)
-2. [Architecture](#architecture)
-3. [The nopCommerce Fork Workflow](#the-nopcommerce-fork-workflow)
-4. [Testing & Verification](#testing--verification)
-5. [Adding Custom Plugins & Themes](#adding-custom-plugins--themes)
-6. [Pulling Upstream Updates](#pulling-upstream-updates)
-7. [Commands](#commands)
-8. [Connecting Your Own Application](#connecting-your-own-application)
-9. [Production Self-Hosting](#production-self-hosting)
-10. [Troubleshooting](#troubleshooting)
+2. [Configuration (.env)](#configuration-env)
+3. [Architecture](#architecture)
+4. [The nopCommerce Fork Workflow](#the-nopcommerce-fork-workflow)
+5. [Testing & Verification](#testing--verification)
+6. [Adding Custom Plugins & Themes](#adding-custom-plugins--themes)
+7. [Pulling Upstream Updates](#pulling-upstream-updates)
+8. [Commands](#commands)
+9. [Connecting Your Own Application](#connecting-your-own-application)
+10. [Production Self-Hosting](#production-self-hosting)
+11. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -45,7 +46,26 @@ make clone-nopcommerce
 
 This creates `nopcommerce-src/` — a full clone of nopCommerce ready for your customizations.
 
-### Step 3 — Start Everything
+### Step 3 — Configure Environment Variables
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` to set your passwords. **Never commit `.env` to git** — it is already `.gitignore`d.
+
+Key variables:
+
+| Variable | Default | Used By |
+|----------|---------|---------|
+| `POSTGRES_USER` | `appuser` | PostgreSQL |
+| `POSTGRES_PASSWORD` | `DevPassword123!` | PostgreSQL |
+| `POSTGRES_DB` | `appdb` | PostgreSQL |
+| `MSSQL_SA_PASSWORD` | `DevPassword123!` | SQL Server (nopCommerce DB) |
+| `MSSQL_PID` | `Developer` | SQL Server edition |
+| `REDIS_PASSWORD` | `DevRedis123!` | Redis |
+
+### Step 4 — Start Everything
 
 ```bash
 make up
@@ -53,9 +73,47 @@ make up
 
 This **builds nopCommerce from your source** (takes 5–10 minutes the first time), then starts all services.
 
-### Step 4 — Complete Installation
+### Step 5 — Complete Installation
 
 Open `http://localhost:8080` and complete the [installation wizard](#step-3--complete-nopcommerce-installation-wizard).
+
+---
+
+## Configuration (.env)
+
+All secrets and passwords live in `.env` (gitignored). Docker Compose loads it automatically.
+
+### Setup
+
+```bash
+cp .env.example .env
+# Edit .env with your passwords
+```
+
+### Variables
+
+| Variable | Description | Where Used |
+|----------|-------------|------------|
+| `POSTGRES_USER` | PostgreSQL username | `docker-compose.yml`, `Makefile` (`make psql`) |
+| `POSTGRES_PASSWORD` | PostgreSQL password | `docker-compose.yml`, `Makefile` |
+| `POSTGRES_DB` | PostgreSQL database name | `docker-compose.yml`, `Makefile` |
+| `MSSQL_SA_PASSWORD` | SQL Server `sa` password | `docker-compose.yml`, `Makefile` (`make sqlcmd`) |
+| `MSSQL_PID` | SQL Server edition (`Developer`/`Express`) | `docker-compose.yml` |
+| `REDIS_PASSWORD` | Redis AUTH password | `docker-compose.yml`, `Makefile` (`make redis-cli`) |
+| `REDIS_CACHE_ENABLED` | Enable Redis distributed cache | `docker-compose.prebuilt.yml` |
+| `REDIS_CACHE_TYPE` | Cache provider type | `docker-compose.prebuilt.yml` |
+| `REDIS_CONNECTION_STRING` | Full Redis connection string | `docker-compose.prebuilt.yml` |
+
+### Changing passwords
+
+1. Edit `.env`
+2. Run `make down && make up` (containers will restart with new env vars)
+3. **Database volumes keep old data** — if you changed `MSSQL_SA_PASSWORD`, the existing `sqlserver_data` volume still has the old password. Either:
+   - Use `make clean` to wipe and reinstall (destroys all data)
+   - Or change the password inside SQL Server manually via `make sqlcmd`:
+     ```sql
+     ALTER LOGIN sa WITH PASSWORD = 'NewPassword123!';
+     ```
 
 ---
 
