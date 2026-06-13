@@ -610,6 +610,17 @@ make rollback IMAGE_TAG=before-theme-update
 
 ---
 
+## Fork Workflow
+
+For a conflict-free workflow when pulling upstream nopCommerce updates, see [`docs/fork-workflow.md`](docs/fork-workflow.md).
+
+**Quick version:**
+- `develop` stays clean for upstream merges
+- Custom work happens on `feature/*` branches
+- Tag your image before risky merges: `make tag IMAGE_TAG=safe`
+
+---
+
 ## Troubleshooting
 
 ### nopCommerce shows "Installation" page after restart
