@@ -73,9 +73,6 @@ services:
       - nopcommerce_data:/app/App_Data
       - nopcommerce_wwwroot:/app/wwwroot
     environment:
-      # Skip the installation wizard — auto-configure SQL Server
-      DataConfig__ConnectionString: "Data Source=db-infra-sqlserver,1433;Initial Catalog=nopcommerce;Integrated Security=False;Persist Security Info=False;User ID=sa;Password=DevPassword123!;Trust Server Certificate=True"
-      DataConfig__DataProvider: "SqlServer"
       # Redis for distributed caching (optional — remove if not wanted)
       DistributedCacheConfig__Enabled: "true"
       DistributedCacheConfig__DistributedCacheType: "Redis"

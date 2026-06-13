@@ -44,48 +44,24 @@ open http://localhost:8080
 
 ## nopCommerce Setup
 
-### Option A: Auto-configured with SQL Server (default)
+On first run, nopCommerce shows the **installation wizard**. Complete it once and the store is ready.
 
-The `docker-compose.yml` already pre-configures nopCommerce to use SQL Server with Redis caching. On first run, nopCommerce will:
+### SQL Server (recommended)
 
-1. Create the `nopcommerce` database in SQL Server
-2. Run migrations and seed data
-3. Be ready at `http://localhost:8080`
-
-**Admin credentials** (set during first-run installation wizard, or if skipped, default to):
-- After the install wizard, create an admin account
-- If auto-install is used, you may need to complete setup via the web UI
-
-### Option B: Using PostgreSQL instead of SQL Server
-
-If you prefer PostgreSQL over SQL Server for nopCommerce, edit `docker-compose.yml`:
-
-```yaml
-  nopcommerce:
-    environment:
-      DataConfig__ConnectionString: "Host=db-infra-postgres;Port=5432;Database=nopcommerce;Username=appuser;Password=DevPassword123!;"
-      DataConfig__DataProvider: "PostgreSql"
-```
-
-Then restart:
-```bash
-docker compose down -v
-docker compose up -d
-```
-
-### Option C: Manual Installation Wizard
-
-If you remove the `DataConfig__` environment variables, nopCommerce will show the installation wizard on first visit. Use these settings:
+Open `http://localhost:8080` and enter:
 
 | Field | Value |
 |-------|-------|
-| **Database** | SQL Server |
+| **Database** | Microsoft SQL Server |
 | **Server name** | `db-infra-sqlserver` |
 | **Database name** | `nopcommerce` |
 | **SQL Username** | `sa` |
 | **SQL Password** | `DevPassword123!` |
+| **Create database if it doesn't exist** | ✅ Checked |
 
-Or for PostgreSQL:
+### PostgreSQL
+
+Open `http://localhost:8080` and enter:
 
 | Field | Value |
 |-------|-------|
@@ -94,6 +70,9 @@ Or for PostgreSQL:
 | **Database name** | `nopcommerce` |
 | **SQL Username** | `appuser` |
 | **SQL Password** | `DevPassword123!` |
+| **Create database if it doesn't exist** | ✅ Checked |
+
+> **Note:** nopCommerce stores your configuration in `App_Data/dataSettings.json` inside the container. The volume `nopcommerce_data` persists this, so you only complete the wizard once.
 
 ## Commands
 
@@ -286,11 +265,9 @@ make up           # fresh start
 
 ## Troubleshooting
 
-### nopCommerce shows "Installation" page instead of store
+### nopCommerce shows "Installation" page on every restart
 
-The database wasn't pre-configured. Either:
-1. Complete the installation wizard in your browser
-2. Or set `DataConfig__ConnectionString` and `DataConfig__DataProvider` env vars
+This is normal **on first run only**. Complete the wizard once. Your config is persisted in the `nopcommerce_data` Docker volume. If you see it again, the volume may have been deleted.
 
 ### SQL Server won't start on Apple Silicon
 
