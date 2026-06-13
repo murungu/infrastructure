@@ -21,7 +21,7 @@ Local PostgreSQL, SQL Server, Redis, and **[nopCommerce](https://www.nopcommerce
 9. [Connecting Your Own Application](#connecting-your-own-application)
 10. [Production Self-Hosting](#production-self-hosting)
 11. [External Database + Registry](#deploying-with-external-database-your-existing-postgresql)
-12. [CI/CD: GitHub Actions](#cicd-github-actions--docker-registry)
+12. [CI/CD: Two-Repo Build & Deploy](#cicd-two-repo-build--deploy)
 13. [Troubleshooting](#troubleshooting)
 
 ---
@@ -143,6 +143,27 @@ nopcommerce-src/               ← YOUR FORK (gitignored, not in this repo)
 - `nopcommerce-src/` = application source. Large, forked, contains your custom code.
 
 **Separation of concerns:** Your deployment setup doesn't change when you add a plugin. Your plugin code doesn't get mixed with Docker config.
+
+**CI/CD separation:**
+- The **fork** builds and pushes the Docker image to `registry.arity.co.za/nopcommerce` on every push to `develop`
+- The **infrastructure** repo pulls the image and runs it — never builds
+
+```
+┌────────────────────────┐        ┌────────────────────────┐
+│ nopcommerce-src        │        │ infrastructure         │
+│ (fork)                 │        │ (this repo)            │
+│                        │        │                        │
+│ src/Plugins/           │        │ docker-compose.yml     │
+│ src/Themes/            │        │ docker-compose.        │
+│ Dockerfile             │        │   external-db.yml      │
+│ .github/workflows/     │        │ Makefile               │
+│   docker-build.yml     │        │ .env                   │
+│        │               │        │                        │
+│        ▼               │        │         ▲              │
+│ registry.arity.co.za   │────────│   pulls image          │
+│ /nopcommerce:latest    │        │   runs container       │
+└────────────────────────┘        └────────────────────────┘
+```
 
 ---
 
@@ -649,36 +670,124 @@ docker compose -f docker-compose.external-db.yml up -d
 
 ---
 
-## CI/CD: GitHub Actions → Docker Registry
+## CI/CD: Two-Repo Build & Deploy
 
-Push every commit to your private registry automatically.
+### Architecture
 
-### Workflow: `.github/workflows/docker-build.yml`
+| Repo | Responsibility | Triggers On |
+|------|---------------|-------------|
+| **`nopcommerce-src` (fork)** | **Builds the Docker image** | Every push to `develop` |
+| **`infrastructure` (this repo)** | **Validates compose + deploys** | Every push to `main` |
 
-Already included in this repo. It:
-1. Clones your nopCommerce fork (`Arity-Solutions/nopCommerce.shop`)
-2. Builds the Docker image from `./nopcommerce-src/Dockerfile`
-3. Pushes to `registry.arity.co.za/nopcommerce:latest` and `:sha`
+**Why two repos?**
+- The **fork** owns the application code. When you push a plugin, it should build the image.
+- The **infrastructure** repo owns deployment config. It should never build code — just validate and run.
 
-### Required GitHub Secrets
+```
+┌─────────────────────────┐         ┌──────────────────────────┐
+│  nopcommerce-src        │         │   infrastructure         │
+│  (your fork)            │         │   (this repo)            │
+│                         │         │                          │
+│  Push plugin/theme      │────────▶│   No build needed        │
+│  to develop ─────┐      │         │   Just pulls image       │
+│                  │      │         │                          │
+│  GitHub Actions  │      │         │   docker-compose         │
+│  builds + pushes │      │         │   references             │
+│  ───────┐        │      │         │   registry.arity.co.za/  │
+│         │        │      │         │   nopcommerce:latest     │
+│         ▼        │      │         │                          │
+│  registry.arity  │      │         │                          │
+│  .co.za/         │──────┘         │   GitHub Actions         │
+│  nopcommerce:    │               │   validates compose      │
+│  latest          │               │   files only             │
+└──────────────────┘               └──────────────────────────┘
+```
 
-Add these in your GitHub repo → **Settings → Secrets and variables → Actions**:
+### 1. Fork Repo: Build & Push (`nopcommerce-src`)
+
+The workflow lives at `nopcommerce-src/.github/workflows/docker-build.yml` (in your fork).
+
+**What it does:**
+1. Checks out the fork repo directly
+2. Builds the Docker image from `./Dockerfile`
+3. Pushes to `registry.arity.co.za/nopcommerce:latest` + `:sha`
+
+**Required secrets in the fork repo:**
+- Go to `github.com/Arity-Solutions/nopCommerce.shop` → **Settings → Secrets and variables → Actions**
+- Add:
 
 | Secret | Value |
 |--------|-------|
 | `DOCKER_USERNAME` | Your registry username |
 | `DOCKER_PASSWORD` | Your registry password |
 
-### Manual Trigger
+**Trigger it:**
+```bash
+cd nopcommerce-src
+git checkout develop
+# ... make plugin changes ...
+git commit -m "feat: add new payment plugin"
+git push origin develop
+```
 
-You can also trigger a build manually with a custom tag:
+Then watch the build at:
+`github.com/Arity-Solutions/nopCommerce.shop/actions`
 
-1. Go to **Actions → Build and Push nopCommerce → Run workflow**
-2. Enter a custom tag (e.g., `v1.2.3`) or leave blank for `latest`
+### 2. Infrastructure Repo: Validate & Deploy (`infrastructure`)
 
-### Local Push (Alternative to GitHub Actions)
+The workflow lives at `.github/workflows/validate.yml` (in this repo).
 
-Build locally and push directly:
+**What it does:**
+1. Validates all `docker-compose*.yml` files are syntactically correct
+2. Optionally checks if the registry image is available
+
+**No Docker secrets needed here** — this repo never builds images.
+
+### 3. Deploy on Production Server
+
+On your server (where `192.168.0.107` PostgreSQL lives):
+
+```bash
+# 1. Clone the infrastructure repo (NOT the fork)
+git clone https://github.com/murungu/infrastructure.git /opt/nopcommerce
+cd /opt/nopcommerce
+
+# 2. Configure environment
+cp .env.example .env
+# Edit .env:
+#   CONNECTION_STRING=Host=192.168.0.107;Port=5432;Database=arity_store_db;...
+#   NOPCOMMERCE_PORT=8086
+#   ASPNETCORE_ENVIRONMENT=Production
+
+# 3. Pull the latest image (built by the fork's CI)
+docker pull registry.arity.co.za/nopcommerce:latest
+
+# 4. Start
+make up-external
+```
+
+### 4. Roll Out a New Plugin
+
+```bash
+# On your dev machine:
+cd nopcommerce-src
+git checkout -b feature/new-plugin
+# ... edit src/Plugins/ ...
+git commit -m "feat: add new-plugin"
+git push origin feature/new-plugin
+# Open PR → merge to develop
+
+# CI automatically builds and pushes :latest
+
+# On production server:
+cd /opt/nopcommerce
+docker pull registry.arity.co.za/nopcommerce:latest
+make up-external
+```
+
+### 5. Manual Build & Push (No CI)
+
+If you don't want GitHub Actions, build and push locally:
 
 ```bash
 # 1. Build the image
