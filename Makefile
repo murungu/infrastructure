@@ -1,6 +1,6 @@
 .PHONY: up down status logs psql sqlcmd redis-cli nop-logs \
         clone-nopcommerce update-nopcommerce use-prebuilt clean help \
-        tag rollback list-tags
+        tag rollback list-tags build-image push up-external
 
 # ════════════════════════════════════════════════════════
 #  CONFIGURATION — change this to your fork URL
@@ -74,6 +74,53 @@ rollback:
 	@echo ""
 	@echo "✅ Rolled back to $(IMAGE_TAG). Container restarting..."
 	@echo "   Check status: make status"
+
+## Build Docker image only (no start)
+## Usage: make build-image
+build-image:
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo "  Building nopCommerce Docker image..."
+	@echo "═══════════════════════════════════════════════════════════════"
+	@docker compose build nopcommerce
+	@echo ""
+	@echo "✅ Image built: infrastructure-nopcommerce:latest"
+	@echo "   Push to registry: make push REGISTRY=registry.arity.co.za IMAGE_TAG=latest"
+
+## Push image to private registry
+## Usage: make push REGISTRY=registry.arity.co.za IMAGE_TAG=latest
+push:
+	@if [ -z "$(REGISTRY)" ]; then \
+		echo "❌ Usage: make push REGISTRY=registry.arity.co.za IMAGE_TAG=latest"; \
+		exit 1; \
+	fi
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo "  Tagging and pushing to $(REGISTRY)/nopcommerce:$(IMAGE_TAG)..."
+	@echo "═══════════════════════════════════════════════════════════════"
+	@docker tag infrastructure-nopcommerce:latest $(REGISTRY)/nopcommerce:$(IMAGE_TAG)
+	@docker push $(REGISTRY)/nopcommerce:$(IMAGE_TAG)
+	@echo ""
+	@echo "✅ Pushed: $(REGISTRY)/nopcommerce:$(IMAGE_TAG)"
+	@echo ""
+	@echo "  To run from registry on another server:"
+	@echo "    docker pull $(REGISTRY)/nopcommerce:$(IMAGE_TAG)"
+	@echo "    docker compose -f docker-compose.external-db.yml up -d"
+
+## Start with external database (production)
+## Uses docker-compose.external-db.yml — no local PostgreSQL/SQL Server
+up-external:
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo "  Starting with EXTERNAL database..."
+	@echo "  (No local PostgreSQL or SQL Server containers)"
+	@echo "═══════════════════════════════════════════════════════════════"
+	@docker compose -f docker-compose.external-db.yml up -d
+	@echo ""
+	@echo "✅ nopCommerce + Redis started."
+	@echo ""
+	@echo "  nopCommerce:     http://localhost:8080"
+	@echo "  Redis:           localhost:6379"
+	@echo ""
+	@echo "  Database:        External PostgreSQL (see CONNECTION_STRING in .env)"
+	@echo "═══════════════════════════════════════════════════════════════"
 
 ## Quick start with pre-built image (no source needed)
 use-prebuilt:
@@ -176,6 +223,11 @@ help:
 	@echo "  make up                  Build from source & start all services"
 	@echo "  make down                Stop all services (data preserved)"
 	@echo "  make clean               Stop and delete all data (volumes)"
+	@echo ""
+	@echo "PRODUCTION:"
+	@echo "  make build-image         Build Docker image only"
+	@echo "  make push                Push image to private registry"
+	@echo "  make up-external         Start with external database (no local PostgreSQL/SQL Server)"
 	@echo ""
 	@echo "UPDATES:"
 	@echo "  make update-nopcommerce  Pull upstream changes into your fork"

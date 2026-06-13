@@ -1,0 +1,52 @@
+# ═══════════════════════════════════════════════════════════
+#  PRODUCTION: External PostgreSQL + nopCommerce + Redis
+# ═══════════════════════════════════════════════════════════
+#  Use this when you have an existing PostgreSQL server
+#  (e.g., 192.168.0.107) and only need nopCommerce + Redis
+#  running in Docker.
+#
+#  No local PostgreSQL or SQL Server containers are started.
+#
+#  Usage:
+#    docker compose -f docker-compose.external-db.yml up -d
+#    # or
+#    make up-external
+# ═══════════════════════════════════════════════════════════
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: db-infra-redis
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command: redis-server --requirepass ${REDIS_PASSWORD} --maxmemory 512mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  nopcommerce:
+    image: ${REGISTRY:-registry.arity.co.za}/nopcommerce:${IMAGE_TAG:-latest}
+    container_name: db-infra-nopcommerce
+    ports:
+      - "8080:80"
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__DefaultConnection: ${CONNECTION_STRING}
+      DistributedCacheConfig__Enabled: "${REDIS_CACHE_ENABLED:-true}"
+      DistributedCacheConfig__DistributedCacheType: "${REDIS_CACHE_TYPE:-Redis}"
+      DistributedCacheConfig__ConnectionString: "db-infra-redis:6379,password=${REDIS_PASSWORD},ssl=False"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+    driver: local
