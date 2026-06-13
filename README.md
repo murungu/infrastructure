@@ -42,6 +42,129 @@ open http://localhost:8080
 - **Host:** `localhost:6379` (or `db-infra-redis` from inside Docker network)
 - **Password:** `DevRedis123!`
 
+## Testing & Verification
+
+After running `make up`, confirm everything works before installing nopCommerce.
+
+### 1. Check All Containers Are Healthy
+
+```bash
+make status
+```
+
+Expected output — all services show `(healthy)` or `Up`:
+
+| Service | Status |
+|---------|--------|
+| `db-infra-postgres` | `Up (healthy)` |
+| `db-infra-sqlserver` | `Up (healthy)` |
+| `db-infra-redis` | `Up (healthy)` |
+| `db-infra-nopcommerce` | `Up` |
+
+### 2. Verify Databases Are Reachable
+
+```bash
+# PostgreSQL
+docker exec db-infra-postgres psql -U appuser -d appdb -c "SELECT 'OK' as status;"
+# → OK
+
+# SQL Server
+docker exec db-infra-sqlserver sh -c '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -Q "SELECT '\''OK'\''" -C'
+# → OK
+
+# Redis
+docker exec db-infra-redis redis-cli -a DevRedis123! ping
+# → PONG
+
+# nopCommerce web
+curl -s -o /dev/null -w "HTTP %{http_code}\n" http://localhost:8080
+# → HTTP 302
+```
+
+### 3. Complete nopCommerce Installation Wizard
+
+Open your browser: **`http://localhost:8080`**
+
+You should see **"nopCommerce installation"**. Fill in:
+
+#### Store Information
+
+| Field | Example Value |
+|-------|---------------|
+| **Admin email** | `admin@example.com` |
+| **Admin password** | `Admin123!` |
+| **Confirm password** | `Admin123!` |
+| **Install sample data** | ✅ Checked (gives you demo products) |
+
+#### Database Information — SQL Server (recommended)
+
+| Field | Value |
+|-------|-------|
+| **Database** | Microsoft SQL Server |
+| **Server name** | `db-infra-sqlserver` |
+| **Database name** | `nopcommerce` |
+| **SQL Username** | `sa` |
+| **SQL Password** | `DevPassword123!` |
+| **Create database if it doesn't exist** | ✅ Checked |
+
+> **Why `db-infra-sqlserver`?** Inside the Docker network, containers reach each other by **container name**, not `localhost`.
+
+#### Database Information — PostgreSQL (alternative)
+
+| Field | Value |
+|-------|-------|
+| **Database** | PostgreSQL |
+| **Server name** | `db-infra-postgres` |
+| **Database name** | `nopcommerce` |
+| **SQL Username** | `appuser` |
+| **SQL Password** | `DevPassword123!` |
+| **Create database if it doesn't exist** | ✅ Checked |
+
+Click **Install**. This takes **2–5 minutes**. You'll see a progress bar.
+
+### 4. Post-Install Verification
+
+After installation completes, verify:
+
+```bash
+# Storefront responds with 200 (not redirect)
+curl -s -o /dev/null -w "Storefront: %{http_code}\n" http://localhost:8080
+# → Storefront: 200
+
+# Admin panel is reachable
+curl -s -o /dev/null -w "Admin: %{http_code}\n" http://localhost:8080/admin
+# → Admin: 200
+
+# SQL Server created the nopcommerce database
+docker exec db-infra-sqlserver sh -c '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -Q "SELECT name FROM sys.databases WHERE name = '\''nopcommerce'\''" -C'
+# → nopcommerce
+
+# Check nopCommerce logs for errors
+make nop-logs
+```
+
+Then open your browser:
+
+| URL | Expected |
+|-----|----------|
+| `http://localhost:8080` | **Storefront** with demo products |
+| `http://localhost:8080/admin` | **Admin login** — use `admin@example.com` / `Admin123!` |
+
+### 5. If Something Goes Wrong
+
+| Symptom | Likely Cause | Fix |
+|---------|-------------|-----|
+| `HTTP 000` or timeout | nopCommerce not ready yet | Wait 30s, retry |
+| "Login failed for user 'sa'" | SQL Server not healthy | `make status`, check SQL Server logs |
+| Installation wizard repeats | Volume was deleted | That's normal — completes once per volume |
+| Red error in wizard | Wrong server name | Use container name (`db-infra-sqlserver`), not `localhost` |
+
+```bash
+# Check logs for specific errors
+docker compose logs nopcommerce --tail=50
+docker compose logs sqlserver --tail=20
+```
+
 ## nopCommerce Setup
 
 On first run, nopCommerce shows the **installation wizard**. Complete it once and the store is ready.
@@ -265,9 +388,11 @@ make up           # fresh start
 
 ## Troubleshooting
 
-### nopCommerce shows "Installation" page on every restart
+### nopCommerce shows "Installation" page after restart
 
-This is normal **on first run only**. Complete the wizard once. Your config is persisted in the `nopcommerce_data` Docker volume. If you see it again, the volume may have been deleted.
+This only happens if the `nopcommerce_data` Docker volume was deleted (e.g., `make clean`). The wizard stores its config in `App_Data/dataSettings.json` inside that volume. If the volume exists, nopCommerce skips the wizard and goes straight to the store.
+
+To preserve your setup, **never** use `make clean` unless you want a complete reset. Use `make down` instead (stops containers but keeps volumes).
 
 ### SQL Server won't start on Apple Silicon
 
