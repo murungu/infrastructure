@@ -3,22 +3,15 @@
         tag rollback list-tags build-image push up-external
 
 # ════════════════════════════════════════════════════════
-#  CONFIGURATION — change this to your fork URL
+#  CONFIGURATION — change this to your private repo URL
 # ════════════════════════════════════════════════════════
-# GitHub does NOT allow making a fork private. Two options:
+# We use a private repo (not a GitHub fork) because GitHub
+# does not allow making forks private. The private repo still
+# pulls upstream updates via 'git remote add upstream'.
 #
-#   A) Public fork (simple): use the fork as-is
-#      NOPCOMMERCE_REPO = git@github.com:YOUR_USERNAME/nopCommerce.git
-#
-#   B) Private repo (recommended for proprietary plugins):
-#      1. Create a NEW private repo on GitHub
-#      2. Push your current nopcommerce-src content to it
-#      3. Set the URL below to the private repo
-#      4. Upstream pulls still work via 'git remote add upstream'
-#
-# SSH is recommended for private repos.
+# SSH is required for private repos.
 # ════════════════════════════════════════════════════════
-NOPCOMMERCE_REPO ?= git@github.com:Arity-Solutions/nopCommerce.shop.git
+NOPCOMMERCE_REPO ?= git@github.com:Arity-Solutions/arity.nopCommerce.shop.git
 
 ## Start/Stop (builds from source)
 up:
@@ -161,12 +154,11 @@ clone-nopcommerce:
 	@echo "  Next steps:"
 	@echo "    1. cd nopcommerce-src"
 	@echo "    2. git remote add upstream https://github.com/nopSolutions/nopCommerce.git"
-	@echo "    3. Optional: make the repo private on GitHub (Settings → Visibility)"
-	@echo "    4. cd .."
-	@echo "    5. make up"
+	@echo "    3. cd .."
+	@echo "    4. make up"
 	@echo ""
-	@echo "  To add your own fork URL, edit Makefile:"
-	@echo "    NOPCOMMERCE_REPO = git@github.com:YOUR_USERNAME/nopCommerce.git"
+	@echo "  Repo URL configured:"
+	@echo "    $(NOPCOMMERCE_REPO)"
 	@echo "═══════════════════════════════════════════════════════════════"
 
 ## Pull latest upstream changes into your fork

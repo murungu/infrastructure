@@ -6,7 +6,7 @@ This guide ensures you can pull upstream updates from `nopSolutions/nopCommerce`
 
 | Repo | URL | Purpose |
 |------|-----|---------|
-| **Your fork (origin)** | `git@github.com:Arity-Solutions/nopCommerce.shop.git` | Where you push your changes |
+| **Your fork (origin)** | `git@github.com:Arity-Solutions/arity.nopCommerce.shop.git` | Where you push your changes |
 | **Official (upstream)** | `https://github.com/nopSolutions/nopCommerce.git` | Source of truth for updates |
 
 ## Golden Rule

@@ -13,7 +13,7 @@ Local PostgreSQL, SQL Server, Redis, and **[nopCommerce](https://www.nopcommerce
 1. [Quick Start (Source Build)](#quick-start-source-build)
 2. [Configuration (.env)](#configuration-env)
 3. [Architecture](#architecture)
-4. [Keeping Your Fork Private](#keeping-your-fork-private)
+4. [Keeping Your Code Private](#keeping-your-code-private)
 5. [The nopCommerce Fork Workflow](#the-nopcommerce-fork-workflow)
 6. [Testing & Verification](#testing--verification)
 7. [Adding Custom Plugins & Themes](#adding-custom-plugins--themes)
@@ -173,61 +173,49 @@ nopcommerce-src/               ← YOUR FORK (gitignored, not in this repo)
 
 ---
 
-## Keeping Your Fork Private
+## Keeping Your Code Private
 
-**GitHub does not allow making a fork private.** The fork stays public because GitHub uses it for network graphs and upstream PRs.
+**GitHub does not allow making a fork private.** We solve this by using a **private repo** instead:
 
-If your custom plugins/themes are proprietary, use a **private repo** instead:
+- **Private repo** (`arity.nopCommerce.shop`) = where your custom plugins/themes live
+- **`upstream` remote** = official nopCommerce repo for pulling updates
 
-### 1. Create a Private Repo
+This is exactly how the infrastructure repo is configured now.
 
-1. Go to GitHub → **New repository**
-2. Name it `nopCommerce-private` (or anything)
-3. Select **Private**
-4. Do NOT check "Initialize this repository with a README"
-
-### 2. Push Your Current Fork Content
-
-```bash
-cd /Users/murungu/Developer/infrastructure/nopcommerce-src
-
-# Add the private repo as origin
-git remote rm origin
-git remote add origin git@github.com:Arity-Solutions/nopCommerce-private.git
-
-# Push everything
-git push -u origin develop
-```
-
-### 3. Update the Infrastructure Makefile
-
-```bash
-cd /Users/murungu/Developer/infrastructure
-# Edit Makefile, change:
-#   NOPCOMMERCE_REPO = git@github.com:Arity-Solutions/nopCommerce.shop.git
-# To:
-#   NOPCOMMERCE_REPO = git@github.com:Arity-Solutions/nopCommerce-private.git
-```
-
-### 4. Upstream Pulls Still Work
-
-The "fork" badge is gone, but `git fetch upstream` works identically:
+### How It Works
 
 ```bash
 cd nopcommerce-src
-git remote add upstream https://github.com/nopSolutions/nopCommerce.git
-git fetch upstream
-git merge upstream/develop
+git remote -v
+# → origin  git@github.com:Arity-Solutions/arity.nopCommerce.shop.git (push)
+# → upstream  https://github.com/nopSolutions/nopCommerce.git (fetch)
 ```
 
-### 5. Trade-offs
+- `origin` is your **private repo** — push custom code here
+- `upstream` is the **official repo** — pull updates from here
 
-| | Public Fork | Private Repo |
-|--|-------------|--------------|
-| **Visibility** | Anyone can see your plugins | Only your team |
-| **Fork UI** | GitHub shows "forked from" | No |
-| **Upstream pulls** | Built-in button | `git fetch upstream` (same) |
-| **CI/CD** | Works automatically | Works automatically |
+### Upstream Pulls
+
+Same as a fork, just without the GitHub "forked from" badge:
+
+```bash
+cd nopcommerce-src
+git fetch upstream
+git checkout develop
+git merge upstream/develop
+# Resolve conflicts, then push to origin
+git push origin develop
+```
+
+### Already Set Up
+
+The Makefile already points to the private repo:
+
+```makefile
+NOPCOMMERCE_REPO = git@github.com:Arity-Solutions/arity.nopCommerce.shop.git
+```
+
+CI/CD secrets should be added to `github.com/Arity-Solutions/arity.nopCommerce.shop` → Settings → Secrets.
 
 ---
 
@@ -777,7 +765,7 @@ The workflow lives at `nopcommerce-src/.github/workflows/docker-build.yml` (in y
 3. Pushes to `registry.arity.co.za/nopcommerce:latest` + `:sha`
 
 **Required secrets in the fork repo:**
-- Go to `github.com/Arity-Solutions/nopCommerce.shop` → **Settings → Secrets and variables → Actions**
+- Go to `github.com/Arity-Solutions/arity.nopCommerce.shop` → **Settings → Secrets and variables → Actions**
 - Add:
 
 | Secret | Value |
@@ -797,7 +785,7 @@ git push origin develop
 ```
 
 Then watch the build at:
-`github.com/Arity-Solutions/nopCommerce.shop/actions`
+`github.com/Arity-Solutions/arity.nopCommerce.shop/actions`
 
 ### 2. Infrastructure Repo: Validate & Deploy (`infrastructure`)
 
