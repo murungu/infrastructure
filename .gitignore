@@ -1,13 +1,6 @@
-# Secrets (never commit real credentials)
-**/secret.yaml
-!*/base/secret.yaml
-# Actually, let's be more specific:
-# If you put real passwords in secret.yaml, add it to .gitignore
-# For this template, secret.yaml contains demo passwords - DO NOT USE IN PROD
-
-# Kubernetes
-*.kubeconfig
-kubeconfig
+# OS
+.DS_Store
+Thumbs.db
 
 # IDE
 .idea/
@@ -15,12 +8,10 @@ kubeconfig
 *.swp
 *.swo
 
-# OS
-.DS_Store
-Thumbs.db
+# Logs
+*.log
 
 # Temporary
 *.tmp
-*.log
 /tmp/
 .pi/
