@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sqlserver-config
+  namespace: databases
+  labels:
+    app: sqlserver
+data:
+  MSSQL_PID: "Developer"
+  ACCEPT_EULA: "Y"
+  MSSQL_AGENT_ENABLED: "true"
+  # Additional config:
+  # MSSQL_COLLATION: "SQL_Latin1_General_CP1_CI_AS"
+  # MSSQL_MEMORY_LIMIT_MB: "2048"

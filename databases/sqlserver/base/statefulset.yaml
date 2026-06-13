@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sqlserver
+  namespace: databases
+  labels:
+    app: sqlserver
+    version: "2022"
+spec:
+  serviceName: sqlserver
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqlserver
+  template:
+    metadata:
+      labels:
+        app: sqlserver
+        version: "2022"
+    spec:
+      # SQL Server requires amd64 architecture
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      containers:
+        - name: sqlserver
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 1433
+              name: sqlserver
+          envFrom:
+            - configMapRef:
+                name: sqlserver-config
+            - secretRef:
+                name: sqlserver-secret
+          volumeMounts:
+            - name: sqlserver-storage
+              mountPath: /var/opt/mssql
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "1000m"
+            limits:
+              memory: "4Gi"
+              cpu: "2000m"
+          readinessProbe:
+            exec:
+              command:
+                - /opt/mssql-tools/bin/sqlcmd
+                - -S
+                - localhost
+                - -U
+                - sa
+                - -P
+                - $(MSSQL_SA_PASSWORD)
+                - -Q
+                - "SELECT 1"
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            exec:
+              command:
+                - /opt/mssql-tools/bin/sqlcmd
+                - -S
+                - localhost
+                - -U
+                - sa
+                - -P
+                - $(MSSQL_SA_PASSWORD)
+                - -Q
+                - "SELECT 1"
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+      volumes:
+        - name: sqlserver-storage
+          persistentVolumeClaim:
+            claimName: sqlserver-pvc
