@@ -61,7 +61,7 @@ Key variables:
 | `POSTGRES_USER` | `appuser` | PostgreSQL |
 | `POSTGRES_PASSWORD` | `DevPassword123!` | PostgreSQL |
 | `POSTGRES_DB` | `appdb` | PostgreSQL |
-| `MSSQL_SA_PASSWORD` | `DevPassword123!` | SQL Server (nopCommerce DB) |
+| `MSSQL_SA_PASSWORD` | `DevPassword123!` | SQL Server (optional — other apps) |
 | `MSSQL_PID` | `Developer` | SQL Server edition |
 | `REDIS_PASSWORD` | `DevRedis123!` | Redis |
 
@@ -235,7 +235,7 @@ You should see **"nopCommerce installation"**. Fill in:
 | **Confirm password** | `Admin123!` |
 | **Install sample data** | ✅ Checked (gives you demo products) |
 
-#### Database Information — SQL Server (recommended)
+#### Database Information — PostgreSQL (recommended)
 
 | Field | Value |
 |-------|-------|
@@ -502,7 +502,7 @@ Internet
     │
     ▼
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   Nginx     │────▶│ nopCommerce │────▶│  SQL Server │
+│   Nginx     │────▶│ nopCommerce │────▶│  PostgreSQL │
 │ (reverse    │     │   (Docker)  │     │   (Docker)  │
 │  proxy +    │     └─────────────┘     └─────────────┘
 │  Let's      │             │
