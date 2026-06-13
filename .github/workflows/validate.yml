@@ -1,0 +1,28 @@
+name: Validate Infrastructure
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-compose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout infrastructure repo
+        uses: actions/checkout@v4
+
+      - name: Validate docker-compose.yml
+        run: docker compose config > /dev/null
+
+      - name: Validate docker-compose.prebuilt.yml
+        run: docker compose -f docker-compose.prebuilt.yml config > /dev/null
+
+      - name: Validate docker-compose.external-db.yml
+        run: docker compose -f docker-compose.external-db.yml config > /dev/null
+
+      - name: Check registry image exists
+        run: |
+          echo "Checking if registry.arity.co.za/nopcommerce:latest is available..."
+          docker manifest inspect registry.arity.co.za/nopcommerce:latest || echo "Note: Image not yet pushed. First build triggers from nopcommerce-src push."
