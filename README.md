@@ -203,11 +203,11 @@ Expected output — all services show `(healthy)` or `Up`:
 ### 2. Verify Databases Are Reachable
 
 ```bash
-# PostgreSQL (passwords read from .env automatically)
+# PostgreSQL (primary database for nopCommerce)
 docker exec db-infra-postgres psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -c "SELECT 'OK' as status;"
 # → OK
 
-# SQL Server (password from .env)
+# SQL Server (available for other applications)
 docker exec db-infra-sqlserver sh -c '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -Q "SELECT '\''OK'\''" -C'
 # → OK
 
@@ -239,24 +239,24 @@ You should see **"nopCommerce installation"**. Fill in:
 
 | Field | Value |
 |-------|-------|
-| **Database** | Microsoft SQL Server |
-| **Server name** | `db-infra-sqlserver` |
-| **Database name** | `nopcommerce` |
-| **SQL Username** | `sa` |
-| **SQL Password** | `${MSSQL_SA_PASSWORD}` from `.env` |
-| **Create database if it doesn't exist** | ✅ Checked |
-
-> **Why `db-infra-sqlserver`?** Inside the Docker network, containers reach each other by **container name**, not `localhost`.
-
-#### Database Information — PostgreSQL (alternative)
-
-| Field | Value |
-|-------|-------|
 | **Database** | PostgreSQL |
 | **Server name** | `db-infra-postgres` |
 | **Database name** | `nopcommerce` |
 | **SQL Username** | `${POSTGRES_USER}` from `.env` |
 | **SQL Password** | `${POSTGRES_PASSWORD}` from `.env` |
+| **Create database if it doesn't exist** | ✅ Checked |
+
+> **Why `db-infra-postgres`?** Inside the Docker network, containers reach each other by **container name**, not `localhost`.
+
+#### Database Information — SQL Server (alternative)
+
+| Field | Value |
+|-------|-------|
+| **Database** | Microsoft SQL Server |
+| **Server name** | `db-infra-sqlserver` |
+| **Database name** | `nopcommerce` |
+| **SQL Username** | `sa` |
+| **SQL Password** | `${MSSQL_SA_PASSWORD}` from `.env` |
 | **Create database if it doesn't exist** | ✅ Checked |
 
 Click **Install**. This takes **2–5 minutes**. You'll see a progress bar.
@@ -274,8 +274,8 @@ curl -s -o /dev/null -w "Storefront: %{http_code}\n" http://localhost:8080
 curl -s -o /dev/null -w "Admin: %{http_code}\n" http://localhost:8080/admin
 # → Admin: 200
 
-# SQL Server created the nopcommerce database
-docker exec db-infra-sqlserver sh -c '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -Q "SELECT name FROM sys.databases WHERE name = '\''nopcommerce'\''" -C'
+# PostgreSQL created the nopcommerce database
+docker exec db-infra-postgres psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -c "\l" | grep nopcommerce
 # → nopcommerce
 
 # Check nopCommerce logs for errors
@@ -307,15 +307,15 @@ Then `make down && make up` to restart with caching enabled.
 | Symptom | Likely Cause | Fix |
 |---------|-------------|-----|
 | `HTTP 000` or timeout | nopCommerce not ready yet | Wait 30s, retry |
-| "Login failed for user 'sa'" | SQL Server not healthy | `make status`, check SQL Server logs |
+| "FATAL: database 'nopcommerce' does not exist" | PostgreSQL not healthy or wrong db name | `make status`, check PostgreSQL logs |
 | Installation wizard repeats | Volume was deleted | That's normal — completes once per volume |
-| Red error in wizard | Wrong server name | Use container name (`db-infra-sqlserver`), not `localhost` |
+| Red error in wizard | Wrong server name | Use container name (`db-infra-postgres`), not `localhost` |
 | Build fails with .NET errors | Outdated fork | `make update-nopcommerce` then `make up` |
 
 ```bash
 # Check logs for specific errors
 docker compose logs nopcommerce --tail=50
-docker compose logs sqlserver --tail=20
+docker compose logs postgres --tail=20
 ```
 
 ---
@@ -587,13 +587,13 @@ When you're ready to go live:
 
 | Environment | Database Recommendation |
 |-------------|--------------------------|
-| **Local dev** | SQL Server in Docker (what you have now) |
+| **Local dev** | PostgreSQL in Docker (what you have now) |
 | **Staging** | Same as local, but on a VPS |
-| **Production** | **Managed database** — don't run SQL Server in Docker for production |
+| **Production** | **Managed database** — don't run PostgreSQL in Docker for production |
 
 **Production database options:**
+- **PostgreSQL**: AWS RDS, Azure Database for PostgreSQL, Google Cloud SQL (recommended — same engine as local)
 - **SQL Server**: Azure SQL Database, AWS RDS for SQL Server
-- **PostgreSQL**: AWS RDS, Azure Database for PostgreSQL, Google Cloud SQL
 - **Redis**: AWS ElastiCache, Azure Cache for Redis
 
 Your app only changes the connection string. Nothing else.

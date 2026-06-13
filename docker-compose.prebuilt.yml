@@ -72,7 +72,7 @@ services:
       DistributedCacheConfig__DistributedCacheType: "${REDIS_CACHE_TYPE:-Redis}"
       DistributedCacheConfig__ConnectionString: "${REDIS_CONNECTION_STRING}"
     depends_on:
-      sqlserver:
+      postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
