@@ -557,9 +557,8 @@ make up           # fresh start
 | `postgres_data` | PostgreSQL database files |
 | `sqlserver_data` | SQL Server database files |
 | `redis_data` | Redis RDB snapshots |
-| `nopcommerce_data` | nopCommerce App_Data (plugins, uploads, settings) |
 
-> **Note:** `wwwroot` is **not** mounted as a volume. It contains the built static files (CSS, JS, images) and must come from the Docker image. Mounting it as a volume would overwrite the image contents with an empty directory on first run.
+> **Note:** `App_Data` is **not** mounted as a volume. Mounting it causes a known nopCommerce bug where `ThemeProvider` crashes with `NullReferenceException` before the install wizard can load. The official nopCommerce Docker setup also does not mount `App_Data`.
 
 ---
 
@@ -567,7 +566,7 @@ make up           # fresh start
 
 ### nopCommerce shows "Installation" page after restart
 
-This only happens if the `nopcommerce_data` Docker volume was deleted (e.g., `make clean`). The wizard stores its config in `App_Data/dataSettings.json` inside that volume. If the volume exists, nopCommerce skips the wizard and goes straight to the store.
+This only happens if the container was recreated (e.g., `make clean`). The wizard stores its config in `App_Data/dataSettings.json` inside the container. Since `App_Data` is not mounted as a volume, container recreation wipes the config and shows the wizard again.
 
 To preserve your setup, **never** use `make clean` unless you want a complete reset. Use `make down` instead (stops containers but keeps volumes).
 
@@ -578,6 +577,25 @@ SQL Server is AMD64-only. Docker Desktop with Rosetta 2 handles this automatical
 ```bash
 # Ensure Rosetta 2 is installed
 softwareupdate --install-rosetta --agree-to-license
+```
+
+### `App_Data` volume causes `NullReferenceException`
+
+**Symptom:** Container starts but web requests fail with HTTP 500 and this error:
+```
+System.NullReferenceException at Nop.Services.Themes.ThemeProvider.ThemeExistsAsync
+```
+
+**Cause:** Mounting `nopcommerce_data:/app/App_Data` as a Docker volume overwrites the image's built-in `App_Data` files. The `ThemeProvider` middleware crashes before the install wizard can load.
+
+**Fix:** Remove the `App_Data` volume mount from `docker-compose.yml`. The official nopCommerce Docker setup does not mount `App_Data`.
+
+**For production persistence:** After completing the install wizard, copy `App_Data` out of the container:
+```bash
+docker cp db-infra-nopcommerce:/app/App_Data ./nopcommerce-app-data
+# Then mount the host directory instead:
+# volumes:
+#   - ./nopcommerce-app-data:/app/App_Data
 ```
 
 ### Port already in use

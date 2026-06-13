@@ -78,8 +78,6 @@ services:
     container_name: db-infra-nopcommerce
     ports:
       - "8080:80"
-    volumes:
-      - nopcommerce_data:/app/App_Data
     environment:
       # Redis for distributed caching (optional — remove if not wanted)
       DistributedCacheConfig__Enabled: "true"
@@ -98,6 +96,4 @@ volumes:
   sqlserver_data:
     driver: local
   redis_data:
-    driver: local
-  nopcommerce_data:
     driver: local
