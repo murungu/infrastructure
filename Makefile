@@ -4,7 +4,7 @@
 
 CLUSTER_NAME ?= db-infra
 KUBECTL := kubectl
-KUSTOMIZE := kustomize
+KUSTOMIZE := $(KUBECTL) kustomize
 
 ## Local Cluster (kind)
 cluster-up:
@@ -56,7 +56,7 @@ status:
 
 clean:
 	@echo "Removing all database deployments..."
-	@$(KUBECTL) delete -k databases/postgres/overlays/dev --ignore-not-found=true || true
+	@$(KUBECTL) delete --ignore-not-found=true -k databases/postgres/overlays/dev || true
 	@$(KUBECTL) delete -k databases/sqlserver/overlays/dev --ignore-not-found=true || true
 	@$(KUBECTL) delete -k databases/redis/overlays/dev --ignore-not-found=true || true
 
