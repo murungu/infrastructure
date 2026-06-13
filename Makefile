@@ -6,12 +6,13 @@
 #  CONFIGURATION — change this to your fork URL
 # ════════════════════════════════════════════════════════
 # After forking nopCommerce on GitHub, replace this with your fork:
-#   NOPCOMMERCE_REPO = https://github.com/YOUR_USERNAME/nopCommerce.git
+#   NOPCOMMERCE_REPO = git@github.com:YOUR_USERNAME/nopCommerce.git
 #
-# Default: official repo (read-only). You can still build, but you
-# can't push your own plugins. Fork to customize.
+# SSH is recommended for private forks (uses your SSH keys).
+# For public forks, HTTPS also works:
+#   NOPCOMMERCE_REPO = https://github.com/YOUR_USERNAME/nopCommerce.git
 # ════════════════════════════════════════════════════════
-NOPCOMMERCE_REPO ?= https://github.com/Arity-Solutions/nopCommerce.shop.git
+NOPCOMMERCE_REPO ?= git@github.com:Arity-Solutions/nopCommerce.shop.git
 
 ## Start/Stop (builds from source)
 up:
@@ -154,11 +155,12 @@ clone-nopcommerce:
 	@echo "  Next steps:"
 	@echo "    1. cd nopcommerce-src"
 	@echo "    2. git remote add upstream https://github.com/nopSolutions/nopCommerce.git"
-	@echo "    3. cd .."
-	@echo "    4. make up"
+	@echo "    3. Optional: make the repo private on GitHub (Settings → Visibility)"
+	@echo "    4. cd .."
+	@echo "    5. make up"
 	@echo ""
 	@echo "  To add your own fork URL, edit Makefile:"
-	@echo "    NOPCOMMERCE_REPO = https://github.com/YOUR_USERNAME/nopCommerce.git"
+	@echo "    NOPCOMMERCE_REPO = git@github.com:YOUR_USERNAME/nopCommerce.git"
 	@echo "═══════════════════════════════════════════════════════════════"
 
 ## Pull latest upstream changes into your fork

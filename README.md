@@ -32,15 +32,21 @@ Local PostgreSQL, SQL Server, Redis, and **[nopCommerce](https://www.nopcommerce
 
 1. Go to [github.com/nopSolutions/nopCommerce](https://github.com/nopSolutions/nopCommerce)
 2. Click **Fork** → creates `github.com/YOUR_USERNAME/nopCommerce`
+3. **Make it private** (recommended): Repo Settings → Change visibility → Private
+
+> **Why private?** Your custom plugins and themes are proprietary. Keeping the fork private prevents competitors from seeing your code.
 
 ### Step 2 — Clone Your Fork
 
 ```bash
-# Edit Makefile: replace with YOUR fork URL
-# Change line 10 from:
-#   NOPCOMMERCE_REPO = https://github.com/nopSolutions/nopCommerce.git
-# To:
+# The Makefile already uses SSH by default (best for private repos):
+#   NOPCOMMERCE_REPO = git@github.com:Arity-Solutions/nopCommerce.shop.git
+#
+# If you prefer HTTPS, edit Makefile and change to:
 #   NOPCOMMERCE_REPO = https://github.com/YOUR_USERNAME/nopCommerce.git
+
+# Make sure your SSH key is added to GitHub:
+#   ssh-add ~/.ssh/id_ed25519
 
 # Then clone
 make clone-nopcommerce
@@ -720,6 +726,8 @@ The workflow lives at `nopcommerce-src/.github/workflows/docker-build.yml` (in y
 |--------|-------|
 | `DOCKER_USERNAME` | Your registry username |
 | `DOCKER_PASSWORD` | Your registry password |
+
+> **Note:** Even if your fork is **private**, GitHub Actions works automatically. The built-in `GITHUB_TOKEN` has repo access by default. No extra configuration needed.
 
 **Trigger it:**
 ```bash
