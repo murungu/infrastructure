@@ -20,7 +20,9 @@ Local PostgreSQL, SQL Server, Redis, and **[nopCommerce](https://www.nopcommerce
 8. [Commands](#commands)
 9. [Connecting Your Own Application](#connecting-your-own-application)
 10. [Production Self-Hosting](#production-self-hosting)
-11. [Troubleshooting](#troubleshooting)
+11. [External Database + Registry](#deploying-with-external-database-your-existing-postgresql)
+12. [CI/CD: GitHub Actions](#cicd-github-actions--docker-registry)
+13. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -597,6 +599,94 @@ When you're ready to go live:
 - **Redis**: AWS ElastiCache, Azure Cache for Redis
 
 Your app only changes the connection string. Nothing else.
+
+### Deploying with External Database (Your Existing PostgreSQL)
+
+If you already have a PostgreSQL server (like your production DB at `192.168.0.107`), use `docker-compose.external-db.yml` instead. This only starts **nopCommerce + Redis** — no local PostgreSQL or SQL Server containers.
+
+#### 1. Configure `.env`
+
+```bash
+cp .env.example .env
+# Edit these lines:
+CONNECTION_STRING=Host=192.168.0.107;Port=5432;Database=arity_store_db;Username=postgres;Password=your_password;Pooling=true;Trust Server Certificate=true;
+ASPNETCORE_ENVIRONMENT=Production
+REGISTRY=registry.arity.co.za
+IMAGE_TAG=latest
+```
+
+#### 2. Start with External Database
+
+```bash
+make up-external
+```
+
+Or manually:
+```bash
+docker compose -f docker-compose.external-db.yml up -d
+```
+
+This starts:
+- `db-infra-nopcommerce` — connects to your existing PostgreSQL
+- `db-infra-redis` — local Redis for caching
+
+No local PostgreSQL or SQL Server containers are created.
+
+#### 3. Pull from Registry (Production Server)
+
+On a production server where you don't want to build from source:
+
+```bash
+# Pull the pre-built image from your registry
+docker pull registry.arity.co.za/nopcommerce:latest
+
+# Start with external database
+docker compose -f docker-compose.external-db.yml up -d
+```
+
+---
+
+## CI/CD: GitHub Actions → Docker Registry
+
+Push every commit to your private registry automatically.
+
+### Workflow: `.github/workflows/docker-build.yml`
+
+Already included in this repo. It:
+1. Clones your nopCommerce fork (`Arity-Solutions/nopCommerce.shop`)
+2. Builds the Docker image from `./nopcommerce-src/Dockerfile`
+3. Pushes to `registry.arity.co.za/nopcommerce:latest` and `:sha`
+
+### Required GitHub Secrets
+
+Add these in your GitHub repo → **Settings → Secrets and variables → Actions**:
+
+| Secret | Value |
+|--------|-------|
+| `DOCKER_USERNAME` | Your registry username |
+| `DOCKER_PASSWORD` | Your registry password |
+
+### Manual Trigger
+
+You can also trigger a build manually with a custom tag:
+
+1. Go to **Actions → Build and Push nopCommerce → Run workflow**
+2. Enter a custom tag (e.g., `v1.2.3`) or leave blank for `latest`
+
+### Local Push (Alternative to GitHub Actions)
+
+Build locally and push directly:
+
+```bash
+# 1. Build the image
+make build-image
+
+# 2. Log in to your registry
+docker login registry.arity.co.za
+
+# 3. Tag and push
+make push REGISTRY=registry.arity.co.za IMAGE_TAG=latest
+```
 
 ---
 
