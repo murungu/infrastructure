@@ -562,6 +562,54 @@ make up           # fresh start
 
 ---
 
+## Image Versioning
+
+Tag your nopCommerce image after every successful build so you can rollback instantly if something breaks.
+
+### Tag the current image
+
+```bash
+# After a successful install, save this working state
+make tag IMAGE_TAG=v1.0.0
+```
+
+This creates `infrastructure-nopcommerce:v1.0.0` from the current `latest`.
+
+### List available tags
+
+```bash
+make list-tags
+```
+
+### Rollback to a previous tag
+
+```bash
+# If a new build breaks, revert in seconds
+make rollback IMAGE_TAG=v1.0.0
+```
+
+This:
+1. Stops the current container
+2. Tags `infrastructure-nopcommerce:v1.0.0` back to `latest`
+3. Restarts with the stable image
+
+### Best practice workflow
+
+```bash
+# 1. Tag before any risky change (plugin install, theme update, upstream merge)
+make tag IMAGE_TAG=before-theme-update
+
+# 2. Make your changes, rebuild
+make up
+
+# 3. If it breaks, rollback instantly
+make rollback IMAGE_TAG=before-theme-update
+```
+
+> **Note:** Image tags only snapshot the application code. Your **database data** lives in Docker volumes and survives rollbacks. If you need to wipe the database too, run `make clean` before `make up`.
+
+---
+
 ## Troubleshooting
 
 ### nopCommerce shows "Installation" page after restart

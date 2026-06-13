@@ -1,5 +1,6 @@
 .PHONY: up down status logs psql sqlcmd redis-cli nop-logs \
-        clone-nopcommerce update-nopcommerce use-prebuilt clean help
+        clone-nopcommerce update-nopcommerce use-prebuilt clean help \
+        tag rollback list-tags
 
 # ════════════════════════════════════════════════════════
 #  CONFIGURATION — change this to your fork URL
@@ -32,6 +33,47 @@ up:
 	@echo "  SQL Server:      localhost:1433"
 	@echo "  Redis:           localhost:6379"
 	@echo "═══════════════════════════════════════════════════════════════"
+
+## Tag the current nopCommerce image (for easy rollback)
+## Usage: make tag IMAGE_TAG=v1.0.0
+tag:
+	@if [ -z "$(IMAGE_TAG)" ]; then \
+		echo "❌ Usage: make tag IMAGE_TAG=v1.0.0"; \
+		exit 1; \
+	fi
+	@docker tag infrastructure-nopcommerce:latest infrastructure-nopcommerce:$(IMAGE_TAG)
+	@echo "✅ Tagged: infrastructure-nopcommerce:latest → infrastructure-nopcommerce:$(IMAGE_TAG)"
+	@echo ""
+	@echo "To rollback to this tag later:"
+	@echo "   make rollback IMAGE_TAG=$(IMAGE_TAG)"
+
+## List all tagged nopCommerce images
+list-tags:
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo "  nopCommerce Image Tags"
+	@echo "═══════════════════════════════════════════════════════════════"
+	@docker images | grep "infrastructure-nopcommerce" || echo "No tags found"
+
+## Rollback to a previously tagged image
+## Usage: make rollback IMAGE_TAG=v1.0.0
+rollback:
+	@if [ -z "$(IMAGE_TAG)" ]; then \
+		echo "❌ Usage: make rollback IMAGE_TAG=v1.0.0"; \
+		exit 1; \
+	fi
+	@if ! docker images | grep -q "infrastructure-nopcommerce.*$(IMAGE_TAG)"; then \
+		echo "❌ Image tag '$(IMAGE_TAG)' not found. Run 'make list-tags' to see available tags."; \
+		exit 1; \
+	fi
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo "  Rolling back to tag: $(IMAGE_TAG)"
+	@echo "═══════════════════════════════════════════════════════════════"
+	@docker compose down
+	@docker tag infrastructure-nopcommerce:$(IMAGE_TAG) infrastructure-nopcommerce:latest
+	@docker compose up -d
+	@echo ""
+	@echo "✅ Rolled back to $(IMAGE_TAG). Container restarting..."
+	@echo "   Check status: make status"
 
 ## Quick start with pre-built image (no source needed)
 use-prebuilt:
@@ -144,6 +186,11 @@ help:
 	@echo "  make status              Show running containers"
 	@echo "  make logs                Follow all container logs"
 	@echo "  make nop-logs            Follow nopCommerce logs only"
+	@echo ""
+	@echo "VERSIONING:"
+	@echo "  make tag IMAGE_TAG=v1.0  Tag current image for rollback"
+	@echo "  make rollback IMAGE_TAG=v1.0  Roll back to tagged image"
+	@echo "  make list-tags           Show all tagged images"
 	@echo ""
 	@echo "ALTERNATIVE:"
 	@echo "  make use-prebuilt        Skip source build, use pre-built image"
