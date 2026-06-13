@@ -1,11 +1,17 @@
-.PHONY: up down status logs psql sqlcmd redis-cli clean help
+.PHONY: up down status logs psql sqlcmd redis-cli nop-logs clean help
 
 ## Start/Stop
 up:
 	@docker compose up -d
 	@echo ""
-	@echo "Waiting for databases to be healthy..."
-	@docker compose ps
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo "  All services starting..."
+	@echo ""
+	@echo "  nopCommerce:     http://localhost:8080"
+	@echo "  PostgreSQL:      localhost:5432"
+	@echo "  SQL Server:      localhost:1433"
+	@echo "  Redis:           localhost:6379"
+	@echo "═══════════════════════════════════════════════════════════════"
 
 down:
 	@docker compose down
@@ -17,7 +23,7 @@ clean:
 ## Status
 status:
 	@echo "╔══════════════════════════════════════════════════════════════╗"
-	@echo "║              DATABASE CONTAINERS                             ║"
+	@echo "║              DATABASE & APPLICATION CONTAINERS               ║"
 	@echo "╚══════════════════════════════════════════════════════════════╝"
 	@docker compose ps
 
@@ -34,15 +40,19 @@ sqlcmd:
 redis-cli:
 	@docker exec -it db-infra-redis redis-cli -a DevRedis123!
 
+nop-logs:
+	@docker compose logs -f nopcommerce
+
 ## Help
 help:
-	@echo "Database Infrastructure — Docker Compose"
+	@echo "Database Infrastructure + nopCommerce — Docker Compose"
 	@echo ""
-	@echo "  make up         Start all databases"
-	@echo "  make down       Stop all databases"
-	@echo "  make clean      Stop and remove all data (volumes)"
-	@echo "  make status     Show running containers"
-	@echo "  make logs       Follow container logs"
-	@echo "  make psql       Connect to PostgreSQL interactively"
-	@echo "  make sqlcmd     Connect to SQL Server interactively"
-	@echo "  make redis-cli  Connect to Redis interactively"
+	@echo "  make up           Start all services (databases + nopCommerce)"
+	@echo "  make down         Stop all services"
+	@echo "  make clean        Stop and remove all data (volumes)"
+	@echo "  make status       Show running containers"
+	@echo "  make logs         Follow all container logs"
+	@echo "  make nop-logs     Follow nopCommerce logs only"
+	@echo "  make psql         Connect to PostgreSQL interactively"
+	@echo "  make sqlcmd       Connect to SQL Server interactively"
+	@echo "  make redis-cli    Connect to Redis interactively"
