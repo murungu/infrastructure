@@ -5,12 +5,18 @@
 # ════════════════════════════════════════════════════════
 #  CONFIGURATION — change this to your fork URL
 # ════════════════════════════════════════════════════════
-# After forking nopCommerce on GitHub, replace this with your fork:
-#   NOPCOMMERCE_REPO = git@github.com:YOUR_USERNAME/nopCommerce.git
+# GitHub does NOT allow making a fork private. Two options:
 #
-# SSH is recommended for private forks (uses your SSH keys).
-# For public forks, HTTPS also works:
-#   NOPCOMMERCE_REPO = https://github.com/YOUR_USERNAME/nopCommerce.git
+#   A) Public fork (simple): use the fork as-is
+#      NOPCOMMERCE_REPO = git@github.com:YOUR_USERNAME/nopCommerce.git
+#
+#   B) Private repo (recommended for proprietary plugins):
+#      1. Create a NEW private repo on GitHub
+#      2. Push your current nopcommerce-src content to it
+#      3. Set the URL below to the private repo
+#      4. Upstream pulls still work via 'git remote add upstream'
+#
+# SSH is recommended for private repos.
 # ════════════════════════════════════════════════════════
 NOPCOMMERCE_REPO ?= git@github.com:Arity-Solutions/nopCommerce.shop.git
 

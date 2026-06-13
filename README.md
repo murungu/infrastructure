@@ -13,16 +13,17 @@ Local PostgreSQL, SQL Server, Redis, and **[nopCommerce](https://www.nopcommerce
 1. [Quick Start (Source Build)](#quick-start-source-build)
 2. [Configuration (.env)](#configuration-env)
 3. [Architecture](#architecture)
-4. [The nopCommerce Fork Workflow](#the-nopcommerce-fork-workflow)
-5. [Testing & Verification](#testing--verification)
-6. [Adding Custom Plugins & Themes](#adding-custom-plugins--themes)
-7. [Pulling Upstream Updates](#pulling-upstream-updates)
-8. [Commands](#commands)
-9. [Connecting Your Own Application](#connecting-your-own-application)
-10. [Production Self-Hosting](#production-self-hosting)
-11. [External Database + Registry](#deploying-with-external-database-your-existing-postgresql)
-12. [CI/CD: Two-Repo Build & Deploy](#cicd-two-repo-build--deploy)
-13. [Troubleshooting](#troubleshooting)
+4. [Keeping Your Fork Private](#keeping-your-fork-private)
+5. [The nopCommerce Fork Workflow](#the-nopcommerce-fork-workflow)
+6. [Testing & Verification](#testing--verification)
+7. [Adding Custom Plugins & Themes](#adding-custom-plugins--themes)
+8. [Pulling Upstream Updates](#pulling-upstream-updates)
+9. [Commands](#commands)
+10. [Connecting Your Own Application](#connecting-your-own-application)
+11. [Production Self-Hosting](#production-self-hosting)
+12. [External Database + Registry](#deploying-with-external-database-your-existing-postgresql)
+13. [CI/CD: Two-Repo Build & Deploy](#cicd-two-repo-build--deploy)
+14. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -32,15 +33,14 @@ Local PostgreSQL, SQL Server, Redis, and **[nopCommerce](https://www.nopcommerce
 
 1. Go to [github.com/nopSolutions/nopCommerce](https://github.com/nopSolutions/nopCommerce)
 2. Click **Fork** → creates `github.com/YOUR_USERNAME/nopCommerce`
-3. **Make it private** (recommended): Repo Settings → Change visibility → Private
 
-> **Why private?** Your custom plugins and themes are proprietary. Keeping the fork private prevents competitors from seeing your code.
+> ⚠️ **GitHub does not allow making a fork private.** If your custom plugins/themes are proprietary, see [Private Repo Setup](#keeping-your-fork-private) below.
 
 ### Step 2 — Clone Your Fork
 
 ```bash
-# The Makefile already uses SSH by default (best for private repos):
-#   NOPCOMMERCE_REPO = git@github.com:Arity-Solutions/nopCommerce.shop.git
+# The Makefile uses SSH by default:
+#   NOPCOMMERCE_REPO = git@github.com:YOUR_USERNAME/nopCommerce.git
 #
 # If you prefer HTTPS, edit Makefile and change to:
 #   NOPCOMMERCE_REPO = https://github.com/YOUR_USERNAME/nopCommerce.git
@@ -170,6 +170,64 @@ nopcommerce-src/               ← YOUR FORK (gitignored, not in this repo)
 │ /nopcommerce:latest    │        │   runs container       │
 └────────────────────────┘        └────────────────────────┘
 ```
+
+---
+
+## Keeping Your Fork Private
+
+**GitHub does not allow making a fork private.** The fork stays public because GitHub uses it for network graphs and upstream PRs.
+
+If your custom plugins/themes are proprietary, use a **private repo** instead:
+
+### 1. Create a Private Repo
+
+1. Go to GitHub → **New repository**
+2. Name it `nopCommerce-private` (or anything)
+3. Select **Private**
+4. Do NOT check "Initialize this repository with a README"
+
+### 2. Push Your Current Fork Content
+
+```bash
+cd /Users/murungu/Developer/infrastructure/nopcommerce-src
+
+# Add the private repo as origin
+git remote rm origin
+git remote add origin git@github.com:Arity-Solutions/nopCommerce-private.git
+
+# Push everything
+git push -u origin develop
+```
+
+### 3. Update the Infrastructure Makefile
+
+```bash
+cd /Users/murungu/Developer/infrastructure
+# Edit Makefile, change:
+#   NOPCOMMERCE_REPO = git@github.com:Arity-Solutions/nopCommerce.shop.git
+# To:
+#   NOPCOMMERCE_REPO = git@github.com:Arity-Solutions/nopCommerce-private.git
+```
+
+### 4. Upstream Pulls Still Work
+
+The "fork" badge is gone, but `git fetch upstream` works identically:
+
+```bash
+cd nopcommerce-src
+git remote add upstream https://github.com/nopSolutions/nopCommerce.git
+git fetch upstream
+git merge upstream/develop
+```
+
+### 5. Trade-offs
+
+| | Public Fork | Private Repo |
+|--|-------------|--------------|
+| **Visibility** | Anyone can see your plugins | Only your team |
+| **Fork UI** | GitHub shows "forked from" | No |
+| **Upstream pulls** | Built-in button | `git fetch upstream` (same) |
+| **CI/CD** | Works automatically | Works automatically |
 
 ---
 
