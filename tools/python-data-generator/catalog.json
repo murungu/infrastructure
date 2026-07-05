@@ -1,0 +1,493 @@
+{
+  "stores": [
+    {
+      "id": 1,
+      "name": "Arity Electra",
+      "url": "http://store1.localhost:8080/",
+      "hosts": "store1.localhost",
+      "theme": "Electrical & Solar hardware"
+    },
+    {
+      "id": 2,
+      "name": "Victoria Falls Artisan Market",
+      "url": "http://store2.localhost:8080/",
+      "hosts": "store2.localhost",
+      "theme": "Hand-crafted goods from local artisans"
+    }
+  ],
+  "manufacturers": [
+    { "id": 101, "name": "SunPower Africa", "storeIds": [1], "description": "Leading solar panel manufacturer across Southern Africa." },
+    { "id": 102, "name": "Victron Energy", "storeIds": [1], "description": "Premium inverters and battery management systems." },
+    { "id": 103, "name": "Philips Lighting", "storeIds": [1], "description": "Global leader in LED and smart lighting solutions." },
+    { "id": 104, "name": "Arity Electric", "storeIds": [1], "description": "Local supplier of quality electrical components and cables." },
+    { "id": 201, "name": "Victoria Crafts Collective", "storeIds": [2], "description": "A cooperative of artisans based near the mighty Victoria Falls." },
+    { "id": 202, "name": "Zambezi Artisans", "storeIds": [2], "description": "Traditional crafts inspired by the river and the spray." },
+    { "id": 203, "name": "Local Hands Co-op", "storeIds": [2], "description": "Community-run workshop supporting rural craft makers." }
+  ],
+  "categories": [
+    { "id": 11, "name": "Solar Panels", "parentId": 0, "storeIds": [1], "description": "Monocrystalline and polycrystalline panels for home and commercial use." },
+    { "id": 12, "name": "Batteries & Storage", "parentId": 0, "storeIds": [1], "description": "Lithium-ion and gel batteries for off-grid and backup systems." },
+    { "id": 13, "name": "Inverters & Controllers", "parentId": 0, "storeIds": [1], "description": "MPPT charge controllers and pure-sine wave inverters." },
+    { "id": 14, "name": "LED Lighting", "parentId": 0, "storeIds": [1], "description": "Energy-efficient indoor, outdoor and security lighting." },
+    { "id": 15, "name": "Cables & Connectors", "parentId": 0, "storeIds": [1], "description": "Solar cable, MC4 connectors, trunking and conduit." },
+    { "id": 16, "name": "Smart Home", "parentId": 0, "storeIds": [1], "description": "Wi-Fi switches, smart plugs and energy monitors." },
+    { "id": 21, "name": "Hand-carved Wood", "parentId": 0, "storeIds": [2], "description": "Bowls, utensils, animals and decorative pieces carved from local hardwoods." },
+    { "id": 22, "name": "Beaded Jewelry", "parentId": 0, "storeIds": [2], "description": "Necklaces, bracelets and earrings in traditional Zulu and Ndebele patterns." },
+    { "id": 23, "name": "Woven Baskets", "parentId": 0, "storeIds": [2], "description": "Ilala palm and grass baskets in every size and colour." },
+    { "id": 24, "name": "Leather Goods", "parentId": 0, "storeIds": [2], "description": "Wallets, belts, bags and sandals hand-stitched from locally sourced leather." },
+    { "id": 25, "name": "Stone Carvings", "parentId": 0, "storeIds": [2], "description": "Soapstone and serpentine sculptures of animals, people and abstract forms." },
+    { "id": 26, "name": "Painted Fabrics", "parentId": 0, "storeIds": [2], "description": "Wall hangings, table runners and clothing hand-painted with natural dyes." }
+  ],
+  "products": [
+    {
+      "sku": "SOL-300W-001", "name": "SunPower 300W Monocrystalline Panel", "price": 189.99, "oldPrice": 229.99,
+      "categoryIds": [11], "manufacturerId": 101, "storeIds": [1],
+      "shortDescription": "High-efficiency 300W panel with 21% conversion rate.",
+      "fullDescription": "Built for African conditions, this panel features tempered glass, anodized aluminium frame and bypass diodes to minimise shade loss. Ideal for residential rooftops and small commercial installations.",
+      "weight": 18.5, "length": 1640, "width": 992, "height": 35,
+      "stockQuantity": 85, "minStockQuantity": 10, "displayOrder": 1,
+      "imagePrompt": "Professional studio photo of a black monocrystalline solar panel standing upright on white seamless background, soft-box lighting, e-commerce product photography, sharp focus, 4k"
+    },
+    {
+      "sku": "SOL-450W-002", "name": "SunPower 450W Bifacial Panel", "price": 289.99, "oldPrice": 349.99,
+      "categoryIds": [11], "manufacturerId": 101, "storeIds": [1],
+      "shortDescription": "Double-sided bifacial panel capturing reflected light.",
+      "fullDescription": "With transparent back-sheet technology, this 450W panel harvests energy from both sides. Perfect for ground-mount arrays and elevated carports where reflected light is abundant.",
+      "weight": 22.0, "length": 2094, "width": 1038, "height": 35,
+      "stockQuantity": 42, "minStockQuantity": 8, "displayOrder": 2,
+      "imagePrompt": "Professional studio photo of a large bifacial solar panel viewed from an angle showing glass front and transparent back, white background, e-commerce style, crisp detail"
+    },
+    {
+      "sku": "SOL-200W-003", "name": "Portable 200W Folding Solar Kit", "price": 149.50, "oldPrice": 0,
+      "categoryIds": [11], "manufacturerId": 101, "storeIds": [1],
+      "shortDescription": "Foldable panel kit for camping and remote power needs.",
+      "fullDescription": "This lightweight folding kit includes a built-in kickstand, carry case and MC4 cables. Charge your batteries anywhere the sun shines – perfect for camping trips and remote monitoring stations.",
+      "weight": 6.2, "length": 580, "width": 420, "height": 45,
+      "stockQuantity": 120, "minStockQuantity": 15, "displayOrder": 3,
+      "imagePrompt": "Professional product photo of a folded portable solar panel kit in a black carry case, white seamless background, soft lighting, e-commerce catalog"
+    },
+    {
+      "sku": "SOL-100W-004", "name": "100W Flexible Solar Panel", "price": 89.99, "oldPrice": 109.99,
+      "categoryIds": [11], "manufacturerId": 101, "storeIds": [1],
+      "shortDescription": "Thin, bendable panel for boats and curved surfaces.",
+      "fullDescription": "At just 2 mm thick, this ETFE-coated panel can be bonded to curved roofs, boat decks and vehicle canopies. Generates reliable 100W in full sun while weighing only 1.8 kg.",
+      "weight": 1.8, "length": 1050, "width": 540, "height": 2,
+      "stockQuantity": 200, "minStockQuantity": 20, "displayOrder": 4,
+      "imagePrompt": "Professional studio photo of a thin black flexible solar panel gently curved, white background, soft even lighting, e-commerce product shot"
+    },
+    {
+      "sku": "BAT-LI-100AH-005", "name": "Victron 100Ah LiFePO4 Battery", "price": 349.00, "oldPrice": 399.00,
+      "categoryIds": [12], "manufacturerId": 102, "storeIds": [1],
+      "shortDescription": "Deep-cycle lithium battery with built-in BMS.",
+      "fullDescription": "This 100Ah LiFePO4 battery delivers over 2,500 cycles at 80% depth of discharge. The integrated Battery Management System protects against overcharge, under-voltage and thermal runaway.",
+      "weight": 12.5, "length": 330, "width": 172, "height": 220,
+      "stockQuantity": 60, "minStockQuantity": 10, "displayOrder": 1,
+      "imagePrompt": "Professional studio photo of a grey rectangular lithium battery with blue Victron label, white background, soft-box lighting, e-commerce product photography"
+    },
+    {
+      "sku": "BAT-GEL-150AH-006", "name": "Victron 150Ah Gel Deep-Cycle Battery", "price": 275.00, "oldPrice": 0,
+      "categoryIds": [12], "manufacturerId": 102, "storeIds": [1],
+      "shortDescription": "Maintenance-free gel battery for backup power.",
+      "fullDescription": "Designed for standby and cyclic applications, this 150Ah gel battery offers excellent performance in high temperatures. Completely sealed and safe for indoor installation.",
+      "weight": 42.0, "length": 483, "width": 170, "height": 240,
+      "stockQuantity": 38, "minStockQuantity": 6, "displayOrder": 2,
+      "imagePrompt": "Professional product photo of a large black deep-cycle battery with terminal posts, white background, soft lighting, e-commerce catalog style"
+    },
+    {
+      "sku": "BAT-RACK-5KW-007", "name": "5kW Modular Battery Rack", "price": 1899.00, "oldPrice": 2199.00,
+      "categoryIds": [12], "manufacturerId": 102, "storeIds": [1],
+      "shortDescription": "Stackable lithium modules for whole-home storage.",
+      "fullDescription": "Start with 5 kWh and expand to 20 kWh by stacking up to four modules. Each module slides into a wall-mounted rack with integrated cooling fan and LCD status display.",
+      "weight": 58.0, "length": 600, "width": 180, "height": 850,
+      "stockQuantity": 15, "minStockQuantity": 3, "displayOrder": 3,
+      "imagePrompt": "Professional studio photo of a sleek white battery storage rack with LCD display, standing upright, white background, modern product photography, e-commerce style"
+    },
+    {
+      "sku": "BAT-PORT-300WH-008", "name": "300Wh Portable Power Station", "price": 129.99, "oldPrice": 159.99,
+      "categoryIds": [12], "manufacturerId": 102, "storeIds": [1],
+      "shortDescription": "Compact power station with USB-C PD and AC outlet.",
+      "fullDescription": "Take 300Wh of energy anywhere. Powers laptops, phones, LED lights and small fans. Recharges from solar, car socket or wall plug in under 4 hours.",
+      "weight": 3.4, "length": 210, "width": 130, "height": 180,
+      "stockQuantity": 95, "minStockQuantity": 12, "displayOrder": 4,
+      "imagePrompt": "Professional product photo of a compact black portable power station with USB ports and AC socket visible, white background, soft lighting, e-commerce catalog"
+    },
+    {
+      "sku": "INV-3KW-009", "name": "3kW Pure Sine Wave Inverter", "price": 459.00, "oldPrice": 529.00,
+      "categoryIds": [13], "manufacturerId": 102, "storeIds": [1],
+      "shortDescription": "Reliable inverter for home solar systems.",
+      "fullDescription": "Converts 24V DC battery power to clean 230V AC output. Features overload protection, temperature-controlled fan and LCD remote monitoring panel. Safe for sensitive electronics.",
+      "weight": 8.9, "length": 420, "width": 220, "height": 110,
+      "stockQuantity": 55, "minStockQuantity": 8, "displayOrder": 1,
+      "imagePrompt": "Professional studio photo of a heavy-duty silver inverter with ventilation grilles and LCD display, white background, soft-box lighting, e-commerce product shot"
+    },
+    {
+      "sku": "INV-5KW-HYBRID-010", "name": "5kW Hybrid Solar Inverter", "price": 899.00, "oldPrice": 0,
+      "categoryIds": [13], "manufacturerId": 102, "storeIds": [1],
+      "shortDescription": "Grid-tie and off-grid hybrid inverter with MPPT.",
+      "fullDescription": "This intelligent inverter blends solar, battery and grid power seamlessly. Two MPPT inputs maximise array output while the built-in Wi-Fi dongle sends real-time data to your phone.",
+      "weight": 14.2, "length": 480, "width": 360, "height": 160,
+      "stockQuantity": 28, "minStockQuantity": 5, "displayOrder": 2,
+      "imagePrompt": "Professional product photo of a modern black hybrid inverter with blue LED display and Wi-Fi indicator, white background, soft lighting, e-commerce catalog"
+    },
+    {
+      "sku": "INV-MPPT-60A-011", "name": "60A MPPT Solar Charge Controller", "price": 179.00, "oldPrice": 209.00,
+      "categoryIds": [13], "manufacturerId": 102, "storeIds": [1],
+      "shortDescription": "Maximum Power Point Tracking for 12/24/48V systems.",
+      "fullDescription": "Extract up to 30% more energy from your panels with this 60A MPPT controller. Large backlit LCD shows volts, amps and daily yield. RS-485 port enables remote monitoring.",
+      "weight": 1.5, "length": 220, "width": 150, "height": 55,
+      "stockQuantity": 72, "minStockQuantity": 10, "displayOrder": 3,
+      "imagePrompt": "Professional studio photo of a small rectangular MPPT charge controller with LCD screen and aluminium heatsink, white background, e-commerce product photography"
+    },
+    {
+      "sku": "LED-BULB-12W-012", "name": "Philips 12W Warm White LED Bulb", "price": 4.99, "oldPrice": 6.49,
+      "categoryIds": [14], "manufacturerId": 103, "storeIds": [1],
+      "shortDescription": "A60 bulb, 1055 lumens, 2700K, E27 base.",
+      "fullDescription": "Replace your old 75W incandescent with this 12W LED and save up to 85% on lighting bills. Instant-on, flicker-free and rated for 15,000 hours of warm white comfort.",
+      "weight": 0.08, "length": 110, "width": 60, "height": 60,
+      "stockQuantity": 500, "minStockQuantity": 50, "displayOrder": 1,
+      "imagePrompt": "Professional product photo of a single frosted LED light bulb glowing warm white, white seamless background, soft lighting, e-commerce catalog"
+    },
+    {
+      "sku": "LED-STRIP-5M-013", "name": "5m RGB LED Strip Kit with Remote", "price": 24.99, "oldPrice": 29.99,
+      "categoryIds": [14], "manufacturerId": 103, "storeIds": [1],
+      "shortDescription": "Colour-changing strip with adhesive backing and IR remote.",
+      "fullDescription": "Transform any room with 5 metres of vibrant RGB LEDs. Includes 44-key remote, power adapter and mounting clips. Cuttable every 3 LEDs for custom lengths.",
+      "weight": 0.35, "length": 5000, "width": 10, "height": 2,
+      "stockQuantity": 180, "minStockQuantity": 25, "displayOrder": 2,
+      "imagePrompt": "Professional product photo of a coiled RGB LED strip light with remote control and power adapter, white background, soft lighting, e-commerce style"
+    },
+    {
+      "sku": "LED-FLOOD-50W-014", "name": "50W LED Floodlight with PIR Sensor", "price": 34.50, "oldPrice": 0,
+      "categoryIds": [14], "manufacturerId": 103, "storeIds": [1],
+      "shortDescription": "Daylight white floodlight with adjustable motion sensor.",
+      "fullDescription": "Illuminate driveways, workshops and yards with this robust aluminium floodlight. The integrated PIR sensor detects movement up to 12 metres and switches the light on automatically.",
+      "weight": 1.2, "length": 185, "width": 155, "height": 45,
+      "stockQuantity": 110, "minStockQuantity": 15, "displayOrder": 3,
+      "imagePrompt": "Professional studio photo of a black rectangular LED floodlight with motion sensor bracket, white background, soft-box lighting, e-commerce product shot"
+    },
+    {
+      "sku": "LED-DOWN-9W-015", "name": "9W Recessed LED Downlight", "price": 7.99, "oldPrice": 9.99,
+      "categoryIds": [14], "manufacturerId": 103, "storeIds": [1],
+      "shortDescription": "Slim-profile ceiling downlight, 90mm cut-out.",
+      "fullDescription": "This slim recessed downlight fits into standard 90 mm ceiling holes. The die-cast aluminium body dissipates heat efficiently for a 25,000-hour lifespan. Dimmable driver included.",
+      "weight": 0.18, "length": 90, "width": 90, "height": 35,
+      "stockQuantity": 300, "minStockQuantity": 40, "displayOrder": 4,
+      "imagePrompt": "Professional product photo of a round white recessed ceiling LED downlight viewed at slight angle, white background, soft lighting, e-commerce catalog"
+    },
+    {
+      "sku": "CAB-MC4-PAIR-016", "name": "MC4 Solar Connector Pair", "price": 3.49, "oldPrice": 0,
+      "categoryIds": [15], "manufacturerId": 104, "storeIds": [1],
+      "shortDescription": "Male and female MC4 connectors for 4-6mm² cable.",
+      "fullDescription": "These weatherproof MC4 connectors ensure reliable panel-to-panel and panel-to-controller connections. Rated IP67 and designed for field assembly without crimping tools.",
+      "weight": 0.04, "length": 55, "width": 22, "height": 22,
+      "stockQuantity": 800, "minStockQuantity": 100, "displayOrder": 1,
+      "imagePrompt": "Professional studio photo of two black MC4 solar cable connectors male and female, white background, macro product photography, sharp detail, e-commerce style"
+    },
+    {
+      "sku": "CAB-TRUNK-25M-017", "name": "25m Solar Cable 4mm² Twin Core", "price": 28.00, "oldPrice": 34.00,
+      "categoryIds": [15], "manufacturerId": 104, "storeIds": [1],
+      "shortDescription": "Double-insulated solar DC cable on a handy drum.",
+      "fullDescription": "TUV-certified 4mm² twin-core cable with UV-resistant XLPE insulation. The compact drum makes it easy to pull exact lengths without tangles. Rated for 600V DC and 90°C operation.",
+      "weight": 3.8, "length": 25000, "width": 6, "height": 6,
+      "stockQuantity": 65, "minStockQuantity": 10, "displayOrder": 2,
+      "imagePrompt": "Professional product photo of a wooden cable drum with black twin-core solar cable wound neatly, white background, soft lighting, e-commerce catalog"
+    },
+    {
+      "sku": "CAB-CON-018", "name": "Weatherproof Junction Box IP65", "price": 12.99, "oldPrice": 15.99,
+      "categoryIds": [15], "manufacturerId": 104, "storeIds": [1],
+      "shortDescription": "Outdoor cable junction box with cable glands.",
+      "fullDescription": "Protect your outdoor connections with this IP65-rated ABS enclosure. Includes four M20 cable glands, DIN rail mounting clips and a transparent lid for visual inspection.",
+      "weight": 0.45, "length": 150, "width": 110, "height": 70,
+      "stockQuantity": 140, "minStockQuantity": 20, "displayOrder": 3,
+      "imagePrompt": "Professional studio photo of a grey ABS plastic junction box with transparent lid and cable glands, white background, soft-box lighting, e-commerce product shot"
+    },
+    {
+      "sku": "SMART-PLUG-WIFI-019", "name": "Wi-Fi Smart Plug with Energy Monitor", "price": 14.99, "oldPrice": 19.99,
+      "categoryIds": [16], "manufacturerId": 104, "storeIds": [1],
+      "shortDescription": "Control appliances from your phone and track consumption.",
+      "fullDescription": "This compact smart plug works with Alexa and Google Assistant. Set timers, monitor real-time wattage and get alerts when devices are left on. No hub required.",
+      "weight": 0.09, "length": 65, "width": 45, "height": 35,
+      "stockQuantity": 250, "minStockQuantity": 30, "displayOrder": 1,
+      "imagePrompt": "Professional product photo of a white compact Wi-Fi smart plug with LED ring, white background, soft lighting, e-commerce product photography"
+    },
+    {
+      "sku": "SMART-SWITCH-020", "name": "Touch Glass Smart Light Switch", "price": 22.50, "oldPrice": 0,
+      "categoryIds": [16], "manufacturerId": 104, "storeIds": [1],
+      "shortDescription": "Tempered glass touch panel with dimmer and timer.",
+      "fullDescription": "Replace any standard wall switch with this elegant tempered glass panel. Capacitive touch controls, built-in dimmer and programmable scenes via the free companion app. Fits standard 86 mm back boxes.",
+      "weight": 0.15, "length": 86, "width": 86, "height": 36,
+      "stockQuantity": 175, "minStockQuantity": 20, "displayOrder": 2,
+      "imagePrompt": "Professional studio photo of a sleek black tempered glass touch light switch mounted on a wall plate, white background, soft lighting, e-commerce catalog style"
+    },
+    {
+      "sku": "WOOD-BOWL-001", "name": "Hand-carved Mopane Bowl", "price": 18.00, "oldPrice": 0,
+      "categoryIds": [21], "manufacturerId": 201, "storeIds": [2],
+      "shortDescription": "Small serving bowl carved from sustainably sourced mopane wood.",
+      "fullDescription": "Each bowl is hand-turned on a traditional lathe and finished with beeswax and linseed oil. The rich red-brown grain of mopane makes every piece unique. Food-safe and perfect for salads or trinkets.",
+      "weight": 0.35, "length": 180, "width": 180, "height": 70,
+      "stockQuantity": 40, "minStockQuantity": 5, "displayOrder": 1,
+      "imagePrompt": "Professional product photo of a beautiful hand-carved wooden bowl with rich grain patterns, white seamless background, soft natural lighting, artisan craft e-commerce photography"
+    },
+    {
+      "sku": "WOOD-SPOON-002", "name": "Set of 3 Olive Wood Spoons", "price": 12.50, "oldPrice": 15.00,
+      "categoryIds": [21], "manufacturerId": 201, "storeIds": [2],
+      "shortDescription": "Long-handled cooking spoons with smooth natural finish.",
+      "fullDescription": "Crafted from fallen olive branches, these spoons are sanded silky-smooth and oiled to bring out the beautiful grain. The set includes a stirring spoon, slotted spoon and tasting spoon.",
+      "weight": 0.18, "length": 280, "width": 55, "height": 15,
+      "stockQuantity": 65, "minStockQuantity": 8, "displayOrder": 2,
+      "imagePrompt": "Professional product photo of three hand-carved olive wood spoons arranged overlapping on white background, soft natural lighting, artisan craft e-commerce photography"
+    },
+    {
+      "sku": "WOOD-ANIMAL-003", "name": "Carved Wooden Warthog", "price": 24.00, "oldPrice": 0,
+      "categoryIds": [21], "manufacturerId": 201, "storeIds": [2],
+      "shortDescription": "Whimsical warthog sculpture carved from jacaranda wood.",
+      "fullDescription": "Local carvers bring personality to every warthog with exaggerated tusks and a comical stance. Jacaranda wood is lightweight yet durable, making this an ideal shelf ornament or gift.",
+      "weight": 0.42, "length": 160, "width": 70, "height": 95,
+      "stockQuantity": 30, "minStockQuantity": 4, "displayOrder": 3,
+      "imagePrompt": "Professional product photo of a hand-carved wooden warthog sculpture with detailed tusks, white seamless background, soft natural lighting, artisan craft e-commerce photography"
+    },
+    {
+      "sku": "WOOD-HEART-004", "name": "Interlocking Wooden Heart Puzzle", "price": 9.00, "oldPrice": 0,
+      "categoryIds": [21], "manufacturerId": 201, "storeIds": [2],
+      "shortDescription": "Two-piece interlocking heart carved from a single block.",
+      "fullDescription": "A classic test of patience and love – two hearts carved from one solid piece of teak that slide together perfectly. Each set comes in a handmade drawstring pouch with a tag explaining the symbolism.",
+      "weight": 0.12, "length": 90, "width": 80, "height": 25,
+      "stockQuantity": 55, "minStockQuantity": 7, "displayOrder": 4,
+      "imagePrompt": "Professional product photo of two interlocking carved wooden heart puzzle pieces on white background, soft natural lighting, artisan craft e-commerce photography"
+    },
+    {
+      "sku": "WOOD-BOARD-005", "name": "Live-edge Acacia Chopping Board", "price": 32.00, "oldPrice": 38.00,
+      "categoryIds": [21], "manufacturerId": 201, "storeIds": [2],
+      "shortDescription": "Thick chopping board with natural live edge and handle.",
+      "fullDescription": "Cut, chop and serve on this stunning slab of acacia. The natural live edge is preserved and sealed, while the flat face is sanded smooth and finished with food-grade mineral oil. Includes a leather hanging strap.",
+      "weight": 1.2, "length": 380, "width": 220, "height": 25,
+      "stockQuantity": 22, "minStockQuantity": 3, "displayOrder": 5,
+      "imagePrompt": "Professional product photo of a thick rustic wooden chopping board with natural live bark edge and leather strap, white background, soft natural lighting, artisan craft e-commerce photography"
+    },
+    {
+      "sku": "BEAD-NECK-001", "name": "Zulu Beaded Necklace – Sunrise", "price": 28.00, "oldPrice": 0,
+      "categoryIds": [22], "manufacturerId": 202, "storeIds": [2],
+      "shortDescription": "Vibrant collar necklace in sunrise orange and gold.",
+      "fullDescription": "Hand-strung by Zulu artisans using tiny Czech glass seed beads. The geometric sunrise pattern symbolises new beginnings. Finished with a traditional barrel clasp. Each necklace takes two days to complete.",
+      "weight": 0.08, "length": 220, "width": 180, "height": 10,
+      "stockQuantity": 18, "minStockQuantity": 3, "displayOrder": 1,
+      "imagePrompt": "Professional product photo of a vibrant colourful beaded Zulu necklace with geometric patterns, laid flat on white background, soft natural lighting, artisan jewelry e-commerce photography"
+    },
+    {
+      "sku": "BEAD-BRAC-002", "name": "Ndebele Pattern Bracelet", "price": 14.00, "oldPrice": 0,
+      "categoryIds": [22], "manufacturerId": 202, "storeIds": [2],
+      "shortDescription": "Wide cuff bracelet with bold black, white and red triangles.",
+      "fullDescription": "Inspired by the traditional house-painting motifs of the Ndebele people, this bracelet is woven on a loom and backed with soft leather for comfort. The elastic cord ensures a snug fit on most wrists.",
+      "weight": 0.05, "length": 180, "width": 45, "height": 8,
+      "stockQuantity": 35, "minStockQuantity": 5, "displayOrder": 2,
+      "imagePrompt": "Professional product photo of a bold geometric beaded cuff bracelet in black white and red, laid flat on white background, soft lighting, artisan jewelry e-commerce photography"
+    },
+    {
+      "sku": "BEAD-EARR-003", "name": "Maasai-inspired Bead Earrings", "price": 10.00, "oldPrice": 0,
+      "categoryIds": [22], "manufacturerId": 202, "storeIds": [2],
+      "shortDescription": "Long drop earrings with red, blue and green beads.",
+      "fullDescription": "These lightweight drop earrings swing gently with every step. Handmade by a women's cooperative, each pair supports fair wages and community education programmes in rural Zimbabwe.",
+      "weight": 0.02, "length": 80, "width": 15, "height": 8,
+      "stockQuantity": 48, "minStockQuantity": 6, "displayOrder": 3,
+      "imagePrompt": "Professional product photo of long colourful beaded drop earrings hanging against white background, soft lighting, artisan jewelry e-commerce photography"
+    },
+    {
+      "sku": "BEAD-ANKL-004", "name": "Seed-bead Anklet with Cowrie Shells", "price": 8.50, "oldPrice": 0,
+      "categoryIds": [22], "manufacturerId": 202, "storeIds": [2],
+      "shortDescription": "Adjustable anklet with tiny cowrie shells and brass beads.",
+      "fullDescription": "Cowrie shells have been used as currency and adornment across Africa for millennia. This delicate anklet combines them with gold-plated brass beads on a durable nylon cord with sliding knot.",
+      "weight": 0.03, "length": 250, "width": 8, "height": 5,
+      "stockQuantity": 60, "minStockQuantity": 8, "displayOrder": 4,
+      "imagePrompt": "Professional product photo of a delicate beaded anklet with small white cowrie shells and gold beads, coiled on white background, soft lighting, artisan jewelry e-commerce photography"
+    },
+    {
+      "sku": "BEAD-RING-005", "name": "Wire-wrapped Bead Ring", "price": 6.00, "oldPrice": 0,
+      "categoryIds": [22], "manufacturerId": 202, "storeIds": [2],
+      "shortDescription": "Adjustable copper wire ring with glass bead centre.",
+      "fullDescription": "Simple, elegant and affordable. The copper wire is hammered and shaped by hand, then wrapped around a colourful glass bead. The open-back design fits most finger sizes.",
+      "weight": 0.015, "length": 20, "width": 20, "height": 8,
+      "stockQuantity": 80, "minStockQuantity": 10, "displayOrder": 5,
+      "imagePrompt": "Professional product photo of a handmade copper wire ring with a blue glass bead, standing upright on white background, macro detail, soft lighting, artisan jewelry e-commerce photography"
+    },
+    {
+      "sku": "BASK-LARGE-001", "name": "Large Ilala Palm Laundry Basket", "price": 35.00, "oldPrice": 42.00,
+      "categoryIds": [23], "manufacturerId": 203, "storeIds": [2],
+      "shortDescription": "Generous woven basket with fitted lid, natural and brown.",
+      "fullDescription": "Woven from sustainably harvested ilala palm in the classic 'ukhamba' shape. The fitted lid keeps laundry or toys neatly hidden. Sturdy enough to double as a side table when flipped over.",
+      "weight": 1.4, "length": 400, "width": 400, "height": 500,
+      "stockQuantity": 25, "minStockQuantity": 4, "displayOrder": 1,
+      "imagePrompt": "Professional product photo of a large round woven basket with fitted lid in natural and brown stripes, white background, soft natural lighting, artisan craft e-commerce photography"
+    },
+    {
+      "sku": "BASK-FLAT-002", "name": "Flat Woven Placemat Set of 4", "price": 22.00, "oldPrice": 0,
+      "categoryIds": [23], "manufacturerId": 203, "storeIds": [2],
+      "shortDescription": "Round grass placemats in earth tones.",
+      "fullDescription": "These flat-weave placemats add warmth to any dining table. Each set includes four mats in complementary earth tones – ochre, sage, sand and rust. Woven from river grass and finished with a simple whipstitch edge.",
+      "weight": 0.4, "length": 350, "width": 350, "height": 5,
+      "stockQuantity": 32, "minStockQuantity": 5, "displayOrder": 2,
+      "imagePrompt": "Professional product photo of four round woven grass placemats in earth tones stacked slightly overlapping, white background, soft natural lighting, artisan craft e-commerce photography"
+    },
+    {
+      "sku": "BASK-TRAY-003", "name": "Oval Serving Tray with Handles", "price": 16.00, "oldPrice": 0,
+      "categoryIds": [23], "manufacturerId": 203, "storeIds": [2],
+      "shortDescription": "Sturdy woven tray for bread, fruit or display.",
+      "fullDescription": "This oval tray is woven around a wire frame for extra rigidity. The wrapped handles make it easy to carry from kitchen to table. Finished with a light coat of clear varnish for wipe-clean care.",
+      "weight": 0.55, "length": 380, "width": 260, "height": 60,
+      "stockQuantity": 28, "minStockQuantity": 4, "displayOrder": 3,
+      "imagePrompt": "Professional product photo of an oval woven serving tray with two handles, white background, soft natural lighting, artisan craft e-commerce photography"
+    },
+    {
+      "sku": "BASK-CLUTCH-004", "name": "Clutch Purse Woven from Phone Wire", "price": 19.00, "oldPrice": 0,
+      "categoryIds": [23], "manufacturerId": 203, "storeIds": [2],
+      "shortDescription": "Colourful geometric phone-wire clutch with zip closure.",
+      "fullDescription": "A modern twist on a traditional craft – telephone wire is coiled and woven into vibrant geometric patterns. The clutch is fully lined with cotton and closes with a sturdy YKK zip.",
+      "weight": 0.2, "length": 250, "width": 150, "height": 30,
+      "stockQuantity": 38, "minStockQuantity": 5, "displayOrder": 4,
+      "imagePrompt": "Professional product photo of a colourful woven clutch purse with geometric phone wire pattern and zip, white background, soft lighting, artisan craft e-commerce photography"
+    },
+    {
+      "sku": "BASK-TOY-005", "name": "Miniature Woven Animal Set", "price": 8.00, "oldPrice": 0,
+      "categoryIds": [23], "manufacturerId": 203, "storeIds": [2],
+      "shortDescription": "Set of 3 tiny woven animals – elephant, giraffe and hippo.",
+      "fullDescription": "These adorable miniature animals are woven from dyed palm fibre around a wire armature. Each set is slightly different, reflecting the individual style of the weaver. Popular with children and collectors alike.",
+      "weight": 0.06, "length": 80, "width": 40, "height": 60,
+      "stockQuantity": 50, "minStockQuantity": 7, "displayOrder": 5,
+      "imagePrompt": "Professional product photo of three tiny woven palm fibre animals elephant giraffe hippo arranged in a row, white background, soft natural lighting, artisan craft e-commerce photography"
+    },
+    {
+      "sku": "LEATH-WALL-001", "name": "Hand-stitched Leather Wallet", "price": 22.00, "oldPrice": 0,
+      "categoryIds": [24], "manufacturerId": 201, "storeIds": [2],
+      "shortDescription": "Bifold wallet with coin pocket and 6 card slots.",
+      "fullDescription": "Cut from full-grain cowhide and hand-stitched with waxed nylon thread. The interior is lined with traditional Shweshwe cotton fabric. Ages beautifully, developing a rich patina over time.",
+      "weight": 0.09, "length": 110, "width": 90, "height": 20,
+      "stockQuantity": 45, "minStockQuantity": 6, "displayOrder": 1,
+      "imagePrompt": "Professional product photo of a hand-stitched brown leather bifold wallet slightly open showing card slots, white background, soft lighting, artisan leather goods e-commerce photography"
+    },
+    {
+      "sku": "LEATH-BELT-002", "name": "Brass-buckle Leather Belt", "price": 18.00, "oldPrice": 0,
+      "categoryIds": [24], "manufacturerId": 201, "storeIds": [2],
+      "shortDescription": "3.5cm wide belt in rich tan leather.",
+      "fullDescription": "A classic belt that gets better with age. The solid brass buckle is cast locally and the leather is vegetable-tanned for durability. Available in waist sizes 80 cm to 110 cm.",
+      "weight": 0.25, "length": 1100, "width": 35, "height": 4,
+      "stockQuantity": 30, "minStockQuantity": 4, "displayOrder": 2,
+      "imagePrompt": "Professional product photo of a coiled tan leather belt with solid brass buckle, white background, soft lighting, artisan leather goods e-commerce photography"
+    },
+    {
+      "sku": "LEATH-TOTE-003", "name": "Leather Tote Bag with Beaded Strap", "price": 45.00, "oldPrice": 55.00,
+      "categoryIds": [24], "manufacturerId": 201, "storeIds": [2],
+      "shortDescription": "Generous tote with hand-beaded shoulder strap.",
+      "fullDescription": "This unstructured tote is soft yet strong. The main body is hand-cut leather and the shoulder strap is woven with glass beads in a subtle stripe pattern. Unlined, with an interior key loop.",
+      "weight": 0.55, "length": 380, "width": 100, "height": 320,
+      "stockQuantity": 20, "minStockQuantity": 3, "displayOrder": 3,
+      "imagePrompt": "Professional product photo of a brown leather tote bag with colourful beaded strap standing upright, white background, soft lighting, artisan leather goods e-commerce photography"
+    },
+    {
+      "sku": "LEATH-SAND-004", "name": "Leather Sandals with Carved Sole", "price": 28.00, "oldPrice": 0,
+      "categoryIds": [24], "manufacturerId": 201, "storeIds": [2],
+      "shortDescription": "Flat sandals with hand-carved rubber sole.",
+      "fullDescription": "The leather straps are cut, dyed and riveted by hand. The rubber sole is carved with a traditional geometric pattern for grip and style. Sizes 36 to 44 available. Made to order in 3 days.",
+      "weight": 0.4, "length": 260, "width": 100, "height": 30,
+      "stockQuantity": 15, "minStockQuantity": 2, "displayOrder": 4,
+      "imagePrompt": "Professional product photo of a pair of handmade leather flat sandals with carved sole pattern, white background, soft lighting, artisan leather goods e-commerce photography"
+    },
+    {
+      "sku": "LEATH-BRAC-005", "name": "Leather Cuff Bracelet with Brass Studs", "price": 14.00, "oldPrice": 0,
+      "categoryIds": [24], "manufacturerId": 201, "storeIds": [2],
+      "shortDescription": "Wide leather cuff with hand-set brass studs.",
+      "fullDescription": "A bold statement piece cut from thick buffalo leather. The brass studs are hammered in by hand and the edges are burnished to a smooth finish. Snap closure. One size fits most wrists.",
+      "weight": 0.06, "length": 220, "width": 45, "height": 5,
+      "stockQuantity": 40, "minStockQuantity": 5, "displayOrder": 5,
+      "imagePrompt": "Professional product photo of a wide brown leather cuff bracelet with brass studs, curved on white background, soft lighting, artisan leather goods e-commerce photography"
+    },
+    {
+      "sku": "STONE-ELE-001", "name": "Soapstone Elephant Family", "price": 30.00, "oldPrice": 0,
+      "categoryIds": [25], "manufacturerId": 202, "storeIds": [2],
+      "shortDescription": "Three elephants carved from a single soapstone block.",
+      "fullDescription": "Master carver Tendai sculpts these gentle giants from soft grey-green soapstone quarried near Mutoko. The family grouping – mother, father and calf – fits in the palm of your hand.",
+      "weight": 0.8, "length": 150, "width": 80, "height": 100,
+      "stockQuantity": 18, "minStockQuantity": 3, "displayOrder": 1,
+      "imagePrompt": "Professional product photo of three small soapstone elephant sculptures in a family group, grey-green stone, white background, soft natural lighting, artisan sculpture e-commerce photography"
+    },
+    {
+      "sku": "STONE-BIRD-002", "name": "Serpentine Fish Eagle", "price": 22.00, "oldPrice": 0,
+      "categoryIds": [25], "manufacturerId": 202, "storeIds": [2],
+      "shortDescription": "Perched fish eagle carved from dark green serpentine.",
+      "fullDescription": "The African fish eagle is Zambia's national bird. This sculpture captures the moment before flight – wings half-spread, talons gripping a carved stump. Polished to a soft sheen with beeswax.",
+      "weight": 0.55, "length": 120, "width": 90, "height": 140,
+      "stockQuantity": 22, "minStockQuantity": 3, "displayOrder": 2,
+      "imagePrompt": "Professional product photo of a dark green stone sculpture of an African fish eagle with wings spread perched on a stump, white background, soft natural lighting, artisan sculpture e-commerce photography"
+    },
+    {
+      "sku": "STONE-BOWL-003", "name": "Polished Soapstone Bowl", "price": 16.00, "oldPrice": 0,
+      "categoryIds": [25], "manufacturerId": 202, "storeIds": [2],
+      "shortDescription": "Small bowl with abstract carved exterior.",
+      "fullDescription": "The exterior is carved with flowing abstract lines inspired by river currents. The interior is sanded smooth and polished with natural oil. Perfect for jewellery, keys or potpourri.",
+      "weight": 0.45, "length": 120, "width": 120, "height": 55,
+      "stockQuantity": 28, "minStockQuantity": 4, "displayOrder": 3,
+      "imagePrompt": "Professional product photo of a small polished soapstone bowl with carved abstract exterior pattern, white background, soft natural lighting, artisan sculpture e-commerce photography"
+    },
+    {
+      "sku": "STONE-FACE-004", "name": "Abstract Stone Face Sculpture", "price": 35.00, "oldPrice": 42.00,
+      "categoryIds": [25], "manufacturerId": 202, "storeIds": [2],
+      "shortDescription": "Minimalist face carved from cream dolomite.",
+      "fullDescription": "In the Shona tradition, the head represents wisdom and the source of life. This modern abstract interpretation is carved from creamy white dolomite with just enough detail to suggest a gaze. A contemplative desk piece.",
+      "weight": 1.1, "length": 90, "width": 70, "height": 180,
+      "stockQuantity": 12, "minStockQuantity": 2, "displayOrder": 4,
+      "imagePrompt": "Professional product photo of a minimalist cream stone face sculpture with abstract features, white background, soft natural lighting, artisan sculpture e-commerce photography"
+    },
+    {
+      "sku": "STONE-BOOK-005", "name": "Stone Bookends – Rhino Pair", "price": 38.00, "oldPrice": 0,
+      "categoryIds": [25], "manufacturerId": 202, "storeIds": [2],
+      "shortDescription": "Matching rhino bookends carved from dark soapstone.",
+      "fullDescription": "These solid bookends keep your shelves tidy while celebrating African wildlife. Each rhino is hand-carved from a single block of dark soapstone and polished to a satin finish. Felt pads protect your surfaces.",
+      "weight": 1.6, "length": 140, "width": 80, "height": 130,
+      "stockQuantity": 16, "minStockQuantity": 2, "displayOrder": 5,
+      "imagePrompt": "Professional product photo of two dark stone rhino bookends facing each other, white background, soft natural lighting, artisan sculpture e-commerce photography"
+    },
+    {
+      "sku": "FABRIC-WALL-001", "name": "Hand-painted Cotton Wall Hanging", "price": 26.00, "oldPrice": 0,
+      "categoryIds": [26], "manufacturerId": 203, "storeIds": [2],
+      "shortDescription": "Large cotton panel with baobab tree scene.",
+      "fullDescription": "Painted with natural ochre, charcoal and plant dyes on heavy unbleached cotton. The baobab tree is a symbol of endurance and community. Wooden dowel and twine included for easy hanging.",
+      "weight": 0.45, "length": 900, "width": 600, "height": 5,
+      "stockQuantity": 20, "minStockQuantity": 3, "displayOrder": 1,
+      "imagePrompt": "Professional product photo of a hand-painted cotton wall hanging featuring an African baobab tree with orange sunset, laid flat on white background, soft natural lighting, artisan textile e-commerce photography"
+    },
+    {
+      "sku": "FABRIC-RUN-002", "name": "Batik Table Runner – Geometric", "price": 18.00, "oldPrice": 0,
+      "categoryIds": [26], "manufacturerId": 203, "storeIds": [2],
+      "shortDescription": "2-metre batik runner in indigo and cream.",
+      "fullDescription": "Traditional batik wax-resist dyeing creates the crisp geometric pattern. The cotton is pre-washed for a soft drape. Machine washable on gentle cycle. Dimensions: 200 x 35 cm.",
+      "weight": 0.2, "length": 2000, "width": 350, "height": 2,
+      "stockQuantity": 30, "minStockQuantity": 4, "displayOrder": 2,
+      "imagePrompt": "Professional product photo of a long indigo and cream batik table runner with geometric pattern, rolled slightly on white background, soft lighting, artisan textile e-commerce photography"
+    },
+    {
+      "sku": "FABRIC-SCARF-003", "name": "Hand-painted Silk Scarf", "price": 32.00, "oldPrice": 38.00,
+      "categoryIds": [26], "manufacturerId": 203, "storeIds": [2],
+      "shortDescription": "Lightweight silk scarf with wildflower design.",
+      "fullDescription": "Each scarf is hand-painted on Habotai silk using reactive dyes that bond permanently with the fibres. The wildflower design is unique – no two scarves are exactly alike. Finished with hand-rolled hem.",
+      "weight": 0.04, "length": 1600, "width": 400, "height": 1,
+      "stockQuantity": 24, "minStockQuantity": 3, "displayOrder": 3,
+      "imagePrompt": "Professional product photo of a colourful hand-painted silk scarf with wildflower design draped elegantly, white background, soft lighting, artisan textile e-commerce photography"
+    },
+    {
+      "sku": "FABRIC-CUSH-004", "name": "Shweshwe Print Cushion Cover", "price": 14.00, "oldPrice": 0,
+      "categoryIds": [26], "manufacturerId": 203, "storeIds": [2],
+      "shortDescription": "45cm cushion cover in traditional indigo Shweshwe.",
+      "fullDescription": "Shweshwe is the iconic printed cotton fabric of Southern Africa. This cushion cover features the classic small geometric motifs in deep indigo on white. Concealed zip closure. Fits standard 45 cm inserts.",
+      "weight": 0.12, "length": 450, "width": 450, "height": 2,
+      "stockQuantity": 40, "minStockQuantity": 5, "displayOrder": 4,
+      "imagePrompt": "Professional product photo of a square indigo and white geometric print cushion cover, flat on white background, soft lighting, artisan textile e-commerce photography"
+    },
+    {
+      "sku": "FABRIC-APR-005", "name": "Hand-painted Kitchen Apron", "price": 20.00, "oldPrice": 0,
+      "categoryIds": [26], "manufacturerId": 203, "storeIds": [2],
+      "shortDescription": "Heavy cotton apron with adjustable neck strap.",
+      "fullDescription": "Protect your clothes in style. This apron is hand-painted with a playful chilli-pepper border design on heavy unbleached cotton. Adjustable D-ring neck strap and long waist ties fit most body sizes.",
+      "weight": 0.25, "length": 700, "width": 600, "height": 2,
+      "stockQuantity": 35, "minStockQuantity": 5, "displayOrder": 5,
+      "imagePrompt": "Professional product photo of a hand-painted cotton kitchen apron with red chilli pepper design, laid flat on white background, soft lighting, artisan textile e-commerce photography"
+    }
+  ]
+}
