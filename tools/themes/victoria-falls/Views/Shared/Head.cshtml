@@ -1,0 +1,27 @@
+@using Nop.Core.Domain.Catalog
+@using Nop.Services.Themes
+
+@inject CatalogSettings catalogSettings
+@inject IThemeContext themeContext
+
+@{
+    Layout = "";
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+    var supportRtl = await Html.ShouldUseRtlThemeAsync();
+
+    // Google Fonts — Inter + Playfair Display for headings
+    NopHtml.AppendCssFileParts("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap");
+
+    // DefaultClean base styles (minimal fallback)
+    NopHtml.AppendCssFileParts($"~/Themes/DefaultClean/Content/css/styles{(supportRtl ? ".rtl" : "")}.css");
+
+    // Victoria Falls custom theme CSS
+    NopHtml.AppendCssFileParts("~/Themes/VictoriaFalls/Content/css/victoria.theme.css");
+
+    if (catalogSettings.DisplayAllPicturesOnCatalogPages)
+    {
+        NopHtml.AppendCssFileParts("~/lib_npm/swiper/swiper-bundle.min.css");
+    }
+
+    NopHtml.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
+}
