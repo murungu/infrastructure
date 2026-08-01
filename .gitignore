@@ -42,3 +42,8 @@ tools/**/.ruff_cache/
 # Pi session artifacts
 pi-session-*.html
 .antigravitycli/
+
+# Pi memory and workspace files
+MEMORY.md
+memory/
+EOF
