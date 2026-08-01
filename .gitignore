@@ -21,3 +21,29 @@ Thumbs.db
 *.tmp
 /tmp/
 .pi/
+
+# Generated build artifacts
+tools/csharp-console/bin/
+tools/csharp-console/obj/
+
+# Generated product images (regenerable)
+tools/output-images/
+
+# Generated brand assets (regenerable)
+tools/themes/assets/
+
+# Generated SQL hex dumps (regenerable)
+tools/sql-seed/insert-picture-binary.sql
+tools/themes/insert-logo-binary.sql
+
+# Python cache
+tools/**/.ruff_cache/
+
+# Pi session artifacts
+pi-session-*.html
+.antigravitycli/
+
+# Pi memory and workspace files
+MEMORY.md
+memory/
+EOF
