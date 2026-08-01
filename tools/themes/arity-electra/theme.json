@@ -1,0 +1,8 @@
+{
+  "Name": "ArtyElectra",
+  "DisplayName": "Arty Electra",
+  "Version": "1.0.0",
+  "Author": "Arity Design",
+  "Description": "Clean, solar-themed store following Arity design system. Black/white with amber solar accent.",
+  "BaseTheme": "ArityTheme"
+}

@@ -1,0 +1,129 @@
+/* Arty Electra — CSS Overrides for ArityTheme
+   Design system: Arity (black/white) + Solar Amber accent
+   Font: Inter (inherited from ArityTheme)
+*/
+
+:root {
+	/* Solar Amber replaces Arity Red for energy accent */
+	--electra-amber: #f5a623;
+	--electra-amber-soft: #fff5e0;
+	--electra-amber-dark: #d4860b;
+
+	/* Keep Arity foundation */
+	--electra-black: #000000;
+	--electra-white: #ffffff;
+	--electra-grey-ink: #4d4d4d;
+	--electra-grey-hairline: #ebebeb;
+	--electra-grey-soft: #f9f9f9;
+
+	/* Override Arity red with amber for this store */
+	--arity-red: var(--electra-amber);
+	--arity-signal-red: var(--electra-amber-dark);
+
+	/* Structural */
+	--electra-border-radius: 4px;
+	--electra-card-radius: 8px;
+	--electra-shadow-soft: 0 4px 12px rgba(245, 166, 35, 0.08);
+}
+
+/* Header — clean white with subtle amber underline */
+.arity-header {
+	border-bottom: 2px solid var(--electra-amber);
+}
+
+/* Hero section on homepage */
+.arty-electra-hero {
+	background: linear-gradient(
+		135deg,
+		var(--electra-white) 0%,
+		var(--electra-amber-soft) 100%
+	);
+	padding: 64px 0;
+	text-align: center;
+}
+
+.arty-electra-hero h1 {
+	font-family: "Inter", sans-serif;
+	font-size: 48px;
+	font-weight: 700;
+	color: var(--electra-black);
+	margin-bottom: 16px;
+}
+
+.arty-electra-hero .lead {
+	font-family: "Inter", sans-serif;
+	font-size: 18px;
+	color: var(--electra-grey-ink);
+	max-width: 600px;
+	margin: 0 auto 32px;
+}
+
+.arty-electra-hero .cta {
+	display: inline-block;
+	background: var(--electra-black);
+	color: var(--electra-white);
+	padding: 14px 32px;
+	border-radius: var(--electra-border-radius);
+	font-family: "Inter", sans-serif;
+	font-weight: 600;
+	font-size: 16px;
+	text-decoration: none;
+	transition: background 0.15s ease;
+}
+
+.arty-electra-hero .cta:hover {
+	background: var(--electra-amber-dark);
+}
+
+/* Category cards — amber hover accent */
+.category-item:hover .category-name {
+	color: var(--electra-amber-dark);
+}
+
+/* Product cards — amber price */
+.product-box .prices .actual-price {
+	color: var(--electra-amber-dark);
+	font-weight: 700;
+}
+
+/* Footer — dark with amber accent */
+.arty-electra-footer {
+	background: var(--electra-black);
+	color: var(--electra-white);
+	padding: 48px 0;
+}
+
+.arty-electra-footer a {
+	color: var(--electra-grey-hairline);
+}
+
+.arty-electra-footer a:hover {
+	color: var(--electra-amber);
+}
+
+/* Buttons — primary black, hover amber */
+.btn-primary {
+	background: var(--electra-black);
+	border-color: var(--electra-black);
+}
+
+.btn-primary:hover {
+	background: var(--electra-amber-dark);
+	border-color: var(--electra-amber-dark);
+}
+
+/* Badges — amber for solar energy */
+.badge-solar {
+	background: var(--electra-amber);
+	color: var(--electra-black);
+	padding: 4px 12px;
+	border-radius: 9999px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+/* Logo mark spacing */
+.arty-electra-logo {
+	height: 40px;
+	margin-right: 12px;
+}
