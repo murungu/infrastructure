@@ -1,0 +1,41 @@
+@using Nop.Services.Localization
+@using Nop.Core
+@inject ILocalizationService localizationService
+@inject IStoreContext storeContext
+
+@{
+    var store = await storeContext.GetCurrentStoreAsync();
+    var storeName = store?.Name ?? "Victoria Falls Artisan Market";
+}
+
+<header class="header victoria-header">
+    <a class="skip" href="#main">@T("Header.SkipNavigation.Text")</a>
+
+    <div class="header-lower" style="display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1200px; margin:0 auto;">
+        <div class="header-logo">
+            <a href="@Url.RouteUrl("Homepage")" style="text-decoration:none;">
+                <img src="/Themes/VictoriaFalls/Content/images/victoria_logo.jpg" alt="Victoria Falls" style="height:48px; border-radius:4px; margin-right:12px; vertical-align:middle;" onerror="this.style.display='none'" />
+                <span style="font-family:'Playfair Display', Georgia, serif; font-size:24px; font-weight:600; color:#C65D3B; letter-spacing:-0.5px;">Victoria Falls</span>
+                <span style="display:block; font-family:'Inter', sans-serif; font-size:11px; font-weight:400; color:#5B7C3F; text-transform:uppercase; letter-spacing:2px;">Artisan Market</span>
+            </a>
+        </div>
+
+        <nav style="display:flex; gap:8px;">
+            <a href="@Url.RouteUrl("Homepage")" style="font-family:'Inter',sans-serif; font-size:14px; font-weight:500; color:#4A4540; text-decoration:none; padding:8px 16px;">Home</a>
+            <a href="/hand-carved-wood" style="font-family:'Inter',sans-serif; font-size:14px; font-weight:500; color:#4A4540; text-decoration:none; padding:8px 16px;">Shop</a>
+            <a href="/contactus" style="font-family:'Inter',sans-serif; font-size:14px; font-weight:500; color:#4A4540; text-decoration:none; padding:8px 16px;">Contact</a>
+        </nav>
+
+        <div class="header-links-wrapper" style="display:flex; align-items:center; gap:16px;">
+            @await Component.InvokeAsync(typeof(HeaderLinksViewComponent))
+            @await Component.InvokeAsync(typeof(FlyoutShoppingCartViewComponent))
+        </div>
+    </div>
+</header>
+
+<style>
+.victoria-header {
+    background: #F5F0E8 !important;
+    border-bottom: 3px solid #C65D3B !important;
+}
+</style>

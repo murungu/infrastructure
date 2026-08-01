@@ -1,0 +1,33 @@
+@using Nop.Core.Domain.Catalog
+@using Nop.Services.Themes
+
+@inject CatalogSettings catalogSettings
+@inject IThemeContext themeContext
+
+@{
+    Layout = "";
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+    var supportRtl = await Html.ShouldUseRtlThemeAsync();
+
+    // Google Fonts — Inter
+    NopHtml.AppendCssFileParts("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+    // Arity base CSS (inherited from ArityTheme)
+    NopHtml.AppendCssFileParts($"~/Themes/ArityTheme/Content/css/styles{(supportRtl ? ".rtl" : "")}.css");
+    NopHtml.AppendCssFileParts("~/Themes/ArityTheme/Content/css/arity.tokens.css");
+    NopHtml.AppendCssFileParts("~/Themes/ArityTheme/Content/css/arity.base.css");
+    NopHtml.AppendCssFileParts("~/Themes/ArityTheme/Content/css/arity.nav.css");
+    NopHtml.AppendCssFileParts("~/Themes/ArityTheme/Content/css/arity.icons.css");
+    NopHtml.AppendCssFileParts("~/Themes/ArityTheme/Content/css/arity.products.css");
+    NopHtml.AppendCssFileParts("~/Themes/ArityTheme/Content/css/arity.footer.css");
+
+    // Arty Electra custom overrides — amber solar accent
+    NopHtml.AppendCssFileParts("~/Themes/ArtyElectra/Content/css/electra.theme.css");
+
+    if (catalogSettings.DisplayAllPicturesOnCatalogPages)
+    {
+        NopHtml.AppendCssFileParts("~/lib_npm/swiper/swiper-bundle.min.css");
+    }
+
+    NopHtml.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
+}

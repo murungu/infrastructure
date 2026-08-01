@@ -1,0 +1,298 @@
+/* Victoria Falls Artisan Market — Complete Theme CSS
+   Palette: Terracotta, Olive, Warm Cream
+   Vibe: Traditional African market, hand-crafted, warm, organic
+   Font: Inter (body) + serif accent for headings
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap");
+
+:root {
+	/* Core African earth palette */
+	--victoria-terracotta: #c65d3b;
+	--victoria-terracotta-soft: #f5e6e0;
+	--victoria-terracotta-dark: #a04020;
+
+	--victoria-olive: #5b7c3f;
+	--victoria-olive-soft: #e8f0e0;
+	--victoria-olive-dark: #3d5a26;
+
+	--victoria-cream: #f5f0e8;
+	--victoria-cream-dark: #e8e0d4;
+	--victoria-warm-white: #fdfcfa;
+
+	--victoria-charcoal: #2d2a26;
+	--victoria-ink: #4a4540;
+	--victoria-warm-grey: #9a9590;
+	--victoria-hairline: #d8d4ce;
+
+	/* Typography */
+	--victoria-font-body: "Inter", sans-serif;
+	--victoria-font-display: "Playfair Display", Georgia, serif;
+
+	/* Spacing */
+	--victoria-border-radius: 2px;
+	--victoria-card-radius: 4px;
+}
+
+/* ===== GLOBAL ===== */
+body {
+	font-family: var(--victoria-font-body);
+	color: var(--victoria-charcoal);
+	background-color: var(--victoria-warm-white);
+	line-height: 1.6;
+}
+
+/* ===== HEADER ===== */
+.victoria-header {
+	background: var(--victoria-cream);
+	border-bottom: 3px solid var(--victoria-terracotta);
+	padding: 16px 0;
+}
+
+.victoria-header .logo-text {
+	font-family: var(--victoria-font-display);
+	font-size: 28px;
+	font-weight: 600;
+	color: var(--victoria-terracotta-dark);
+	letter-spacing: -0.5px;
+}
+
+.victoria-header .logo-sub {
+	font-family: var(--victoria-font-body);
+	font-size: 12px;
+	font-weight: 400;
+	color: var(--victoria-olive);
+	text-transform: uppercase;
+	letter-spacing: 2px;
+}
+
+.victoria-header nav a {
+	font-family: var(--victoria-font-body);
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--victoria-ink);
+	text-decoration: none;
+	padding: 8px 16px;
+	transition: color 0.2s ease;
+}
+
+.victoria-header nav a:hover {
+	color: var(--victoria-terracotta);
+}
+
+/* ===== HERO ===== */
+.victoria-hero {
+	background: linear-gradient(
+		180deg,
+		var(--victoria-cream) 0%,
+		var(--victoria-terracotta-soft) 60%,
+		var(--victoria-cream-dark) 100%
+	);
+	padding: 80px 24px;
+	text-align: center;
+	position: relative;
+}
+
+.victoria-hero::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 6px;
+	background: repeating-linear-gradient(
+		90deg,
+		var(--victoria-terracotta) 0px,
+		var(--victoria-terracotta) 40px,
+		var(--victoria-olive) 40px,
+		var(--victoria-olive) 80px
+	);
+}
+
+.victoria-hero h1 {
+	font-family: var(--victoria-font-display);
+	font-size: 52px;
+	font-weight: 700;
+	color: var(--victoria-terracotta-dark);
+	margin-bottom: 20px;
+	line-height: 1.2;
+}
+
+.victoria-hero .tagline {
+	font-family: var(--victoria-font-body);
+	font-size: 18px;
+	font-weight: 300;
+	color: var(--victoria-ink);
+	max-width: 560px;
+	margin: 0 auto 40px;
+}
+
+.victoria-hero .cta {
+	display: inline-block;
+	background: var(--victoria-terracotta);
+	color: var(--victoria-warm-white);
+	padding: 16px 40px;
+	border-radius: var(--victoria-border-radius);
+	font-family: var(--victoria-font-body);
+	font-weight: 600;
+	font-size: 16px;
+	text-decoration: none;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	transition: all 0.2s ease;
+	border: 2px solid var(--victoria-terracotta);
+}
+
+.victoria-hero .cta:hover {
+	background: transparent;
+	color: var(--victoria-terracotta-dark);
+}
+
+/* ===== CATEGORY CARDS ===== */
+.victoria-category-card {
+	background: var(--victoria-warm-white);
+	border: 1px solid var(--victoria-hairline);
+	border-radius: var(--victoria-card-radius);
+	padding: 24px;
+	text-align: center;
+	transition: all 0.2s ease;
+}
+
+.victoria-category-card:hover {
+	border-color: var(--victoria-terracotta);
+	box-shadow: 0 8px 24px rgba(198, 93, 59, 0.12);
+}
+
+.victoria-category-card .category-name {
+	font-family: var(--victoria-font-display);
+	font-size: 20px;
+	font-weight: 600;
+	color: var(--victoria-charcoal);
+	margin-top: 16px;
+}
+
+.victoria-category-card .category-count {
+	font-size: 13px;
+	color: var(--victoria-warm-grey);
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+/* ===== PRODUCT CARDS ===== */
+.victoria-product-card {
+	background: var(--victoria-warm-white);
+	border: 1px solid var(--victoria-hairline);
+	border-radius: var(--victoria-card-radius);
+	overflow: hidden;
+}
+
+.victoria-product-card .product-title {
+	font-family: var(--victoria-font-display);
+	font-size: 18px;
+	font-weight: 600;
+	color: var(--victoria-charcoal);
+	margin: 16px 16px 8px;
+}
+
+.victoria-product-card .product-price {
+	font-family: var(--victoria-font-body);
+	font-size: 18px;
+	font-weight: 700;
+	color: var(--victoria-terracotta-dark);
+	margin: 0 16px 16px;
+}
+
+.victoria-product-card .btn-add-cart {
+	display: block;
+	width: 100%;
+	padding: 12px;
+	background: var(--victoria-olive);
+	color: var(--victoria-warm-white);
+	border: none;
+	font-family: var(--victoria-font-body);
+	font-weight: 600;
+	font-size: 14px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	cursor: pointer;
+	transition: background 0.2s ease;
+}
+
+.victoria-product-card .btn-add-cart:hover {
+	background: var(--victoria-olive-dark);
+}
+
+/* ===== FOOTER ===== */
+.victoria-footer {
+	background: var(--victoria-charcoal);
+	color: var(--victoria-cream);
+	padding: 56px 0 32px;
+}
+
+.victoria-footer h4 {
+	font-family: var(--victoria-font-display);
+	font-size: 18px;
+	font-weight: 600;
+	color: var(--victoria-terracotta-soft);
+	margin-bottom: 16px;
+}
+
+.victoria-footer a {
+	color: var(--victoria-warm-grey);
+	text-decoration: none;
+	font-size: 14px;
+	line-height: 2;
+	transition: color 0.2s ease;
+}
+
+.victoria-footer a:hover {
+	color: var(--victoria-terracotta);
+}
+
+.victoria-footer .copyright {
+	border-top: 1px solid rgba(216, 212, 206, 0.2);
+	margin-top: 40px;
+	padding-top: 24px;
+	font-size: 13px;
+	color: var(--victoria-warm-grey);
+	text-align: center;
+}
+
+/* ===== DECORATIVE ELEMENTS ===== */
+.victoria-divider {
+	height: 4px;
+	background: repeating-linear-gradient(
+		90deg,
+		var(--victoria-terracotta) 0px,
+		var(--victoria-terracotta) 30px,
+		var(--victoria-olive) 30px,
+		var(--victoria-olive) 60px,
+		var(--victoria-cream-dark) 60px,
+		var(--victoria-cream-dark) 90px
+	);
+}
+
+.victoria-badge-handmade {
+	display: inline-block;
+	background: var(--victoria-olive);
+	color: var(--victoria-warm-white);
+	padding: 4px 12px;
+	border-radius: 9999px;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+	.victoria-hero h1 {
+		font-size: 36px;
+	}
+	.victoria-hero .tagline {
+		font-size: 16px;
+	}
+	.victoria-header .logo-text {
+		font-size: 22px;
+	}
+}
