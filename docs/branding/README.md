@@ -97,7 +97,8 @@ Read these in order if you need depth on a topic:
 | 3 | **[viewport-plan.md](viewport-plan.md)** | Add a new breakpoint or media query. Understand the 375/768/1280 screenshot rule. |
 | 4 | **[theme-playbook.md](theme-playbook.md)** | Make your first theme change. Find which file to edit. Learn the hot-copy loop. |
 | 5 | **[DESIGN.md](DESIGN.md)** | Understand the color tokens, typography, and spacing system. Know how tokens map to CSS. |
-| 6 | **[theme-guide.md](theme-guide.md)** | Understand the modular CSS architecture, specificity rules, RTL safety. |
+| 6 | **[SOCIAL.md](SOCIAL.md)** | Know which social media accounts to create and how to add them to the footer. |
+| 7 | **[theme-guide.md](theme-guide.md)** | Understand the modular CSS architecture, specificity rules, RTL safety. |
 | 7 | **[deployment.md](deployment.md)** | Deploy to production. Understand the Docker image pipeline. |
 | 8 | **[backup-restore.md](backup-restore.md)** | Back up or restore the database. |
 | 9 | **[CONTRIBUTING.md](CONTRIBUTING.md)** | Contribution rules, PR workflow, testing checklist. |
