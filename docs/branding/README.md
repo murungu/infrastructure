@@ -8,6 +8,8 @@
 
 A **renewable energy e-commerce store** for Arity Solutions. Products: solar panels, batteries, inverters, charge controllers.
 
+- **Launch market:** Zimbabwe (first), with USD pricing
+- **Currency:** USD (primary transactional currency in Zimbabwe)
 - **Platform:** nopCommerce 4.x (forked), running in Docker
 - **Theme:** ArityTheme — custom theme, modular CSS, mobile-first
 - **Database:** PostgreSQL (local dev), managed PostgreSQL (production)
@@ -24,7 +26,7 @@ A **renewable energy e-commerce store** for Arity Solutions. Products: solar pan
 | **Responsive base** | ✅ Done | DefaultClean mobile-first behavior is intact. Verified at 375/768/1280px. |
 | **Products in DB** | 🔄 Partial | 50 items exist but names/descriptions/images are generic sample data (iPhones, MacBooks). |
 | **Mobile UX polish** | 🔄 Not started | Sidebar blocks products on mobile. Touch targets too small. Description text too dense. See [mobile-first-audit.md](mobile-first-audit.md). |
-| **Branding** | 🔄 Partial | Logo, colors, footer are custom. But "Powered by nopCommerce" still shows. Copyright says "Arty Store" not "Arity Shop". |
+| **Branding** | 🔄 Partial | Logo, colors, footer are custom. But "Powered by nopCommerce" still shows. Store name undecided: "Arity Store" vs "Arity Shop". |
 | **Legal pages** | ❌ Missing | Privacy Policy is a 404. Terms of Use exists but is default nopCommerce text. |
 | **Content** | ❌ Missing | Homepage welcome text is default nopCommerce. Product descriptions are IBM copy. Reviews are sample data. |
 

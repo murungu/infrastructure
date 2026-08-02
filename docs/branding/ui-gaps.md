@@ -21,8 +21,8 @@ The ArityTheme structure is solid: header, footer, nav, product grid, cart, logi
 |---|---|---|---|---|
 | 1 | **Privacy Policy is a 404** | Footer → "Privacy notice" | Screenshot shows "Page not found" | Create a Topic page in admin (Content Management → Topics) with SystemName `PrivacyInfo`. Or create a static CMS page. |
 | 2 | **"Powered by nopCommerce" in footer** | All pages | Visible on every screenshot | Remove or replace in `_Footer.cshtml` override or via CSS `display: none` |
-| 3 | **"Your store" in page titles** | All pages | Browser tab shows "Your store. Home page title" | Admin → Configuration → Settings → General Settings → Store Name = "Arity Shop" |
-| 4 | **Copyright says "Arty Store"** | Footer | "Copyright © 2026 Arty Store" | Fix in admin or footer view: "Arty Store" → "Arity Solutions" or "Arity Shop" |
+| 3 | **"Your store" in page titles** | All pages | Browser tab shows "Your store. Home page title" | Admin → Configuration → Settings → General Settings → Store Name = "Arity Store" or "Arity Shop" (decision pending) |
+| 4 | **Copyright says "Arty Store"** | Footer | "Copyright © 2026 Arty Store" | Fix in admin or footer view: "Arty Store" → "Arity Solutions" or the chosen store name |
 
 ---
 
@@ -45,7 +45,7 @@ The ArityTheme structure is solid: header, footer, nav, product grid, cart, logi
 
 | # | Gap | Page | Evidence | Fix |
 |---|---|---|---|---|
-| 13 | **Tags are sample data** | Category sidebar | "awesome", "cool", "nice", "book", "camera" | Remove sample tags or replace with Arity-relevant tags ("solar", "battery", "off-grid", "LiFePO4") |
+| 13 | **Tags are sample data** | Category sidebar | "awesome", "cool", "nice", "book", "camera" | Remove sample tags or replace with Arity-relevant tags ("solar", "battery", "off-grid", "LiFePO4", "Zimbabwe", "Harare", "load-shedding") |
 | 14 | **Category names don't match Arity brand** | Nav + Category | "Electronics", "Apparel", "Digital downloads", "Books", "Jewelry" | Rename categories in admin to Arity categories: "Solar Panels", "Batteries", "Inverters", "Charge Controllers", "Accessories". |
 | 15 | **Logo alt text says "Arity Store"** | Header | `logoAlt: "Arity Store"` | Change to "Arity Shop" in `_Header.cshtml` or admin |
 | 16 | **Search placeholder is generic** | Header | "Search store" | Change to "Search solar products..." or "Find your solar solution..." |
@@ -128,6 +128,15 @@ Most P0 and P1 fixes are **admin panel tasks** — no code changes needed. The r
 
 - Admin → Content Management → Topics (for simple pages)
 - Admin → Content Management → Pages (for full CMS pages)
+
+**Zimbabwe-specific notes:**
+
+- Currency: USD (primary transactional currency in Zimbabwe)
+- Payments: EcoCash mobile money (55%), USD Cash (20%), Cards (12%), Bank Transfer (8%)
+- Shipping: Harare $3-7, Bulawayo $5-10, rural $10-25 USD
+- Tax: 15% VAT, 2% IMTT on electronic transactions
+- Legal: Cyber Security and Data Protection Act (2021), Consumer Protection Act (2019)
+- COD (Cash on Delivery) is important for first-time buyer trust
 
 ---
 
