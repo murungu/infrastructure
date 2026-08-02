@@ -21,8 +21,8 @@ The ArityTheme structure is solid: header, footer, nav, product grid, cart, logi
 |---|---|---|---|---|
 | 1 | **Privacy Policy is a 404** | Footer → "Privacy notice" | Screenshot shows "Page not found" | Create a Topic page in admin (Content Management → Topics) with SystemName `PrivacyInfo`. Or create a static CMS page. |
 | 2 | **"Powered by nopCommerce" in footer** | All pages | Visible on every screenshot | Remove or replace in `_Footer.cshtml` override or via CSS `display: none` |
-| 3 | **"Your store" in page titles** | All pages | Browser tab shows "Your store. Home page title" | Admin → Configuration → Settings → General Settings → Store Name = "Arity Store" or "Arity Shop" (decision pending) |
-| 4 | **Copyright says "Arty Store"** | Footer | "Copyright © 2026 Arty Store" | Fix in admin or footer view: "Arty Store" → "Arity Solutions" or the chosen store name |
+| 3 | **"Your store" in page titles** | All pages | Browser tab shows "Your store. Home page title" | Admin → Configuration → Settings → General Settings → Store Name = "Arity Shop" |
+| 4 | **Copyright says "Arty Store"** | Footer | "Copyright © 2026 Arty Store" | Fix in admin or footer view: "Arty Store" → "Arity Shop" |
 
 ---
 
