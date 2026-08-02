@@ -1,6 +1,6 @@
 # Arity nopCommerce Deployment
 
-This document covers Arity-specific deployment configuration for our nopCommerce fork.
+This document covers Arity-specific deployment configuration.
 
 ## Container Registry
 
@@ -14,36 +14,33 @@ registry.arity.co.za/nopcommerce
 
 **File:** `.github/workflows/docker-build.yml`
 
-The workflow automatically builds and pushes Docker images on every push to:
-
-- `develop`
-- `main`
+The workflow builds and pushes Docker images on every push to `develop` or `main`.
 
 ### Image Tags
 
 | Trigger | Tags Created |
 |---------|-------------|
-| Push to `develop` or `main` | `latest`, `<short-sha>` |
-| Manual workflow dispatch | `latest`, `<custom-tag-or-short-sha>` |
+| Push to `develop` or `main` | `latest`, `\u003cshort-sha\u003e` |
+| Manual workflow dispatch | `latest`, `\u003ccustom-tag-or-short-sha\u003e` |
 
 ### Manual Build
 
 To trigger a manual build with a custom tag:
 
-1. Go to **Actions** → **Build and Push nopCommerce**
-2. Click **Run workflow**
-3. Optionally enter a custom `image_tag`
-4. Click **Run workflow**
+1. Go to **Actions** → **Build and Push nopCommerce**.
+2. Click **Run workflow**.
+3. Optionally enter a custom `image_tag`.
+4. Click **Run workflow**.
 
 ## Dockerfile Changes
 
-Our `Dockerfile` includes a fix to ensure the `wwwroot/images/3d` directory exists at runtime:
+Our `Dockerfile` includes a fix for the `wwwroot/images/3d` directory:
 
 ```dockerfile
 RUN mkdir -p logs bin wwwroot/images/3d
 ```
 
-This prevents runtime errors when the application attempts to access this path.
+This prevents runtime errors. The application accesses this path at runtime.
 
 ## Running Locally
 
@@ -53,7 +50,7 @@ Use the provided `docker-compose.yml`:
 docker-compose up --build
 ```
 
-This starts:
+This starts two containers:
 
 - `nopcommerce` web container (exposed on port 80)
 - `nopcommerce_mssql_server` database container
