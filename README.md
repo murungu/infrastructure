@@ -119,6 +119,7 @@ cp .env.example .env
 3. **Database volumes keep old data** — if you changed `MSSQL_SA_PASSWORD`, the existing `sqlserver_data` volume still has the old password. Either:
    - Use `make clean` to wipe and reinstall (destroys all data)
    - Or change the password inside SQL Server manually via `make sqlcmd`:
+
      ```sql
      ALTER LOGIN sa WITH PASSWORD = 'NewPassword123!';
      ```
@@ -145,12 +146,14 @@ nopcommerce-src/               ← YOUR FORK (gitignored, not in this repo)
 ```
 
 **Why two repos?**
+
 - `infrastructure/` = deployment config. Small, focused, easy to review.
 - `nopcommerce-src/` = application source. Large, forked, contains your custom code.
 
-**Separation of concerns:** Your deployment setup doesn't change when you add a plugin. Your plugin code doesn't get mixed with Docker config.
+**Separation of concerns:** Your deployment setup does not change when you add a plugin. Your plugin code does not get mixed with Docker config.
 
 **CI/CD separation:**
+
 - The **fork** builds and pushes the Docker image to `registry.arity.co.za/nopcommerce` on every push to `develop`
 - The **infrastructure** repo pulls the image and runs it — never builds
 
@@ -215,7 +218,7 @@ The Makefile already points to the private repo:
 NOPCOMMERCE_REPO = git@github.com:Arity-Solutions/arity.nopCommerce.shop.git
 ```
 
-CI/CD secrets should be added to `github.com/Arity-Solutions/arity.nopCommerce.shop` → Settings → Secrets.
+CI/CD secrets must be added to `github.com/Arity-Solutions/arity.nopCommerce.shop` → Settings → Secrets.
 
 ---
 
@@ -248,7 +251,7 @@ make up                          # Rebuild with latest upstream + your changes
 
 | File / Directory | Repo | Why |
 |------------------|------|-----|
-| `docker-compose.yml` | `infrastructure` | Deployment config doesn't belong in app source |
+| `docker-compose.yml` | `infrastructure` | Deployment config does not belong in app source |
 | `Makefile` | `infrastructure` | Automation scripts are infrastructure |
 | `src/Plugins/YourPlugin/` | `nopcommerce-src` (your fork) | Plugin is application code |
 | `src/Presentation/Nop.Web/Themes/YourTheme/` | `nopcommerce-src` (your fork) | Theme is application code |
@@ -299,7 +302,7 @@ curl -s -o /dev/null -w "HTTP %{http_code}\n" http://localhost:8080
 
 Open your browser: **`http://localhost:8080`**
 
-You should see **"nopCommerce installation"**. Fill in:
+You will see **"nopCommerce installation"**. Fill in:
 
 #### Store Information
 
@@ -319,7 +322,7 @@ You should see **"nopCommerce installation"**. Fill in:
 | **Database name** | `nopcommerce` |
 | **SQL Username** | `${POSTGRES_USER}` from `.env` |
 | **SQL Password** | `${POSTGRES_PASSWORD}` from `.env` |
-| **Create database if it doesn't exist** | ✅ Checked |
+| **Create database if it does not exist** | ✅ Checked |
 
 > **Why `db-infra-postgres`?** Inside the Docker network, containers reach each other by **container name**, not `localhost`.
 
@@ -332,9 +335,9 @@ You should see **"nopCommerce installation"**. Fill in:
 | **Database name** | `nopcommerce` |
 | **SQL Username** | `sa` |
 | **SQL Password** | `${MSSQL_SA_PASSWORD}` from `.env` |
-| **Create database if it doesn't exist** | ✅ Checked |
+| **Create database if it does not exist** | ✅ Checked |
 
-Click **Install**. This takes **2–5 minutes**. You'll see a progress bar.
+Click **Install**. This takes **2–5 minutes**. You will see a progress bar.
 
 ### 4. Post-Install Verification
 
@@ -383,7 +386,7 @@ Then `make down && make up` to restart with caching enabled.
 |---------|-------------|-----|
 | `HTTP 000` or timeout | nopCommerce not ready yet | Wait 30s, retry |
 | "FATAL: database 'nopcommerce' does not exist" | PostgreSQL not healthy or wrong db name | `make status`, check PostgreSQL logs |
-| Installation wizard repeats | Volume was deleted | That's normal — completes once per volume |
+| Installation wizard repeats | Volume was deleted | That is normal — completes once per volume |
 | Red error in wizard | Wrong server name | Use container name (`db-infra-postgres`), not `localhost` |
 | Build fails with .NET errors | Outdated fork | `make update-nopcommerce` then `make up` |
 
@@ -479,17 +482,18 @@ make up
 ```
 
 **What conflicts to expect:**
+
 - **None** if you only added new files (plugins/themes in new directories)
 - **Minor** if you modified existing files (rare, document your changes)
-- **None** if upstream didn't touch your files
+- **None** if upstream did not touch your files
 
-**Best practice:** Don't modify core nopCommerce files. Add files, don't edit existing ones. This keeps merges conflict-free.
+**Best practice:** Do not modify core nopCommerce files. Add files. Do not edit existing ones. This keeps merges conflict-free.
 
 ---
 
 ## Quick Start with Pre-built Image
 
-If you don't need to customize plugins/themes, skip the source build:
+If you do not need to customize plugins or themes, skip the source build:
 
 ```bash
 # No fork needed. No build needed.
@@ -530,7 +534,7 @@ make use-prebuilt
 
 ## Connecting Your Own Application
 
-If you're building a separate app that needs to connect to these databases:
+If you are building a separate app that needs to connect to these databases:
 
 ```bash
 # Your app connects via localhost (if also running in Docker, use service names)
@@ -545,6 +549,7 @@ redis-cli -a ${REDIS_PASSWORD} -p 6379
 ```
 
 From inside Docker network (another container):
+
 ```bash
 # Use Docker service names instead of localhost
 postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db-infra-postgres:5432/${POSTGRES_DB}
@@ -568,6 +573,7 @@ For a real production store, rent a VPS and deploy with Docker Compose:
 | **Vultr** | 2 vCPU / 4 GB / 55 GB | ~$18 |
 
 **Why VPS over managed/cloud?**
+
 - You own the infrastructure
 - No per-transaction fees from the platform
 - Full control over backups, SSL, scaling
@@ -652,24 +658,26 @@ server {
 
 ### What About Kubernetes?
 
-**Don't use Kubernetes for a single nopCommerce store.** It's overkill. Use Kubernetes only if:
+**Do not use Kubernetes for a single nopCommerce store.** It is overkill. Use Kubernetes only if:
+
 - You have a team of 3+ DevOps engineers
-- You're running 10+ microservices
+- You are running 10+ microservices
 - You need auto-scaling across multiple regions
 
 For a single e-commerce store, Docker Compose on a VPS is simpler, cheaper, and easier to debug.
 
 ### Database Migration Path (Local → Production)
 
-When you're ready to go live:
+When you are ready to go live:
 
 | Environment | Database Recommendation |
 |-------------|--------------------------|
 | **Local dev** | PostgreSQL in Docker (what you have now) |
 | **Staging** | Same as local, but on a VPS |
-| **Production** | **Managed database** — don't run PostgreSQL in Docker for production |
+| **Production** | **Managed database** — do not run PostgreSQL in Docker for production |
 
 **Production database options:**
+
 - **PostgreSQL**: AWS RDS, Azure Database for PostgreSQL, Google Cloud SQL (recommended — same engine as local)
 - **SQL Server**: Azure SQL Database, AWS RDS for SQL Server
 - **Redis**: AWS ElastiCache, Azure Cache for Redis
@@ -698,11 +706,13 @@ make up-external
 ```
 
 Or manually:
+
 ```bash
 docker compose -f docker-compose.external-db.yml up -d
 ```
 
 This starts:
+
 - `db-infra-nopcommerce` — connects to your existing PostgreSQL
 - `db-infra-redis` — local Redis for caching
 
@@ -710,7 +720,7 @@ No local PostgreSQL or SQL Server containers are created.
 
 #### 3. Pull from Registry (Production Server)
 
-On a production server where you don't want to build from source:
+On a production server where you do not want to build from source:
 
 ```bash
 # Pull the pre-built image from your registry
@@ -732,8 +742,9 @@ docker compose -f docker-compose.external-db.yml up -d
 | **`infrastructure` (this repo)** | **Validates compose + deploys** | Every push to `main` |
 
 **Why two repos?**
-- The **fork** owns the application code. When you push a plugin, it should build the image.
-- The **infrastructure** repo owns deployment config. It should never build code — just validate and run.
+
+- The **fork** owns the application code. When you push a plugin, it must build the image.
+- The **infrastructure** repo owns deployment config. It must never build code — just validate and run.
 
 ```
 ┌─────────────────────────┐         ┌──────────────────────────┐
@@ -760,11 +771,13 @@ docker compose -f docker-compose.external-db.yml up -d
 The workflow lives at `nopcommerce-src/.github/workflows/docker-build.yml` (in your fork).
 
 **What it does:**
+
 1. Checks out the fork repo directly
 2. Builds the Docker image from `./Dockerfile`
 3. Pushes to `registry.arity.co.za/nopcommerce:latest` + `:sha`
 
 **Required secrets in the fork repo:**
+
 - Go to `github.com/Arity-Solutions/arity.nopCommerce.shop` → **Settings → Secrets and variables → Actions**
 - Add:
 
@@ -776,6 +789,7 @@ The workflow lives at `nopcommerce-src/.github/workflows/docker-build.yml` (in y
 > **Note:** Even if your fork is **private**, GitHub Actions works automatically. The built-in `GITHUB_TOKEN` has repo access by default. No extra configuration needed.
 
 **Trigger it:**
+
 ```bash
 cd nopcommerce-src
 git checkout develop
@@ -792,6 +806,7 @@ Then watch the build at:
 The workflow lives at `.github/workflows/validate.yml` (in this repo).
 
 **What it does:**
+
 1. Validates all `docker-compose*.yml` files are syntactically correct
 2. Optionally checks if the registry image is available
 
@@ -841,7 +856,7 @@ make up-external
 
 ### 5. Manual Build & Push (No CI)
 
-If you don't want GitHub Actions, build and push locally:
+If you do not want GitHub Actions, build and push locally:
 
 ```bash
 # 1. Build the image
@@ -870,6 +885,7 @@ docker exec db-infra-redis redis-cli -a "${REDIS_PASSWORD}" SAVE
 ### Production
 
 Use your cloud provider's automated backup:
+
 - Azure SQL: Point-in-time restore (built-in)
 - AWS RDS: Automated daily backups + snapshots
 - PostgreSQL: `pg_dump` via cron + object storage (S3)
@@ -897,7 +913,7 @@ make up           # fresh start
 
 ## Image Versioning
 
-Tag your nopCommerce image after every successful build so you can rollback instantly if something breaks.
+If something breaks, you can rollback instantly. Tag your nopCommerce image after every successful build.
 
 ### Tag the current image
 
@@ -922,6 +938,7 @@ make rollback IMAGE_TAG=v1.0.0
 ```
 
 This:
+
 1. Stops the current container
 2. Tags `infrastructure-nopcommerce:v1.0.0` back to `latest`
 3. Restarts with the stable image
@@ -948,6 +965,7 @@ make rollback IMAGE_TAG=before-theme-update
 For a conflict-free workflow when pulling upstream nopCommerce updates, see [`docs/fork-workflow.md`](docs/fork-workflow.md).
 
 **Quick version:**
+
 - `develop` stays clean for upstream merges
 - Custom work happens on `feature/*` branches
 - Tag your image before risky merges: `make tag IMAGE_TAG=safe`
@@ -966,11 +984,11 @@ For a conflict-free workflow when pulling upstream nopCommerce updates, see [`do
 
 ### nopCommerce shows "Installation" page after restart
 
-This only happens if the container was recreated (e.g., `make clean`). The wizard stores its config in `App_Data/dataSettings.json` inside the container. Since `App_Data` is not mounted as a volume, container recreation wipes the config and shows the wizard again.
+This happens only when the container was recreated. For example, `make clean` recreates the container. The wizard stores its config in `App_Data/dataSettings.json` inside the container. Since `App_Data` is not mounted as a volume, container recreation wipes the config and shows the wizard again.
 
 To preserve your setup, **never** use `make clean` unless you want a complete reset. Use `make down` instead (stops containers but keeps volumes).
 
-### SQL Server won't start on Apple Silicon
+### SQL Server will not start on Apple Silicon
 
 SQL Server is AMD64-only. Docker Desktop with Rosetta 2 handles this automatically. If it fails:
 
@@ -982,6 +1000,7 @@ softwareupdate --install-rosetta --agree-to-license
 ### `App_Data` volume causes `NullReferenceException`
 
 **Symptom:** Container starts but web requests fail with HTTP 500 and this error:
+
 ```
 System.NullReferenceException at Nop.Services.Themes.ThemeProvider.ThemeExistsAsync
 ```
@@ -991,6 +1010,7 @@ System.NullReferenceException at Nop.Services.Themes.ThemeProvider.ThemeExistsAs
 **Fix:** Remove the `App_Data` volume mount from `docker-compose.yml`. The official nopCommerce Docker setup does not mount `App_Data`.
 
 **For production persistence:** After completing the install wizard, copy `App_Data` out of the container:
+
 ```bash
 docker cp db-infra-nopcommerce:/app/App_Data ./nopcommerce-app-data
 # Then mount the host directory instead:
@@ -1003,7 +1023,7 @@ docker cp db-infra-nopcommerce:/app/App_Data ./nopcommerce-app-data
 If 5432, 1433, 6379, or 8080 are taken:
 
 ```bash
-# Find what's using port 8080
+# Find what is using port 8080
 lsof -i :8080
 
 # Change ports in docker-compose.yml

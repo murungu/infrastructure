@@ -1,11 +1,11 @@
 # Arity Theme Customization Playbook
 
-> How to modify the Arity nopCommerce theme confidently, safely, and fast.
-> **Scope:** You want to customize themes — not rebuild nopCommerce from scratch.
+> How to modify the Arity nopCommerce theme with confidence and speed.
+> **Scope:** You want to customize themes. You do not want to rebuild nopCommerce from scratch.
 
 ---
 
-## 1. The Mental Model (Read This Once, Remember Forever)
+## 1. The Mental Model (Read This Once)
 
 nopCommerce themes work on **override + fallback**:
 
@@ -16,29 +16,29 @@ Views/                        ← CORE nopCommerce (NEVER edit)
 
 When nopCommerce needs a view (for example, `Shared/_Header.cshtml`):
 
-1. Looks in `Themes/ArityTheme/Views/Shared/_Header.cshtml`
-2. If found → uses the theme version
-3. If NOT found → falls back to `Views/Shared/_Header.cshtml`
+1. It looks in `Themes/ArityTheme/Views/Shared/_Header.cshtml`.
+2. If it finds the file, it uses the theme version.
+3. If it does not find the file, it falls back to `Views/Shared/_Header.cshtml`.
 
 **The Rule:**
 
-- **Copy to override** — find the core view, copy it into the theme at the same path, edit it
-- **Delete to revert** — remove your copy, core fallback kicks in automatically
-- **Never edit `Views/`** — those are core files, lost on updates
+- **Copy to override.** Find the core view. Copy it into the theme at the same path. Then edit it.
+- **Delete to revert.** Remove your copy. The core fallback kicks in automatically.
+- **Never edit `Views/`.** Those are core files. You will lose the edits on updates.
 
 ### How a Page Renders
 
 ```
 Browser request
-  → Controller (e.g., HomeController.Index)
-    → Returns a View (e.g., Views/Home/Index.cshtml)
+  → Controller (for example, HomeController.Index)
+    → Returns a View (for example, Views/Home/Index.cshtml)
       → View uses a Layout (_Root.cshtml)
         → _Root.cshtml loads Head.cshtml
           → Head.cshtml registers CSS files
-            → CSS is bundled + minified → browser
+            → CSS is bundled and minified → browser
 ```
 
-**Key insight:** Your theme controls the HTML (via copied views) and the CSS (via `Content/css/`). The C# backend stays untouched.
+**Key insight:** Your theme controls the HTML through copied views. It controls the CSS through `Content/css/`. The C# backend stays untouched.
 
 ---
 
@@ -84,22 +84,23 @@ src/Presentation/Nop.Web/Themes/ArityTheme/
 │       └── Wishlist.cshtml
 ```
 
-**What exists already:** Phases 0–2 are done (theme created, brand identity, global layout).
-**What is next:** Homepage, product pages, category pages, cart — matching your design prototypes.
+**What exists already:** Phases 0–2 are complete. The theme exists. The brand identity is set. The global layout is done.
+
+**What is next:** Homepage, product pages, category pages, and cart. Match these to your design prototypes.
 
 ---
 
 ## 3. The Customization Workflow
 
-Every theme change follows this exact loop:
+Every theme change follows this loop:
 
 ### Step 1: Identify What You Want to Change
 
-Ask:
+Ask three questions:
 
-- Is this **CSS-only** (colors, spacing, fonts)? → Edit a `.css` file
-- Is this **HTML structure** (layout, new sections, reordering elements)? → Copy a `.cshtml` view
-- Is this **both**? → Do both
+- Is this **CSS-only** (colors, spacing, fonts)? If yes, edit a `.css` file.
+- Is this **HTML structure** (layout, new sections, reordering elements)? If yes, copy a `.cshtml` view.
+- Is this **both**? If yes, do both.
 
 ### Step 2: Find the Source File
 
@@ -109,7 +110,7 @@ Ask:
 # Search for a class or style in the theme
 grep -rn "menu__link" Themes/ArityTheme/Content/css/
 
-# Or search the huge styles.css
+# Or search the large styles.css
 grep -n "your-class" Themes/ArityTheme/Content/css/styles.css
 ```
 
@@ -119,7 +120,7 @@ grep -n "your-class" Themes/ArityTheme/Content/css/styles.css
 # Find which core view renders something
 grep -rn "SomeTextOrClass" Views/
 
-# List what's already overridden in your theme
+# List what is already overridden in your theme
 ls Themes/ArityTheme/Views/
 
 # Find widget zones (injection points)
@@ -162,7 +163,7 @@ Wait for `Build succeeded. 0 Error(s)`.
 
 ### Step 5: Deploy
 
-**Option A: Hot Copy (fast, 30 sec, for CSS/view changes)**
+**Option A: Hot Copy (fast, 30 seconds, for CSS and view changes)**
 
 ```bash
 dotnet publish src/Presentation/Nop.Web/Nop.Web.csproj -c Release -o /tmp/nop-publish
@@ -171,7 +172,7 @@ docker exec db-infra-nopcommerce rm -rf /app/wwwroot/bundles/*
 docker restart db-infra-nopcommerce
 ```
 
-**Option B: Full Docker Rebuild (slow, 2–3 min, needed for .csproj changes)**
+**Option B: Full Docker Rebuild (slow, 2–3 minutes, needed for .csproj changes)**
 
 ```bash
 docker build -t registry.arity.co.za/nopcommerce:my-test .
@@ -208,17 +209,17 @@ git push origin develop
 
 ### The Modular System
 
-Instead of dumping everything into one giant `styles.css`, we split by concern:
+Instead of one large `styles.css`, we split by concern:
 
 | File | Purpose | Edit When... |
 |------|---------|-------------|
 | `arity.tokens.css` | Brand colors, fonts, spacing variables | You need a new color, font, or spacing token |
-| `arity.base.css` | Global resets, body typography, link styles | You want to change base font, link color, scrollbar |
-| `arity.nav.css` | Header, search bar, menu, mobile nav | Header changes, menu styling, search tweaks |
-| `arity.products.css` | Product cards, category grids, PDP layout | Product listings, detail pages, cart items |
+| `arity.base.css` | Global resets, body typography, link styles | You want to change base font, link color, or scrollbar |
+| `arity.nav.css` | Header, search bar, menu, mobile nav | Header changes, menu styling, or search tweaks |
+| `arity.products.css` | Product cards, category grids, PDP layout | Product listings, detail pages, or cart items |
 | `arity.footer.css` | Footer layout and styling | Footer changes |
-| `arity.icons.css` | Lucide SVG icon sizing, color overrides | Icon replacements, sizing |
-| `styles.css` | Legacy DefaultClean base (8500+ lines) + overrides at bottom | You can't find a modular hook for an override |
+| `arity.icons.css` | Lucide SVG icon sizing, color overrides | Icon replacements or sizing |
+| `styles.css` | Legacy DefaultClean base (8500+ lines) + overrides at bottom | You cannot find a modular hook for an override |
 
 ### How CSS Gets Loaded
 
@@ -230,11 +231,11 @@ Head.cshtml registers files in this order:
   4. arity.base.css
   5. arity.nav.css
   6. arity.icons.css
-  7. arity.products.css
+   7. arity.products.css
   8. arity.footer.css
 ```
 
-**Later files override earlier files** (if selectors have equal specificity). This means our modular files win over `styles.css`.
+Later files override earlier files (if selectors have equal specificity). Our modular files win over `styles.css`.
 
 ### The Specificity Trap
 
@@ -250,7 +251,7 @@ If you write:
 .add-to-wishlist-button { background-image: none; }
 ```
 
-It **will not work** — the old selector is more specific.
+It **will not work**. The old selector is more specific.
 
 **Fix:** Match the specificity exactly:
 
@@ -279,7 +280,7 @@ Or use the same selector chain:
 | `text-align: left` | `text-align: start` |
 | `left: 0` | `inset-inline-start: 0` |
 
-This ensures the theme works for RTL languages without separate `.rtl.css` files for our custom modules.
+This ensures the theme works for RTL languages. You do not need separate `.rtl.css` files for our custom modules.
 
 ### Adding a New CSS File
 
@@ -290,7 +291,7 @@ This ensures the theme works for RTL languages without separate `.rtl.css` files
    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/arity.whatever.css");
    ```
 
-3. Build and deploy
+3. Build and deploy.
 
 ---
 
@@ -298,7 +299,7 @@ This ensures the theme works for RTL languages without separate `.rtl.css` files
 
 ### Pattern A: Override a Shared Partial
 
-Used for: header, footer, head, product box (appears on many pages)
+Use this for: header, footer, head, product box (appears on many pages).
 
 ```bash
 # Find the file in core views
@@ -310,7 +311,7 @@ cp Views/Shared/_Header.cshtml Themes/ArityTheme/Views/Shared/_Header.cshtml
 
 ### Pattern B: Override a Page-Specific View
 
-Used for: homepage, product detail, category page, cart
+Use this for: homepage, product detail, category page, cart.
 
 ```bash
 # Homepage
@@ -329,7 +330,7 @@ cp Views/ShoppingCart/Cart.cshtml Themes/ArityTheme/Views/ShoppingCart/Cart.csht
 
 ### Pattern C: Override a Component View
 
-Used for: header links, search box, main menu, footer menu
+Use this for: header links, search box, main menu, footer menu.
 
 ```bash
 # Header links (wishlist, account, logout)
@@ -373,14 +374,12 @@ Your design prototypes (`designs/redesign/*/code.html`) are **static HTML** usin
 
 ### The Translation Process
 
-1. **Open the prototype** — it is a complete HTML page with inline Tailwind classes
-2. **Identify the nopCommerce view** that renders the same page
-3. **Copy that view** to your theme
-4. **Preserve the Razor model** — keep all `@model`, `@Html.*`, `Model.*`, and `@await Component.InvokeAsync` calls
-5. **Apply the HTML structure** from the prototype, using Razor where data is dynamic
-6. **Convert Tailwind classes to CSS** — either:
-   - Add the styles to the appropriate `arity.*.css` file, or
-   - Keep Tailwind classes if you integrate Tailwind (see Tailwind feasibility docs)
+1. **Open the prototype.** It is a complete HTML page with inline Tailwind classes.
+2. **Identify the nopCommerce view** that renders the same page.
+3. **Copy that view** to your theme.
+4. **Preserve the Razor model.** Keep all `@model`, `@Html.*`, `Model.*`, and `@await Component.InvokeAsync` calls.
+5. **Apply the HTML structure** from the prototype. Use Razor where data is dynamic.
+6. **Convert Tailwind classes to CSS.** Add the styles to the appropriate `arity.*.css` file. Or keep Tailwind classes if you integrate Tailwind.
 
 ### Example: Translating a Product Card
 
@@ -419,7 +418,7 @@ Your design prototypes (`designs/redesign/*/code.html`) are **static HTML** usin
 </div>
 ```
 
-**Your job:** Keep the Razor model and helpers, but change the HTML structure and classes to match the prototype.
+**Your job:** Keep the Razor model and helpers. Change the HTML structure and classes to match the prototype.
 
 ---
 
@@ -430,7 +429,7 @@ Your design prototypes (`designs/redesign/*/code.html`) are **static HTML** usin
 ```bash
 # Replace the image file
 cp your-logo.png Themes/ArityTheme/Content/images/logo.png
-# Build + hot copy
+# Build and hot copy
 ```
 
 ### Change a Color
@@ -438,9 +437,9 @@ cp your-logo.png Themes/ArityTheme/Content/images/logo.png
 ```bash
 # Edit tokens
 vim Themes/ArityTheme/Content/css/arity.tokens.css
-# Update the CSS variable, e.g.:
+# Update the CSS variable, for example:
 # --arity-signal-red: #E63946;
-# Build + hot copy
+# Build and hot copy
 ```
 
 ### Change the Homepage Layout
@@ -449,7 +448,7 @@ vim Themes/ArityTheme/Content/css/arity.tokens.css
 # Copy the homepage view
 cp Views/Home/Index.cshtml Themes/ArityTheme/Views/Home/Index.cshtml
 # Edit the theme copy
-# Build + hot copy + screenshot
+# Build, hot copy, and screenshot
 ```
 
 ### Add a New Font
@@ -478,7 +477,7 @@ grep -n "wishlist-button" Themes/ArityTheme/Content/css/styles.css
 }
 
 # 3. Update the view that renders the button
-# 4. Build + hot copy
+# 4. Build and hot copy
 ```
 
 ### Stale CSS After Deploy
@@ -492,30 +491,30 @@ docker restart db-infra-nopcommerce
 ### Revert a Broken Change
 
 ```bash
-# Simply delete the overridden view from the theme
+# Delete the overridden view from the theme
 rm Themes/ArityTheme/Views/Some/File.cshtml
 # Core fallback kicks in automatically
-# Build + hot copy
+# Build and hot copy
 ```
 
 ---
 
 ## 8. Safety Rules (The "Do Not" List)
 
-| Don't | Because |
+| Do not | Because |
 |-------|---------|
-| Edit `Views/` (core) directly | Lost on nopCommerce updates |
-| Edit `Themes/DefaultClean/` | It's your reference copy; keep it pristine |
+| Edit `Views/` (core) directly | You will lose edits on nopCommerce updates |
+| Edit `Themes/DefaultClean/` | It is your reference copy. Keep it pristine |
 | Forget `styles.rtl.css` | RTL users see broken styles |
-| Use `left`/`right` in modular CSS | Breaks RTL; use `inline-start`/`inline-end` |
-| Skip the bundle cache clear | Stale CSS will drive you insane |
-| Change multiple surfaces at once | Hard to debug; one surface per deploy |
+| Use `left`/`right` in modular CSS | Breaks RTL. Use `inline-start`/`inline-end` |
+| Skip the bundle cache clear | Stale CSS will cause false results |
+| Change multiple surfaces at once | Hard to debug. One surface per deploy |
 | Forget to build before deploying | Errors only show on build |
-| Use `!important` unless necessary | Makes debugging harder; match specificity instead |
+| Use `!important` unless necessary | Makes debugging harder. Match specificity instead |
 
 ---
 
-## 9. Quick Reference: Files You'll Touch Most Often
+## 9. Quick Reference: Files You Will Touch Most Often
 
 | Task | File(s) |
 |------|---------|
@@ -527,9 +526,9 @@ rm Themes/ArityTheme/Views/Some/File.cshtml
 | Change category page | `Catalog/CategoryTemplate.*.cshtml` + `arity.products.css` |
 | Change cart | `ShoppingCart/Cart.cshtml` + `arity.products.css` |
 | Change footer | `arity.footer.css` |
-| Add/remove CSS files | `Views/Shared/Head.cshtml` |
+| Add or remove CSS files | `Views/Shared/Head.cshtml` |
 | Change page skeleton | `Views/Shared/_Root.cshtml` |
-| Change `<head>` content | `Views/Shared/_Root.Head.cshtml` |
+| Change <head> content | `Views/Shared/_Root.Head.cshtml` |
 | Change meta/title/scripts | `Views/Shared/_Root.Head.cshtml` |
 
 ---
@@ -548,15 +547,15 @@ rm Themes/ArityTheme/Views/Some/File.cshtml
 
 ## 11. Next Steps to Get Good
 
-1. **Make one small CSS change** (e.g., change `--arity-signal-red` to a different red) and deploy it using the hot copy workflow. Verify with a screenshot.
+1. **Make one small CSS change.** For example, change `--arity-signal-red` to a different red. Deploy it using the hot copy workflow. Verify with a screenshot.
 
-2. **Override one view** — copy `Views/Home/Index.cshtml` to the theme and add a simple HTML comment. Deploy and verify the comment appears in the page source.
+2. **Override one view.** Copy `Views/Home/Index.cshtml` to the theme. Add a simple HTML comment. Deploy and verify the comment appears in the page source.
 
-3. **Translate one prototype section** — take the product card HTML from `code.html` and adapt `_ProductBox.cshtml` to match the structure while keeping the Razor model.
+3. **Translate one prototype section.** Take the product card HTML from `code.html`. Adapt `_ProductBox.cshtml` to match the structure. Keep the Razor model.
 
-4. **Read the design system** — open `Design.md` and `arity.tokens.css` side by side. Understand how tokens map to CSS variables.
+4. **Read the design system.** Open `Design.md` and `arity.tokens.css` side by side. Understand how tokens map to CSS variables.
 
-5. **Master the feedback loop** — your power is the 30-second hot copy + screenshot cycle. The faster you can iterate, the better your theme will be.
+5. **Master the feedback loop.** Your power is the 30-second hot copy + screenshot cycle. The faster you iterate, the better your theme will be.
 
 ---
 

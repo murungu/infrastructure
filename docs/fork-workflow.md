@@ -1,6 +1,6 @@
 # nopCommerce Fork Workflow
 
-This guide ensures you can pull upstream updates from `nopSolutions/nopCommerce` without merge conflicts.
+This guide shows you how to pull upstream updates from `nopSolutions/nopCommerce` without merge conflicts.
 
 ## Repositories
 
@@ -13,7 +13,7 @@ This guide ensures you can pull upstream updates from `nopSolutions/nopCommerce`
 
 > **Never commit directly to `develop`.** Always work on feature branches.
 >
-> This keeps `develop` clean and allows fast-forward merges from upstream.
+> This keeps `develop` clean. It also allows fast-forward merges from upstream.
 
 ## Daily Workflow
 
@@ -22,36 +22,46 @@ This guide ensures you can pull upstream updates from `nopSolutions/nopCommerce`
 ```bash
 cd nopcommerce-src
 git checkout develop
-git pull origin develop          # make sure you're current
+git pull origin develop
 git checkout -b feature/my-plugin
+```
 
-# ... make changes ...
+Make your changes. Then commit and push:
+
+```bash
 git add .
 git commit -m "feat: add custom payment plugin"
 git push origin feature/my-plugin
-
-# Open PR on GitHub to merge into develop
 ```
 
-### 2. Pull upstream updates (weekly/monthly)
+Open a PR on GitHub to merge into `develop`.
+
+### 2. Pull upstream updates (weekly or monthly)
 
 ```bash
 cd nopcommerce-src
-git fetch upstream               # download latest from nopSolutions
+git fetch upstream
 git checkout develop
-git merge upstream/develop       # fast-forward if you kept develop clean
+git merge upstream/develop
+```
 
-# If there are conflicts, resolve them, then:
+If `develop` is clean, this is a fast-forward merge.
+
+If there are conflicts, resolve them. Then push:
+
+```bash
 git push origin develop
 ```
 
 ### 3. Rebuild after upstream merge
 
 ```bash
-cd ..                          # back to infrastructure root
-make tag IMAGE_TAG=before-upstream-merge   # safety net
-make up                        # rebuilds from updated source
+cd ..
+make tag IMAGE_TAG=before-upstream-merge
+make up
 ```
+
+The `make tag` command creates a safety net. The `make up` command rebuilds from the updated source.
 
 ### 4. If the build breaks
 
@@ -59,22 +69,23 @@ make up                        # rebuilds from updated source
 make rollback IMAGE_TAG=before-upstream-merge
 ```
 
-## What Happens If You Committed to `develop`?
+## What Happens If You Commit to `develop`?
 
-If you committed the Dockerfile fix directly to `develop` (like we just did), future `git merge upstream/develop` may create a merge commit instead of fast-forwarding. That's fine — just resolve any conflicts during the merge.
+If you commit directly to `develop`, future `git merge upstream/develop` can create a merge commit. This is not a problem. Resolve any conflicts during the merge.
 
-For **all future custom work**, use feature branches:
+For all future custom work, use feature branches:
 
 ```bash
 git checkout -b feature/custom-theme
 git commit -m "feat: add dark mode theme"
 git push origin feature/custom-theme
-# Open PR → merge to develop
 ```
+
+Then open a PR and merge to `develop`.
 
 ## Keeping the Dockerfile Fix Separate
 
-Your `Dockerfile` fix (`mkdir -p wwwroot/images/3d`) is now on `develop` and pushed to origin. If upstream later fixes it too, you'll get a trivial merge conflict. Resolve by accepting upstream's version and deleting yours.
+The `Dockerfile` fix (`mkdir -p wwwroot/images/3d`) is on `develop` and pushed to origin. If upstream fixes this too, you will get a trivial merge conflict. Resolve the conflict by accepting upstream's version and deleting yours.
 
 ## Cheat Sheet
 
@@ -82,7 +93,7 @@ Your `Dockerfile` fix (`mkdir -p wwwroot/images/3d`) is now on `develop` and pus
 # New feature
 git checkout develop && git pull origin develop
 git checkout -b feature/xxx
-# ...edit...
+# ... edit ...
 git commit && git push origin feature/xxx
 
 # Upstream update
