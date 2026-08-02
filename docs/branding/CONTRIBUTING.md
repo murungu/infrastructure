@@ -14,8 +14,22 @@
 6. **RTL-safe.** Use `margin-inline-start`, not `margin-left`. Use `text-align: start`, not `left`.
 7. **Clear bundles after CSS changes.** `docker exec db-infra-nopcommerce rm -rf /app/wwwroot/bundles/*`
 8. **Keep docs in STE100.** Short sentences. No contractions. Imperative voice for procedures.
+9. **Wireframe before CSS.** Every layout change needs a wireframe for each target viewport (375px / 768px / 1280px) before implementation. Create it in `docs/wireframes/`. Review it. Then write CSS.
 
 ---
+
+## Wireframe-First Workflow
+
+Every layout change follows this order:
+
+1. **Identify** the issue in `mobile-first-audit.md` or `ui-gaps.md`
+2. **Wireframe** the proposed layout at 375px / 768px / 1280px in `docs/wireframes/`
+3. **Review** the wireframe — check touch targets, readability, fold position
+4. **Implement** in `Themes/ArityTheme/` CSS and views
+5. **Screenshot** at 375px / 768px / 1280px and compare with wireframe
+6. **Commit** if screenshots match the wireframe
+
+**Rule: No CSS without a wireframe.** Color and spacing tweaks that do not change layout are exempt.
 
 ## Workflow
 
@@ -25,6 +39,11 @@
 cd ~/Developer/infrastructure/nopcommerce-src
 git checkout develop
 git pull origin develop
+
+# For wireframe-only changes (docs branch)
+git checkout -b docs/wireframes/what-you-are-designing
+
+# For CSS/view changes (theme branch)
 git checkout -b fix/theme/something-short
 ```
 
@@ -106,8 +125,10 @@ docker run -d --name db-infra-nopcommerce \
 
 Before you open a PR, confirm:
 
+- [ ] Wireframe exists in `docs/wireframes/` for this layout change
+- [ ] Wireframe reviewed at 375px / 768px / 1280px
 - [ ] Build succeeds: `dotnet build src/NopCommerce.sln` → `0 Error(s)`
-- [ ] Screenshots at 375/768/1280 look correct
+- [ ] Screenshots at 375/768/1280 match the wireframe
 - [ ] No horizontal scroll on mobile
 - [ ] Touch targets are 44×44px or larger
 - [ ] RTL logical properties used (no `left`/`right` in new CSS)

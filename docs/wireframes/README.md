@@ -1,6 +1,6 @@
 # Wireframe-First Workflow
 
-> Use wireframes before writing any CSS. Review them. Then implement.
+> Use wireframes before writing any CSS. Review them at every viewport. Then implement.
 
 ## How to Use Wireframes
 
@@ -10,22 +10,29 @@ Find the issue in [mobile-first-audit.md](../branding/mobile-first-audit.md) or 
 
 ### Step 2: Create or Open the Wireframe
 
-Each wireframe shows **CURRENT** (red banner) vs **PROPOSED** (green banner) at 375px.
+Every wireframe shows **CURRENT** (red) vs **PROPOSED** (green) at **three viewports**:
 
-Open any `.html` file in Chrome:
+| Viewport | Size | What it represents |
+|---|---|---|
+| Mobile | 375px | Zimbabwe primary market — 55%+ of traffic |
+| Tablet | 768px | iPad, Android tablets |
+| Desktop | 1280px | Laptops and larger screens |
 
-- DevTools → Toggle device toolbar (Cmd+Shift+M)
-- Select "iPhone X" (375×812)
-- Scroll to compare both versions
+Open any `.html` file in Chrome. Use the viewport tabs at the top:
+
+- Click **Mobile** to see 375px
+- Click **Tablet** to see 768px
+- Click **Desktop** to see 1280px
 
 ### Step 3: Review and Decide
 
-Ask:
+Ask at **each viewport**:
 
-- Does the proposed layout solve the problem?
-- Are touch targets ≥ 44×44px?
+- Does the layout work for this screen size?
+- Are touch targets ≥ 44×44px on mobile?
 - Is content readable without zoom?
-- Is the primary action visible above the fold?
+- Is the primary action visible without scrolling?
+- Does the layout scale gracefully?
 
 If yes → proceed to Step 4.  
 If no → edit the wireframe HTML, review again.
@@ -42,34 +49,42 @@ Follow the hot-copy workflow from [theme-playbook.md](../branding/theme-playbook
 
 ### Step 5: Verify with Screenshots
 
-Screenshot at 375/768/1280px. Compare with the wireframe.
+Screenshot at 375/768/1280px. Compare with the wireframe at each viewport.
 
-If the implementation matches the wireframe → commit.  
+If the implementation matches the wireframe at all three sizes → commit.  
 If not → iterate.
 
 ---
 
 ## Wireframe Library
 
-| # | File | Page | Issue | Status |
+| # | File | Page | Issue | Viewports |
 |---|---|---|---|---|
-| 01 | [category-page.html](01-category-page.html) | Category | Sidebar blocks products | Reviewed |
-| 02 | [product-card-actions.html](02-product-card-actions.html) | Product Grid | Tiny touch targets | Reviewed |
-| 03 | [pdp-variants.html](03-pdp-variants.html) | Product Detail | Dense variant selectors | Reviewed |
-| 04 | [homepage-categories.html](04-homepage-categories.html) | Homepage | Oversized category images | Reviewed |
-| 05 | [empty-cart.html](05-empty-cart.html) | Cart | Dead end, no CTA | Reviewed |
-| 06 | [checkout-flow.html](06-checkout-flow.html) | Checkout | Long form, no progress | Draft |
-| 07 | [mobile-menu.html](07-mobile-menu.html) | Navigation | Text-only menu | Draft |
-| 08 | [search-results.html](08-search-results.html) | Search | No filters visible | Draft |
+| 01 | [category-page.html](01-category-page.html) | Category | Sidebar blocks products | 375px |
+| 02 | [product-card-actions.html](02-product-card-actions.html) | Product Grid | Tiny touch targets | 375px |
+| 03 | [pdp-variants.html](03-pdp-variants.html) | Product Detail | Dense variant selectors | 375px |
+| 04 | [homepage-categories.html](04-homepage-categories.html) | Homepage | Oversized category images | 375px |
+| 05 | [empty-cart.html](05-empty-cart.html) | Cart | Dead end, no CTA | 375px |
 
 ---
 
 ## How to Create a New Wireframe
 
-Copy an existing wireframe and modify:
+### Option A: Use the Multi-Viewport Template
+
+Copy `00-template.html` and fill in the CURRENT and PROPOSED sections for each viewport:
 
 ```bash
-cp 01-category-page.html 09-your-new-page.html
+cd docs/wireframes
+cp 00-template.html 06-your-page.html
+```
+
+The template shows all three viewports (375/768/1280) in one file with tab navigation.
+
+### Option B: Copy an Existing Wireframe
+
+```bash
+cp 01-category-page.html 06-your-page.html
 ```
 
 Edit the HTML. Keep the structure:
@@ -82,13 +97,29 @@ Add to this README. Commit.
 
 ---
 
+## Multi-Viewport Template
+
+The `00-template.html` file includes:
+
+- Tab navigation: Mobile (375px) / Tablet (768px) / Desktop (1280px)
+- Phone frame styling for each size
+- "Current" and "Proposed" badges
+- Arity Shop header and nav
+- Content area for your layout
+- Instructions in HTML comments
+
+Use it for any new page.
+
+---
+
 ## Why Wireframe-First?
 
 1. **Faster than CSS.** Edit HTML in 5 minutes vs. 30 minutes of CSS tweaking.
-2. **No build needed.** Open in browser, no `dotnet build`, no Docker restart.
+2. **No build needed.** Open in browser. No `dotnet build`. No Docker restart.
 3. **Reviewable by anyone.** Stakeholders can see the layout without understanding CSS.
 4. **Prevents regressions.** Wireframe is the spec. Implementation must match.
-5. **Reusable.** Template works for any page type.
+5. **Multi-viewport by default.** You design for 375, 768, and 1280 simultaneously.
+6. **Mobile-first enforcement.** You see mobile first, not as an afterthought.
 
 ---
 
