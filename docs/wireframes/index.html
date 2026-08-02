@@ -1,88 +1,233 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-  body { font-family: system-ui, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
-  h1 { font-size: 22px; margin-bottom: 8px; }
-  h2 { font-size: 16px; margin: 24px 0 12px; color: #374151; }
-  p { color: #666; margin-bottom: 16px; }
-  .intro { background: #f9fafb; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
-  .intro p { margin-bottom: 8px; }
-  .intro p:last-child { margin-bottom: 0; }
-  .wireframe { background: #f5f5f5; padding: 16px; border-radius: 8px; margin-bottom: 12px; }
-  .wireframe a { color: #000; text-decoration: none; font-weight: 500; }
-  .wireframe a:hover { text-decoration: underline; }
-  .wireframe-desc { font-size: 13px; color: #666; margin-top: 4px; }
-  .tag { display: inline-block; background: #e74c3c; color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 2px; margin-left: 8px; }
-  .tag.fix { background: #27ae60; }
-  .tag.template { background: #3b82f6; }
-  .template-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
-  .template-box a { color: #1d4ed8; font-weight: 600; text-decoration: none; }
-  .template-box a:hover { text-decoration: underline; }
-</style>
-</head>
-<body>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 22px;
+        margin-bottom: 8px;
+      }
+      h2 {
+        font-size: 16px;
+        margin: 24px 0 12px;
+        color: #374151;
+      }
+      p {
+        color: #666;
+        margin-bottom: 16px;
+      }
+      .intro {
+        background: #f9fafb;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+      .intro p {
+        margin-bottom: 8px;
+      }
+      .intro p:last-child {
+        margin-bottom: 0;
+      }
+      .wireframe {
+        background: #f5f5f5;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+      }
+      .wireframe a {
+        color: #000;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .wireframe a:hover {
+        text-decoration: underline;
+      }
+      .wireframe-desc {
+        font-size: 13px;
+        color: #666;
+        margin-top: 4px;
+      }
+      .tag {
+        display: inline-block;
+        background: #e74c3c;
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 2px;
+        margin-left: 8px;
+      }
+      .tag.fix {
+        background: #27ae60;
+      }
+      .tag.template {
+        background: #3b82f6;
+      }
+      .template-box {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+      .template-box a {
+        color: #1d4ed8;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .template-box a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📐 Arity Shop — Wireframe Library</h1>
 
-<h1>📐 Arity Shop — Wireframe Library</h1>
+    <div class="intro">
+      <p>
+        <strong>Rule: Wireframe before CSS.</strong> Every layout change needs a
+        wireframe for each target viewport before implementation begins.
+      </p>
+      <p>
+        <strong>Target viewports:</strong> Mobile 375px (primary) / Tablet 768px
+        / Desktop 1280px
+      </p>
+      <p>
+        <strong>Workflow:</strong> Identify issue → Wireframe all viewports →
+        Review → Implement → Screenshot → Compare → Commit
+      </p>
+    </div>
 
-<div class="intro">
-  <p><strong>Rule: Wireframe before CSS.</strong> Every layout change needs a wireframe for each target viewport before implementation begins.</p>
-  <p><strong>Target viewports:</strong> Mobile 375px (primary) / Tablet 768px / Desktop 1280px</p>
-  <p><strong>Workflow:</strong> Identify issue → Wireframe all viewports → Review → Implement → Screenshot → Compare → Commit</p>
-</div>
+    <div class="template-box">
+      <strong>🆕 Start here:</strong>
+      <a href="00-template.html">00-template.html</a> — Multi-viewport template
+      with Mobile/Tablet/Desktop tabs
+      <div class="wireframe-desc">
+        Copy this template for any new page. Shows CURRENT vs PROPOSED at all
+        three viewports with tab navigation.
+      </div>
+    </div>
 
-<div class="template-box">
-  <strong>🆕 Start here:</strong> <a href="00-template.html">00-template.html</a> — Multi-viewport template with Mobile/Tablet/Desktop tabs
-  <div class="wireframe-desc">Copy this template for any new page. Shows CURRENT vs PROPOSED at all three viewports with tab navigation.</div>
-</div>
+    <h2>Existing Wireframes</h2>
 
-<h2>Existing Wireframes</h2>
+    <div class="wireframe">
+      <a href="01-category-page.html"
+        >01 — Category Page: Sidebar vs Products</a
+      >
+      <span class="tag">P1</span>
+      <div class="wireframe-desc">
+        Current: sidebar blocks products. Proposed: products first, sidebar
+        below.
+      </div>
+    </div>
 
-<div class="wireframe">
-  <a href="01-category-page.html">01 — Category Page: Sidebar vs Products</a>
-  <span class="tag">P1</span>
-  <div class="wireframe-desc">Current: sidebar blocks products. Proposed: products first, sidebar below.</div>
-</div>
+    <div class="wireframe">
+      <a href="02-product-card-actions.html"
+        >02 — Product Card: Touch Targets</a
+      >
+      <span class="tag">P1</span>
+      <div class="wireframe-desc">
+        Current: 32×32px icon buttons. Proposed: full-width stacked buttons.
+      </div>
+    </div>
 
-<div class="wireframe">
-  <a href="02-product-card-actions.html">02 — Product Card: Touch Targets</a>
-  <span class="tag">P1</span>
-  <div class="wireframe-desc">Current: 32×32px icon buttons. Proposed: full-width stacked buttons.</div>
-</div>
+    <div class="wireframe">
+      <a href="03-pdp-variants.html">03 — Product Detail: Variant Selectors</a>
+      <span class="tag">P1</span>
+      <div class="wireframe-desc">
+        Current: tight radios/dropdowns. Proposed: spacious, tappable cards.
+      </div>
+    </div>
 
-<div class="wireframe">
-  <a href="03-pdp-variants.html">03 — Product Detail: Variant Selectors</a>
-  <span class="tag">P1</span>
-  <div class="wireframe-desc">Current: tight radios/dropdowns. Proposed: spacious, tappable cards.</div>
-</div>
+    <div class="wireframe">
+      <a href="04-homepage-categories.html">04 — Homepage: Category Blocks</a>
+      <span class="tag">P1</span>
+      <div class="wireframe-desc">
+        Current: 200px tall images. Proposed: horizontal scroll, 120px images.
+      </div>
+    </div>
 
-<div class="wireframe">
-  <a href="04-homepage-categories.html">04 — Homepage: Category Blocks</a>
-  <span class="tag">P1</span>
-  <div class="wireframe-desc">Current: 200px tall images. Proposed: horizontal scroll, 120px images.</div>
-</div>
+    <div class="wireframe">
+      <a href="05-empty-cart.html">05 — Empty Cart: Dead End vs CTA</a>
+      <span class="tag fix">P2</span>
+      <div class="wireframe-desc">
+        Current: empty message only. Proposed: "Continue Shopping" + featured
+        products.
+      </div>
+    </div>
 
-<div class="wireframe">
-  <a href="05-empty-cart.html">05 — Empty Cart: Dead End vs CTA</a>
-  <span class="tag fix">P2</span>
-  <div class="wireframe-desc">Current: empty message only. Proposed: "Continue Shopping" + featured products.</div>
-</div>
+    <div class="wireframe">
+      <a href="06-login-register.html"
+        >06 — Login/Register: Placeholder Text vs Branded</a
+      >
+      <span class="tag">P1</span>
+      <div class="wireframe-desc">
+        Current: "About login / registration" placeholder, generic social
+        buttons. Proposed: branded sign-in, larger inputs, WhatsApp CTA.
+      </div>
+    </div>
 
-<h2>Documentation</h2>
+    <div class="wireframe">
+      <a href="07-cart-with-items.html"
+        >07 — Cart with Items: Compact vs Stacked</a
+      >
+      <span class="tag">P1</span>
+      <div class="wireframe-desc">
+        Current: small quantity buttons, dense layout. Proposed: larger touch
+        targets, order summary, WhatsApp support.
+      </div>
+    </div>
 
-<div class="wireframe">
-  <a href="README.md">README.md</a> — Wireframe-First Workflow Guide
-  <div class="wireframe-desc">How to use wireframes, review checklist, why wireframe-first is faster and safer.</div>
-</div>
+    <div class="wireframe">
+      <a href="08-footer.html">08 — Footer: Generic vs Branded</a>
+      <span class="tag">P1</span>
+      <div class="wireframe-desc">
+        Current: "Arty Store" wrong name, generic links, no WhatsApp. Proposed:
+        Arity Shop branded, solar categories, WhatsApp social.
+      </div>
+    </div>
 
-<p style="margin-top: 30px; font-size: 12px; color: #999;">
-  <strong>How to view:</strong><br>
-  1. Open <a href="00-template.html">00-template.html</a> in Chrome<br>
-  2. Use the Mobile/Tablet/Desktop tabs at the top<br>
-  3. Scroll to compare CURRENT (red) vs PROPOSED (green)<br>
-  4. Edit the HTML directly to iterate on layouts
-</p>
+    <div class="wireframe">
+      <a href="09-product-detail-full.html"
+        >09 — Product Detail: Generic vs Rich</a
+      >
+      <span class="tag">P1</span>
+      <div class="wireframe-desc">
+        Current: generic product, no specs, small action buttons. Proposed:
+        specs grid, trust badges, swipe gallery, full-width actions.
+      </div>
+    </div>
 
-</body>
+    <div class="wireframe">
+      <a href="10-wishlist.html">10 — Wishlist: Small vs Full-Width</a>
+      <span class="tag">P2</span>
+      <div class="wireframe-desc">
+        Current: small buttons, no stock info. Proposed: full-width actions,
+        stock status, larger cards.
+      </div>
+    </div>
+
+    <h2>Documentation</h2>
+
+    <div class="wireframe">
+      <a href="README.md">README.md</a> — Wireframe-First Workflow Guide
+      <div class="wireframe-desc">
+        How to use wireframes, review checklist, why wireframe-first is faster
+        and safer.
+      </div>
+    </div>
+
+    <p style="margin-top: 30px; font-size: 12px; color: #999">
+      <strong>How to view:</strong><br />
+      1. Open <a href="00-template.html">00-template.html</a> in Chrome<br />
+      2. Use the Mobile/Tablet/Desktop tabs at the top<br />
+      3. Scroll to compare CURRENT (red) vs PROPOSED (green)<br />
+      4. Edit the HTML directly to iterate on layouts
+    </p>
+  </body>
 </html>

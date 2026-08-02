@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; }
+  body { background: #f5f5f5; padding: 10px; max-width: 375px; margin: 0 auto; }
+  .version { background: #000; color: #fff; padding: 8px; text-align: center; font-size: 12px; margin-bottom: 10px; border-radius: 4px; }
+  .version.current { background: #c0392b; }
+  .version.proposed { background: #27ae60; }
+  .header { background: #fff; padding: 12px; display: flex; align-items: center; gap: 8px; border-radius: 4px; margin-bottom: 8px; }
+  .logo { font-size: 18px; font-weight: bold; }
+  .search { flex: 1; background: #eee; padding: 8px; border-radius: 4px; font-size: 12px; color: #999; }
+  .icons { display: flex; gap: 12px; }
+  .icon { width: 20px; height: 20px; background: #333; border-radius: 50%; }
+  .nav { background: #000; color: #fff; padding: 10px 12px; border-radius: 4px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+  .breadcrumb { background: #fff; padding: 8px 12px; font-size: 11px; color: #666; border-radius: 4px; margin-bottom: 8px; }
+  h2 { font-size: 16px; margin: 20px 0 10px; }
+  .label { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .card { background: #fff; padding: 16px; border-radius: 4px; margin-bottom: 8px; }
+  .card-title { font-size: 16px; font-weight: bold; margin-bottom: 8px; }
+  .card-text { font-size: 13px; color: #666; line-height: 1.5; }
+  .btn-primary { background: #000; color: #fff; padding: 14px; text-align: center; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; }
+  .btn-secondary { background: #fff; border: 1px solid #000; padding: 14px; text-align: center; border-radius: 4px; font-size: 14px; cursor: pointer; }
+  .form-group { margin-bottom: 12px; }
+  .form-label { font-size: 12px; color: #666; margin-bottom: 4px; display: block; }
+  .form-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+  .footer { background: #1a1a1a; color: #fff; padding: 20px; border-radius: 4px; margin-top: 10px; }
+  .footer-title { font-size: 12px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+  .footer-link { font-size: 11px; color: #aaa; padding: 4px 0; }
+  .divider { height: 1px; background: #eee; margin: 12px 0; }
+</style>
+</head>
+<body>
+
+<h2>📱 Login / Register Page</h2>
+
+<div class="label">CURRENT — PROBLEM</div>
+<div class="version current">❌ PLACEHOLDER TEXT, GENERIC SOCIAL BUTTONS</div>
+
+
+  <div class="header">
+    <div class="logo">arity shop</div>
+    <div class="search">Search store</div>
+    <div class="icons"><div class="icon"></div><div class="icon"></div><div class="icon"></div></div>
+  </div>
+
+
+  <div class="nav">
+    <span>CATEGORIES</span>
+    <span>☰</span>
+  </div>
+
+<div class="card">
+  <div class="card-title">Welcome, Please Sign In!</div>
+  <div class="card-text" style="margin-bottom: 16px;">About login / registration. Put your login / registration information here. You can edit this in the admin site.</div>
+  
+  <div class="form-group">
+    <span class="form-label">Email:</span>
+    <div class="form-input"></div>
+  </div>
+  <div class="form-group">
+    <span class="form-label">Password:</span>
+    <div class="form-input"></div>
+  </div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+    <label style="font-size: 12px;"><input type="checkbox"> Remember me</label>
+    <a href="#" style="font-size: 12px; color: #666;">Forgot password?</a>
+  </div>
+  <div class="btn-primary">Log in</div>
+</div>
+
+<div class="card">
+  <div class="card-title">New Customer</div>
+  <div class="card-text" style="margin-bottom: 12px;">By creating an account on our website, you will be able to shop faster, be up to date on an order's status, and keep track of the orders you have previously made.</div>
+  <div class="btn-secondary">Register</div>
+</div>
+
+<div class="card">
+  <div class="card-title" style="font-size: 14px;">Or log in with</div>
+  <div style="display: flex; gap: 8px;">
+    <div style="flex: 1; padding: 10px; background: #f5f5f5; text-align: center; border-radius: 4px; font-size: 12px;">Facebook</div>
+    <div style="flex: 1; padding: 10px; background: #f5f5f5; text-align: center; border-radius: 4px; font-size: 12px;">Google</div>
+    <div style="flex: 1; padding: 10px; background: #f5f5f5; text-align: center; border-radius: 4px; font-size: 12px;">Phone</div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-title">Information</div>
+  <div class="footer-link">Sitemap</div>
+  <div class="footer-link">Privacy notice</div>
+  <div class="footer-link">Powered by nopCommerce</div>
+</div>
+
+<div style="height: 30px;"></div>
+
+<div class="label">PROPOSED — FIX</div>
+<div class="version proposed">✅ PLACEHOLDER TEXT, GENERIC SOCIAL BUTTONS</div>
+
+
+  <div class="header">
+    <div class="logo">arity shop</div>
+    <div class="search">Search store</div>
+    <div class="icons"><div class="icon"></div><div class="icon"></div><div class="icon"></div></div>
+  </div>
+
+
+  <div class="nav">
+    <span>CATEGORIES</span>
+    <span>☰</span>
+  </div>
+
+<div class="card">
+  <div style="text-align: center; margin-bottom: 20px;">
+    <div style="width: 48px; height: 48px; background: #000; border-radius: 50%; margin: 0 auto 12px;"></div>
+    <div class="card-title">Sign in to Arity Shop</div>
+    <div class="card-text">Access your orders and saved products.</div>
+  </div>
+  
+  <div class="form-group">
+    <span class="form-label">Email or phone</span>
+    <div class="form-input" style="padding: 14px; font-size: 16px;"></div>
+  </div>
+  <div class="form-group">
+    <span class="form-label">Password</span>
+    <div class="form-input" style="padding: 14px; font-size: 16px;"></div>
+  </div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 13px;">
+    <label><input type="checkbox"> Remember me</label>
+    <a href="#" style="color: #000; text-decoration: underline;">Forgot password?</a>
+  </div>
+  <div class="btn-primary" style="padding: 16px; font-size: 16px; border-radius: 8px; margin-bottom: 12px;">Sign In</div>
+  <div style="text-align: center; font-size: 13px; color: #666;">
+    Don't have an account? <a href="#" style="color: #000; font-weight: 600;">Create one</a>
+  </div>
+</div>
+
+<div class="card" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+  <div style="font-size: 13px; color: #666; text-align: center;">
+    <strong>Why sign in?</strong><br/>
+    Track orders, save wishlists, reorder quickly.
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-title">Information</div>
+  <div class="footer-link">Sitemap</div>
+  <div class="footer-link">Privacy notice</div>
+  <div class="footer-link">© 2026 Arity Shop</div>
+</div>
+
+</body>
+</html>
