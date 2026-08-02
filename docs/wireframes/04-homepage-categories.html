@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; }
+  body { background: #f5f5f5; padding: 10px; max-width: 375px; margin: 0 auto; }
+  .version { background: #000; color: #fff; padding: 8px; text-align: center; font-size: 12px; margin-bottom: 10px; border-radius: 4px; }
+  .version.current { background: #c0392b; }
+  .version.proposed { background: #27ae60; }
+  
+  h2 { font-size: 16px; margin: 20px 0 10px; }
+  .label { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  
+  .section { background: #fff; padding: 12px; border-radius: 4px; margin-bottom: 10px; }
+  .section-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; }
+  
+  /* Current: huge images */
+  .cat-current { margin-bottom: 12px; }
+  .cat-img-current { width: 100%; height: 200px; background: #ddd; border-radius: 4px; margin-bottom: 6px; }
+  .cat-name-current { font-size: 14px; text-align: center; }
+  
+  /* Proposed: compact horizontal scroll */
+  .cat-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; }
+  .cat-scroll::-webkit-scrollbar { display: none; }
+  .cat-p { flex-shrink: 0; width: 120px; }
+  .cat-img-p { width: 120px; height: 120px; background: #ddd; border-radius: 8px; margin-bottom: 6px; }
+  .cat-name-p { font-size: 12px; text-align: center; }
+  
+  /* Featured products */
+  .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .product { background: #fff; padding: 8px; border-radius: 4px; }
+  .product-img { width: 100%; height: 120px; background: #ddd; border-radius: 4px; margin-bottom: 6px; }
+  .product-name { font-size: 11px; margin-bottom: 4px; }
+  .product-price { font-size: 13px; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h2>📱 Homepage Categories @ 375px</h2>
+
+<div class="label">CURRENT — PROBLEM</div>
+<div class="version current">❌ ONLY 1 CATEGORY ABOVE FOLD, MUST SCROLL TO SEE PRODUCTS</div>
+
+<div class="section">
+  <div class="section-title">Welcome to our store</div>
+  <div style="font-size: 12px; color: #666; margin-bottom: 10px;">Your solar solution for Zimbabwe.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Categories</div>
+  <div class="cat-current">
+    <div class="cat-img-current"></div>
+    <div class="cat-name-current">Electronics</div>
+  </div>
+  <div class="cat-current">
+    <div class="cat-img-current"></div>
+    <div class="cat-name-current">Apparel</div>
+  </div>
+  <div class="cat-current">
+    <div class="cat-img-current"></div>
+    <div class="cat-name-current">Digital downloads</div>
+  </div>
+</div>
+
+<!-- User must scroll past 3×200px = 600px of categories to see featured products -->
+<div class="section">
+  <div class="section-title">Featured products</div>
+  <div class="product-grid">
+    <div class="product">
+      <div class="product-img"></div>
+      <div class="product-name">500W Panel</div>
+      <div class="product-price">$249</div>
+    </div>
+    <div class="product">
+      <div class="product-img"></div>
+      <div class="product-name">5kWh Battery</div>
+      <div class="product-price">$1,299</div>
+    </div>
+  </div>
+</div>
+
+<div style="height: 30px;"></div>
+
+<div class="label">PROPOSED — FIX</div>
+<div class="version proposed">✅ COMPACT CATEGORIES, FEATURED PRODUCTS VISIBLE SOONER</div>
+
+<div class="section">
+  <div class="section-title">Welcome to our store</div>
+  <div style="font-size: 12px; color: #666; margin-bottom: 10px;">Your solar solution for Zimbabwe.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Shop by category</div>
+  <div class="cat-scroll">
+    <div class="cat-p">
+      <div class="cat-img-p"></div>
+      <div class="cat-name-p">Solar Panels</div>
+    </div>
+    <div class="cat-p">
+      <div class="cat-img-p"></div>
+      <div class="cat-name-p">Batteries</div>
+    </div>
+    <div class="cat-p">
+      <div class="cat-img-p"></div>
+      <div class="cat-name-p">Inverters</div>
+    </div>
+    <div class="cat-p">
+      <div class="cat-img-p"></div>
+      <div class="cat-name-p">Controllers</div>
+    </div>
+  </div>
+</div>
+
+<!-- Featured products visible at ~400px scroll instead of ~800px -->
+<div class="section">
+  <div class="section-title">Featured products</div>
+  <div class="product-grid">
+    <div class="product">
+      <div class="product-img"></div>
+      <div class="product-name">500W Panel</div>
+      <div class="product-price">$249</div>
+    </div>
+    <div class="product">
+      <div class="product-img"></div>
+      <div class="product-name">5kWh Battery</div>
+      <div class="product-price">$1,299</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
