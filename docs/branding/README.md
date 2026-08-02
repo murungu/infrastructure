@@ -94,10 +94,12 @@ Read these in order if you need depth on a topic:
 | 2 | **[ui-gaps.md](ui-gaps.md)** | Know the full UI review findings (desktop + mobile + branding + content). |
 | 3 | **[viewport-plan.md](viewport-plan.md)** | Add a new breakpoint or media query. Understand the 375/768/1280 screenshot rule. |
 | 4 | **[theme-playbook.md](theme-playbook.md)** | Make your first theme change. Find which file to edit. Learn the hot-copy loop. |
-| 5 | **[theme-guide.md](theme-guide.md)** | Understand the modular CSS architecture, specificity rules, RTL safety. |
-| 6 | **[deployment.md](deployment.md)** | Deploy to production. Understand the Docker image pipeline. |
-| 7 | **[backup-restore.md](backup-restore.md)** | Back up or restore the database. |
-| 8 | **[doc-audit-ste.md](doc-audit-ste.md)** | Check STE compliance of our docs. (Meta — rarely needed.) |
+| 5 | **[DESIGN.md](DESIGN.md)** | Understand the color tokens, typography, and spacing system. Know how tokens map to CSS. |
+| 6 | **[theme-guide.md](theme-guide.md)** | Understand the modular CSS architecture, specificity rules, RTL safety. |
+| 7 | **[deployment.md](deployment.md)** | Deploy to production. Understand the Docker image pipeline. |
+| 8 | **[backup-restore.md](backup-restore.md)** | Back up or restore the database. |
+| 9 | **[CONTRIBUTING.md](CONTRIBUTING.md)** | Contribution rules, PR workflow, testing checklist. |
+| 10 | **[doc-audit-ste.md](doc-audit-ste.md)** | Check STE compliance of our docs. (Meta — rarely needed.) |
 
 ---
 
@@ -113,6 +115,9 @@ Read these in order if you need depth on a topic:
 ### Key Files
 
 ```
+# Design system (source of truth)
+~/Developer/infrastructure/nopcommerce-src/src/Presentation/Nop.Web/Themes/ArityTheme/Design.md
+
 # Theme CSS (edit these for styling)
 ~/Developer/infrastructure/nopcommerce-src/src/Presentation/Nop.Web/Themes/ArityTheme/Content/css/
 ├── arity.tokens.css       # Colors, fonts, spacing variables
