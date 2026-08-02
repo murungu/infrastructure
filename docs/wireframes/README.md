@@ -65,6 +65,11 @@ If not → iterate.
 | 03 | [pdp-variants.html](03-pdp-variants.html) | Product Detail | Dense variant selectors | 375px |
 | 04 | [homepage-categories.html](04-homepage-categories.html) | Homepage | Oversized category images | 375px |
 | 05 | [empty-cart.html](05-empty-cart.html) | Cart | Dead end, no CTA | 375px |
+| 06 | [login-register.html](06-login-register.html) | Login/Register | Placeholder text, generic social | 375px |
+| 07 | [cart-with-items.html](07-cart-with-items.html) | Cart | Small quantity buttons | 375px |
+| 08 | [footer.html](08-footer.html) | All pages | Wrong store name, no WhatsApp | 375px |
+| 09 | [product-detail-full.html](09-product-detail-full.html) | Product Detail | Generic layout, no specs | 375px |
+| 10 | [wishlist.html](10-wishlist.html) | Wishlist | Small buttons, no stock info | 375px |
 
 ---
 
