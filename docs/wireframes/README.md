@@ -70,6 +70,7 @@ If not → iterate.
 | 08 | [footer.html](08-footer.html) | All pages | Wrong store name, no WhatsApp | 375px |
 | 09 | [product-detail-full.html](09-product-detail-full.html) | Product Detail | Generic layout, no specs | 375px |
 | 10 | [wishlist.html](10-wishlist.html) | Wishlist | Small buttons, no stock info | 375px |
+| 15 | [header-layout.html](15-header-layout.html) | Header | Single-row markup overflows on mobile | 375/768/1280px |
 
 ---
 
