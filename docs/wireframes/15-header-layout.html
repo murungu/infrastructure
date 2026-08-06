@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arity Shop — Header Wireframe</title>
+    <style>
+      :root {
+        --ink: #000;
+        --canvas: #fff;
+        --soft: #f9f9f9;
+        --line: #ebebeb;
+        --body: #4d4d4d;
+        --mute: #888;
+        --danger: #d41313;
+        --success: #16803c;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f5f5f5;
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          sans-serif;
+        line-height: 1.4;
+      }
+      .page-header {
+        padding: 16px 24px;
+        background: var(--ink);
+        color: #fff;
+      }
+      .page-header h1 {
+        margin: 0;
+        font-size: 18px;
+      }
+      .page-header p {
+        margin: 3px 0 0;
+        color: #bdbdbd;
+        font-size: 13px;
+      }
+      .tabs {
+        display: flex;
+        padding: 0 24px;
+        background: #fff;
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        z-index: 5;
+      }
+      .tab {
+        padding: 12px 20px;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        background: transparent;
+        color: var(--mute);
+        cursor: pointer;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .tab.active {
+        color: var(--ink);
+        border-bottom-color: var(--ink);
+      }
+      .viewport-panel {
+        display: none;
+        padding: 24px;
+      }
+      .viewport-panel.active {
+        display: block;
+      }
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .device {
+        min-width: 0;
+        overflow: hidden;
+        border-radius: 12px;
+        background: var(--canvas);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      }
+      .device-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .device-label {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .device-label.current {
+        color: var(--danger);
+      }
+      .device-label.proposed {
+        color: var(--success);
+      }
+      .device-size {
+        color: var(--mute);
+        font:
+          11px ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+      }
+      .screen {
+        width: 100%;
+        overflow: auto;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        margin: 8px;
+        background: var(--canvas);
+      }
+      .screen-mobile {
+        width: 375px;
+        height: 620px;
+      }
+      .screen-tablet {
+        width: 768px;
+        height: 480px;
+      }
+      .screen-desktop {
+        width: 1280px;
+        height: 420px;
+      }
+      .screen-inner {
+        min-height: 100%;
+        padding: 16px;
+      }
+      .annotation {
+        margin: 0 0 12px;
+        padding: 10px 12px;
+        border: 1px dashed currentColor;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+      .current-area .annotation {
+        color: var(--danger);
+        background: #fff7f7;
+      }
+      .proposed-area .annotation {
+        color: var(--success);
+        background: #f4fff7;
+      }
+
+      /* Header mock-up */
+      .mock-page {
+        min-height: 100%;
+        background: #fff;
+      }
+      .mock-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        min-height: 72px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+      }
+      .mock-logo {
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
+        min-width: 132px;
+        height: 40px;
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+      .mock-logo::before {
+        content: "";
+        display: block;
+        width: 28px;
+        height: 28px;
+        margin-right: 8px;
+        border: 3px solid var(--ink);
+        border-radius: 50%;
+      }
+      .mock-search {
+        display: flex;
+        flex: 1 1 auto;
+        min-width: 120px;
+        height: 48px;
+        border: 1px solid #cfcfcf;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .mock-search span {
+        flex: 1;
+        align-self: center;
+        padding: 0 14px;
+        color: var(--mute);
+        font-size: 14px;
+      }
+      .mock-search button {
+        width: 48px;
+        border: 0;
+        background: var(--ink);
+        color: #fff;
+        font-size: 20px;
+      }
+      .mock-links {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        gap: 8px;
+      }
+      .mock-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        min-height: 44px;
+        gap: 6px;
+        color: var(--ink);
+        font-size: 12px;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .mock-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border: 1px solid var(--ink);
+        border-radius: 50%;
+        font-size: 12px;
+      }
+      .mock-content {
+        padding: 20px 16px;
+      }
+      .placeholder {
+        height: 14px;
+        margin-bottom: 10px;
+        border-radius: 3px;
+        background: #eee;
+      }
+      .placeholder.short {
+        width: 42%;
+      }
+      .placeholder.medium {
+        width: 68%;
+      }
+      .placeholder.long {
+        width: 92%;
+      }
+
+      /* Current markup stays in one flex row at every viewport. */
+      .current-header {
+        min-width: 690px;
+      }
+      .current-header .mock-search {
+        max-width: 420px;
+      }
+
+      /* Proposed: one row on tablet/desktop; two rows on mobile. */
+      .proposed-header {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .proposed-header .mock-search {
+        max-width: 560px;
+      }
+      .proposed-header .mock-links {
+        margin-left: auto;
+      }
+      .mobile-search {
+        display: none;
+      }
+
+      .notes {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 24px 32px;
+      }
+      .notes h2 {
+        margin: 0 0 8px;
+        font-size: 15px;
+      }
+      .notes ul {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--body);
+        font-size: 13px;
+      }
+      .notes li {
+        margin-bottom: 5px;
+      }
+      /* Current and proposed are intentionally stacked at every viewport so
+         each full wireframe can be reviewed without competing for width. */
+      @media (max-width: 600px) {
+        .viewport-panel {
+          padding: 12px;
+        }
+        .tabs {
+          padding: 0 12px;
+          overflow-x: auto;
+        }
+        .tab {
+          padding: 12px 14px;
+          white-space: nowrap;
+        }
+        .notes {
+          padding: 0 12px 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Arity Shop header wireframe</h1>
+      <p>HTML structure: logo, search, account, wishlist and cart</p>
+    </header>
+
+    <nav class="tabs" aria-label="Viewport selection">
+      <button class="tab active" data-viewport="mobile">Mobile 375px</button>
+      <button class="tab" data-viewport="tablet">Tablet 768px</button>
+      <button class="tab" data-viewport="desktop">Desktop 1280px</button>
+    </nav>
+
+    <!-- MOBILE -->
+    <section class="viewport-panel active" id="mobile">
+      <div class="comparison">
+        <article class="device current-area">
+          <div class="device-header">
+            <span class="device-label current">Current markup</span
+            ><span class="device-size">375 × 620</span>
+          </div>
+          <div class="screen screen-mobile">
+            <div class="screen-inner">
+              <p class="annotation">
+                <strong>Problem:</strong> all three header groups stay in one
+                row. The 690px minimum width forces horizontal overflow.
+              </p>
+              <div class="mock-page">
+                <div class="mock-header current-header">
+                  <div class="mock-logo">arity shop</div>
+                  <div class="mock-search">
+                    <span>Search store</span
+                    ><button aria-label="Search">⌕</button>
+                  </div>
+                  <div class="mock-links">
+                    <a class="mock-link" href="#"
+                      ><span class="mock-icon">◯</span><span>Log in</span></a
+                    >
+                    <a class="mock-link" href="#" aria-label="Wishlist"
+                      ><span class="mock-icon">♡</span></a
+                    >
+                    <a class="mock-link" href="#" aria-label="Shopping cart"
+                      ><span class="mock-icon">□</span></a
+                    >
+                  </div>
+                </div>
+                <div class="mock-content">
+                  <div class="placeholder long"></div>
+                  <div class="placeholder medium"></div>
+                  <div class="placeholder short"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="device proposed-area">
+          <div class="device-header">
+            <span class="device-label proposed">Proposed layout</span
+            ><span class="device-size">375 × 620</span>
+          </div>
+          <div class="screen screen-mobile">
+            <div class="screen-inner">
+              <p class="annotation">
+                <strong>Fix:</strong> keep the logo and actions together. Move
+                search to a full-width second row with 48px controls.
+              </p>
+              <div class="mock-page">
+                <div class="mock-header proposed-header" style="display: block">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      gap: 12px;
+                    "
+                  >
+                    <div class="mock-logo">arity shop</div>
+                    <div class="mock-links">
+                      <a class="mock-link" href="#" aria-label="Log in"
+                        ><span class="mock-icon">◯</span></a
+                      >
+                      <a class="mock-link" href="#" aria-label="Wishlist"
+                        ><span class="mock-icon">♡</span></a
+                      >
+                      <a class="mock-link" href="#" aria-label="Shopping cart"
+                        ><span class="mock-icon">□</span></a
+                      >
+                    </div>
+                  </div>
+                  <div
+                    class="mobile-search"
+                    style="display: flex; margin-top: 12px"
+                  >
+                    <div class="mock-search">
+                      <span>Search store</span
+                      ><button aria-label="Search">⌕</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="mock-content">
+                  <div class="placeholder long"></div>
+                  <div class="placeholder medium"></div>
+                  <div class="placeholder short"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- TABLET -->
+    <section class="viewport-panel" id="tablet">
+      <div class="comparison">
+        <article class="device current-area">
+          <div class="device-header">
+            <span class="device-label current">Current markup</span
+            ><span class="device-size">768 × 480</span>
+          </div>
+          <div class="screen screen-tablet">
+            <div class="screen-inner">
+              <p class="annotation">
+                <strong>Observed structure:</strong> logo, search and header
+                links share one flex row.
+              </p>
+              <div class="mock-page">
+                <div class="mock-header current-header">
+                  <div class="mock-logo">arity shop</div>
+                  <div class="mock-search">
+                    <span>Search store</span
+                    ><button aria-label="Search">⌕</button>
+                  </div>
+                  <div class="mock-links">
+                    <a class="mock-link" href="#"
+                      ><span class="mock-icon">◯</span><span>Log in</span></a
+                    ><a class="mock-link" href="#" aria-label="Wishlist"
+                      ><span class="mock-icon">♡</span></a
+                    ><a class="mock-link" href="#" aria-label="Shopping cart"
+                      ><span class="mock-icon">□</span></a
+                    >
+                  </div>
+                </div>
+                <div class="mock-content">
+                  <div class="placeholder long"></div>
+                  <div class="placeholder medium"></div>
+                  <div class="placeholder short"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="device proposed-area">
+          <div class="device-header">
+            <span class="device-label proposed">Proposed layout</span
+            ><span class="device-size">768 × 480</span>
+          </div>
+          <div class="screen screen-tablet">
+            <div class="screen-inner">
+              <p class="annotation">
+                <strong>Keep one row:</strong> the tablet width gives the search
+                field enough room without crowding actions.
+              </p>
+              <div class="mock-page">
+                <div class="mock-header proposed-header">
+                  <div class="mock-logo">arity shop</div>
+                  <div class="mock-search">
+                    <span>Search store</span
+                    ><button aria-label="Search">⌕</button>
+                  </div>
+                  <div class="mock-links">
+                    <a class="mock-link" href="#"
+                      ><span class="mock-icon">◯</span><span>Log in</span></a
+                    ><a class="mock-link" href="#" aria-label="Wishlist"
+                      ><span class="mock-icon">♡</span></a
+                    ><a class="mock-link" href="#" aria-label="Shopping cart"
+                      ><span class="mock-icon">□</span></a
+                    >
+                  </div>
+                </div>
+                <div class="mock-content">
+                  <div class="placeholder long"></div>
+                  <div class="placeholder medium"></div>
+                  <div class="placeholder short"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- DESKTOP -->
+    <section class="viewport-panel" id="desktop">
+      <div class="comparison">
+        <article class="device current-area">
+          <div class="device-header">
+            <span class="device-label current">Current markup</span
+            ><span class="device-size">1280 × 420</span>
+          </div>
+          <div class="screen screen-desktop">
+            <div class="screen-inner">
+              <p class="annotation">
+                <strong>Current:</strong> the three semantic groups align
+                horizontally.
+              </p>
+              <div class="mock-page">
+                <div class="mock-header current-header">
+                  <div class="mock-logo">arity shop</div>
+                  <div class="mock-search">
+                    <span>Search store</span
+                    ><button aria-label="Search">⌕</button>
+                  </div>
+                  <div class="mock-links">
+                    <a class="mock-link" href="#"
+                      ><span class="mock-icon">◯</span><span>Log in</span></a
+                    ><a class="mock-link" href="#" aria-label="Wishlist"
+                      ><span class="mock-icon">♡</span></a
+                    ><a class="mock-link" href="#" aria-label="Shopping cart"
+                      ><span class="mock-icon">□</span></a
+                    >
+                  </div>
+                </div>
+                <div class="mock-content">
+                  <div class="placeholder long"></div>
+                  <div class="placeholder medium"></div>
+                  <div class="placeholder short"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="device proposed-area">
+          <div class="device-header">
+            <span class="device-label proposed">Proposed layout</span
+            ><span class="device-size">1280 × 420</span>
+          </div>
+          <div class="screen screen-desktop">
+            <div class="screen-inner">
+              <p class="annotation">
+                <strong>Proposed:</strong> center the content at a readable max
+                width while preserving the same markup roles.
+              </p>
+              <div class="mock-page">
+                <div class="mock-header proposed-header">
+                  <div class="mock-logo">arity shop</div>
+                  <div class="mock-search">
+                    <span>Search store</span
+                    ><button aria-label="Search">⌕</button>
+                  </div>
+                  <div class="mock-links">
+                    <a class="mock-link" href="#"
+                      ><span class="mock-icon">◯</span><span>Log in</span></a
+                    ><a class="mock-link" href="#" aria-label="Wishlist"
+                      ><span class="mock-icon">♡</span></a
+                    ><a class="mock-link" href="#" aria-label="Shopping cart"
+                      ><span class="mock-icon">□</span></a
+                    >
+                  </div>
+                </div>
+                <div class="mock-content">
+                  <div class="placeholder long"></div>
+                  <div class="placeholder medium"></div>
+                  <div class="placeholder short"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="notes">
+      <h2>Review checklist</h2>
+      <ul>
+        <li>
+          Mobile: no horizontal overflow; logo, search and each action remain
+          usable at 44px or larger.
+        </li>
+        <li>
+          Tablet: one-row header remains balanced and search remains the
+          flexible element.
+        </li>
+        <li>
+          Desktop: header content is centered and the flyout cart remains
+          outside the visual row until opened.
+        </li>
+        <li>
+          Accessibility: retain <code>role="search"</code>, visible/accessible
+          labels, keyboard focus styles and the skip link.
+        </li>
+      </ul>
+    </section>
+
+    <script>
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab")
+            .forEach((item) => item.classList.remove("active"));
+          document
+            .querySelectorAll(".viewport-panel")
+            .forEach((panel) => panel.classList.remove("active"));
+          tab.classList.add("active");
+          document.getElementById(tab.dataset.viewport).classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>
