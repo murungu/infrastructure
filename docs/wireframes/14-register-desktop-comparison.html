@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Register Desktop — Wireframe vs Actual</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: #f5f5f5;
+        color: #1a1a1a;
+        padding: 24px;
+      }
+      h1 {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 24px;
+      }
+
+      .comparison-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      @media (max-width: 900px) {
+        .comparison-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .comparison-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+      .device-label {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #6b7280;
+        margin-bottom: 8px;
+      }
+      .device-label.wireframe {
+        color: #16a34a;
+      }
+      .device-label.actual {
+        color: #2563eb;
+      }
+      .comparison-card img {
+        width: 100%;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+      }
+
+      .checklist {
+        margin-top: 16px;
+        padding: 12px;
+        background: #f9fafb;
+        border-radius: 8px;
+      }
+      .checklist h4 {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .checklist ul {
+        font-size: 12px;
+        color: #4b5563;
+        padding-left: 16px;
+        line-height: 1.8;
+      }
+      .checklist li {
+        margin-bottom: 2px;
+      }
+      .pass {
+        color: #16a34a;
+      }
+      .warn {
+        color: #ea580c;
+      }
+      .note {
+        font-size: 11px;
+        color: #6b7280;
+        margin-top: 8px;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Register Page — Desktop (1280px)</h1>
+    <p class="subtitle">
+      Wireframe target vs Actual implementation (localhost:8083)
+    </p>
+
+    <div class="comparison-grid">
+      <div class="comparison-card">
+        <div class="device-label wireframe">📐 Wireframe Target</div>
+        <img
+          src="comparison-wireframe-desktop.png"
+          alt="Wireframe Register Desktop"
+        />
+      </div>
+
+      <div class="comparison-card">
+        <div class="device-label actual">🚀 Actual Implementation</div>
+        <img
+          src="comparison-actual-register-desktop-v2.png"
+          alt="Actual Register Desktop"
+        />
+        <div class="checklist">
+          <h4>Visual Checklist</h4>
+          <ul>
+            <li>
+              <span class="pass">✓</span> Section cards: white + hairline border
+              + 12px radius
+            </li>
+            <li>
+              <span class="pass">✓</span> Section titles: 14px / weight 600 /
+              sentence case
+            </li>
+            <li>
+              <span class="pass">✓</span> Labels on left: GENDER:, FIRST NAME:,
+              LAST NAME:, EMAIL:
+            </li>
+            <li>
+              <span class="pass">✓</span> Gender options: grouped inline, label
+              left
+            </li>
+            <li>
+              <span class="pass">✓</span> Inputs: rounded corners, grey idle
+              #f9fafb
+            </li>
+            <li>
+              <span class="pass">✓</span> Button: sentence-case "Register",
+              black fill
+            </li>
+            <li>
+              <span class="warn">⚠</span> "ISACTIVE" label — nopCommerce field
+              name (not CSS)
+            </li>
+          </ul>
+          <p class="note">
+            Note: "Company Details" and "Subscribe to newsletter" sections
+            appear in the actual site because those fields are enabled in
+            nopCommerce settings. The wireframe only shows "Your Personal
+            Details" and "Your Password" for simplicity.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Side-by-Side: Wireframe vs Implementation</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: #f5f5f5;
+        color: #1a1a1a;
+        padding: 24px;
+      }
+      h1 {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 24px;
+      }
+
+      .section-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 32px 0 16px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #000;
+      }
+      .device-label {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #6b7280;
+        margin-bottom: 8px;
+      }
+      .device-label.wireframe {
+        color: #16a34a;
+      }
+      .device-label.actual {
+        color: #2563eb;
+      }
+
+      .comparison-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      @media (max-width: 900px) {
+        .comparison-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .comparison-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+      .comparison-card img {
+        width: 100%;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+      }
+
+      .checklist {
+        margin-top: 16px;
+        padding: 12px;
+        background: #f9fafb;
+        border-radius: 8px;
+      }
+      .checklist h4 {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .checklist ul {
+        font-size: 12px;
+        color: #4b5563;
+        padding-left: 16px;
+        line-height: 1.8;
+      }
+      .checklist li {
+        margin-bottom: 2px;
+      }
+      .pass {
+        color: #16a34a;
+      }
+      .fail {
+        color: #dc2626;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Side-by-Side Comparison</h1>
+    <p class="subtitle">
+      Wireframe (target) vs Actual Implementation (deployed on localhost:8083)
+    </p>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+     DESKTOP COMPARISON
+     ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="section-title">💻 Desktop (1280px)</div>
+
+    <div class="comparison-grid">
+      <!-- Login Desktop -->
+      <div class="comparison-card">
+        <div class="device-label wireframe">📐 Wireframe — Login Page</div>
+        <img
+          src="comparison-wireframe-desktop.png"
+          alt="Wireframe Login Desktop"
+        />
+        <div class="checklist">
+          <h4>Target Design</h4>
+          <ul>
+            <li>Labels left of inputs (<code>120px</code> right-aligned)</li>
+            <li>Two cards side by side</li>
+            <li>Sentence-case buttons</li>
+            <li>Rounded inputs with grey idle state</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="comparison-card">
+        <div class="device-label actual">
+          🚀 Actual — Login Page (localhost:8083)
+        </div>
+        <img
+          src="comparison-actual-login-desktop.png"
+          alt="Actual Login Desktop"
+        />
+        <div class="checklist">
+          <h4>Implementation Check</h4>
+          <ul>
+            <li>
+              <span class="pass">✓</span> Labels left of inputs (EMAIL:,
+              PASSWORD:)
+            </li>
+            <li><span class="pass">✓</span> Two cards side by side</li>
+            <li>
+              <span class="pass">✓</span> Sentence-case buttons ("Log in",
+              "Register")
+            </li>
+            <li>
+              <span class="pass">✓</span> Rounded inputs with #f9fafb idle state
+            </li>
+            <li><span class="pass">✓</span> Card borders + 12px radius</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Register Desktop -->
+      <div class="comparison-card">
+        <div class="device-label wireframe">📐 Wireframe — Register Page</div>
+        <img
+          src="comparison-wireframe-desktop.png"
+          alt="Wireframe Register Desktop"
+        />
+        <div class="checklist">
+          <h4>Target Design</h4>
+          <ul>
+            <li>Gender: label left, options inline</li>
+            <li>Stacked section cards</li>
+            <li>Labels left of inputs throughout</li>
+            <li>Sentence-case "Register" button</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="comparison-card">
+        <div class="device-label actual">
+          🚀 Actual — Register Page (localhost:8083)
+        </div>
+        <img
+          src="comparison-actual-register-desktop.png"
+          alt="Actual Register Desktop"
+        />
+        <div class="checklist">
+          <h4>Implementation Check</h4>
+          <ul>
+            <li>
+              <span class="pass">✓</span> Gender: "GENDER:" label left,
+              Male/Female inline
+            </li>
+            <li>
+              <span class="pass">✓</span> Stacked section cards (Your Personal
+              Details, Company Details, etc.)
+            </li>
+            <li>
+              <span class="pass">✓</span> Labels left of inputs (FIRST NAME:,
+              LAST NAME:, etc.)
+            </li>
+            <li><span class="pass">✓</span> Sentence-case "Register" button</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+     MOBILE COMPARISON
+     ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="section-title">📱 Mobile (375px)</div>
+
+    <div class="comparison-grid">
+      <!-- Login Mobile -->
+      <div class="comparison-card">
+        <div class="device-label wireframe">📐 Wireframe — Login Page</div>
+        <img
+          src="comparison-wireframe-mobile.png"
+          alt="Wireframe Login Mobile"
+        />
+        <div class="checklist">
+          <h4>Target Design</h4>
+          <ul>
+            <li>Labels above stacked inputs</li>
+            <li>Full-width inputs (16px for touch)</li>
+            <li>Full-width "Sign In" button</li>
+            <li>Cards stacked vertically</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="comparison-card">
+        <div class="device-label actual">
+          🚀 Actual — Login Page (localhost:8083)
+        </div>
+        <img
+          src="comparison-actual-login-mobile.png"
+          alt="Actual Login Mobile"
+        />
+        <div class="checklist">
+          <h4>Implementation Check</h4>
+          <ul>
+            <li>
+              <span class="pass">✓</span> Labels above stacked inputs (Email:,
+              Password:)
+            </li>
+            <li><span class="pass">✓</span> Full-width inputs at 16px</li>
+            <li><span class="pass">✓</span> Full-width "Log in" button</li>
+            <li><span class="pass">✓</span> Cards stacked vertically</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Register Mobile -->
+      <div class="comparison-card">
+        <div class="device-label wireframe">📐 Wireframe — Register Page</div>
+        <img
+          src="comparison-wireframe-mobile.png"
+          alt="Wireframe Register Mobile"
+        />
+        <div class="checklist">
+          <h4>Target Design</h4>
+          <ul>
+            <li>Gender: label above, options horizontal</li>
+            <li>All labels above inputs</li>
+            <li>Full-width "Register" button</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="comparison-card">
+        <div class="device-label actual">
+          🚀 Actual — Register Page (localhost:8083)
+        </div>
+        <img
+          src="comparison-actual-register-mobile.png"
+          alt="Actual Register Mobile"
+        />
+        <div class="checklist">
+          <h4>Implementation Check</h4>
+          <ul>
+            <li>
+              <span class="pass">✓</span> Gender: "Gender:" label above,
+              Male/Female horizontal
+            </li>
+            <li>
+              <span class="pass">✓</span> All labels above inputs (First name:,
+              Last name:, etc.)
+            </li>
+            <li><span class="pass">✓</span> Full-width "Register" button</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

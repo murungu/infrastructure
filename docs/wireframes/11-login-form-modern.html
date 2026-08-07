@@ -1,0 +1,430 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login Form — Before / After</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", system-ui, sans-serif;
+      }
+      body {
+        background: #f5f5f5;
+        padding: 10px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      @media (max-width: 900px) {
+        .comparison {
+          grid-template-columns: 1fr;
+        }
+      }
+      .device {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
+      .device-header {
+        padding: 12px 16px;
+        border-bottom: 1px solid #f3f4f6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .device-label {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .device-label.current {
+        color: #dc2626;
+      }
+      .device-label.proposed {
+        color: #16a34a;
+      }
+      .screen {
+        border: 1px solid #e5e7eb;
+        margin: 8px;
+        border-radius: 8px;
+        overflow: auto;
+      }
+      .screen-inner {
+        padding: 16px;
+        min-height: 100%;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+     CURRENT (Old) Styles — inherited from ArityTheme/styles.css
+     ═══════════════════════════════════════════════════════════ */
+      .current-area .form-fields {
+        position: relative;
+        border-top: 1px solid #e6e6e6;
+        background-color: #f9f9f9;
+        padding: 30px 15px;
+      }
+      .current-area .inputs {
+        position: relative;
+        margin: 0 0 15px;
+        text-align: center;
+        white-space: nowrap;
+        font-size: 0;
+      }
+      .current-area .inputs label {
+        display: block;
+        width: 100%;
+        margin: 0 0 10px;
+        text-align: center;
+        font-size: 14px;
+        color: #4d4d4d;
+      }
+      .current-area .inputs input[type="text"],
+      .current-area .inputs input[type="email"],
+      .current-area .inputs input[type="password"] {
+        width: 400px;
+        max-width: 100%;
+        background: #fff;
+        border: 1px solid #ddd;
+        padding: 8px;
+        font-size: 14px;
+        height: 36px;
+        border-radius: 0;
+      }
+      .current-area .button-1 {
+        min-width: 160px;
+        border: none;
+        background: #000;
+        padding: 10px 30px;
+        font-size: 15px;
+        color: #fff;
+        text-transform: uppercase;
+      }
+      .current-area .page-title h1 {
+        font-size: 30px;
+        text-align: center;
+        margin-bottom: 16px;
+      }
+      .current-area .required {
+        color: #d41313;
+        font-size: 20px;
+      }
+      .current-area .field-validation-error {
+        text-align: center;
+        font-size: 13px;
+        color: #dc2626;
+        margin-top: 5px;
+        display: block;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+     PROPOSED (Modern) Styles — from modern-forms.css
+     ═══════════════════════════════════════════════════════════ */
+      .proposed-area .page {
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      .proposed-area .page-title h1 {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 24px;
+      }
+      .proposed-area .fieldset {
+        background: #fff;
+        border: 1px solid #ebebeb;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      }
+      .proposed-area .fieldset .title {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #4d4d4d;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #ebebeb;
+      }
+      .proposed-area .form-fields {
+        border-top: none;
+        background: transparent;
+        padding: 0;
+      }
+      .proposed-area .inputs {
+        text-align: left;
+        white-space: normal;
+        font-size: inherit;
+        margin: 0 0 16px;
+      }
+      .proposed-area .inputs label {
+        display: block;
+        width: auto;
+        margin: 0 0 6px;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #6b7280;
+      }
+      .proposed-area .inputs input[type="text"],
+      .proposed-area .inputs input[type="email"],
+      .proposed-area .inputs input[type="password"] {
+        width: 100%;
+        max-width: 100%;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-size: 14px;
+        color: #111827;
+        outline: none;
+        transition:
+          border-color 0.15s ease,
+          box-shadow 0.15s ease,
+          background-color 0.15s ease;
+      }
+      .proposed-area .inputs input:focus {
+        background: #fff;
+        border-color: #000;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+      }
+      .proposed-area .inputs input::placeholder {
+        color: #9ca3af;
+      }
+      .proposed-area .required {
+        color: #dc2626;
+        font-size: 14px;
+        margin-left: 3px;
+      }
+      .proposed-area .field-validation-error {
+        text-align: left;
+        font-size: 12px;
+        font-weight: 500;
+        color: #dc2626;
+        margin-top: 6px;
+        padding: 8px 12px;
+        background: #fef2f2;
+        border-radius: 6px;
+        border-left: 3px solid #dc2626;
+      }
+      .proposed-area .inputs.reversed {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        font-size: 13px;
+      }
+      .proposed-area .button-1 {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        border: none;
+        border-radius: 8px;
+        background: #000;
+        color: #fff;
+        padding: 14px 24px;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .proposed-area .button-1:hover {
+        background: #333;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      .proposed-area .forgot-password a {
+        font-size: 13px;
+        font-weight: 500;
+        color: #4d4d4d;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 style="text-align: center; margin: 20px 0">
+      Login Form — Before / After Comparison
+    </h2>
+
+    <div class="comparison">
+      <!-- CURRENT -->
+      <div class="device current-area">
+        <div class="device-header">
+          <span class="device-label current">❌ Current (styles.css)</span>
+          <span style="font-size: 11px; color: #9ca3af"
+            >Legacy nopCommerce</span
+          >
+        </div>
+        <div class="screen">
+          <div class="screen-inner">
+            <div class="page-title"><h1>Welcome, Please Sign In!</h1></div>
+            <div class="form-fields">
+              <div class="inputs">
+                <label>Email:</label>
+                <input type="email" placeholder="" />
+                <span class="field-validation-error"
+                  >Please enter a valid email.</span
+                >
+              </div>
+              <div class="inputs">
+                <label>Password:</label>
+                <input type="password" />
+              </div>
+              <div
+                class="inputs reversed"
+                style="display: flex; justify-content: center; gap: 20px"
+              >
+                <label><input type="checkbox" /> Remember me</label>
+                <a href="#" style="font-size: 13px; color: #4d4d4d"
+                  >Forgot password?</a
+                >
+              </div>
+            </div>
+            <div style="text-align: center; margin-top: 16px">
+              <button class="button-1">Log in</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROPOSED -->
+      <div class="device proposed-area">
+        <div class="device-header">
+          <span class="device-label proposed"
+            >✅ Proposed (modern-forms.css)</span
+          >
+          <span style="font-size: 11px; color: #9ca3af"
+            >Tailwind UI inspired</span
+          >
+        </div>
+        <div class="screen">
+          <div class="screen-inner">
+            <div class="page">
+              <div class="page-title"><h1>Welcome back</h1></div>
+
+              <div class="fieldset">
+                <div class="title">Returning Customer</div>
+                <div class="form-fields">
+                  <div class="inputs">
+                    <label>Email Address <span class="required">*</span></label>
+                    <input type="email" placeholder="name@company.com" />
+                    <span class="field-validation-error"
+                      >Please enter a valid email.</span
+                    >
+                  </div>
+                  <div class="inputs">
+                    <label>Password <span class="required">*</span></label>
+                    <input type="password" placeholder="••••••••" />
+                  </div>
+                  <div class="inputs reversed">
+                    <label class="checkbox-label"
+                      ><input type="checkbox" /> <span>Remember me</span></label
+                    >
+                    <span class="forgot-password"
+                      ><a href="#">Forgot password?</a></span
+                    >
+                  </div>
+                </div>
+                <div class="buttons">
+                  <button class="button-1">Sign In</button>
+                </div>
+              </div>
+
+              <div class="fieldset" style="background: #f9fafb">
+                <div class="title">New Customer</div>
+                <div
+                  style="
+                    font-size: 14px;
+                    color: #6b7280;
+                    margin-bottom: 16px;
+                    line-height: 1.5;
+                  "
+                >
+                  Create an account to track orders and save your favorites.
+                </div>
+                <button
+                  class="button-1"
+                  style="
+                    background: transparent;
+                    border: 1px solid #e5e7eb;
+                    color: #111;
+                  "
+                >
+                  Create Account
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key differences callout -->
+    <div
+      style="
+        max-width: 1200px;
+        margin: 24px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+      "
+    >
+      <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 12px">
+        Key Changes
+      </h3>
+      <ul
+        style="
+          font-size: 13px;
+          color: #4b5563;
+          line-height: 2;
+          padding-left: 20px;
+        "
+      >
+        <li>
+          <strong>Labels left-aligned</strong> — no more centered text, small
+          uppercase style
+        </li>
+        <li>
+          <strong>Inputs full-width</strong> — 100% width with max-width
+          container, 12px padding, 8px radius
+        </li>
+        <li>
+          <strong>Focus ring</strong> — black border + subtle shadow on focus
+          (no default blue outline)
+        </li>
+        <li>
+          <strong>Errors contained</strong> — left-aligned with light red
+          background + left border accent
+        </li>
+        <li>
+          <strong>Buttons softer</strong> — no uppercase, slightly larger, hover
+          lift + shadow
+        </li>
+        <li>
+          <strong>Card container</strong> — white card with hairline border
+          instead of grey box
+        </li>
+        <li>
+          <strong>Remember me + forgot</strong> — flex row, spaced apart,
+          natural reading order
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
