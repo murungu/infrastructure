@@ -72,6 +72,7 @@ If not → iterate.
 | 10 | [wishlist.html](10-wishlist.html) | Wishlist | Small buttons, no stock info | 375px |
 | 15 | [header-layout.html](15-header-layout.html) | Header | Single-row markup overflows on mobile | 375/768/1280px |
 | 16 | [search-autocomplete.html](16-search-autocomplete.html) | Header search | Fixed-width autocomplete does not match responsive search | 375/768/1280px |
+| 17 | [menu-navigation.html](17-menu-navigation.html) | Main menu | Ambiguous mobile disclosure and undersized desktop dropdown | 375/768/1280px |
 
 ---
 
