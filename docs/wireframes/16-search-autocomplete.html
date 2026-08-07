@@ -1,0 +1,832 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arity Shop — Search autocomplete wireframe</title>
+    <style>
+      :root {
+        --ink: #000;
+        --canvas: #fff;
+        --soft: #f9f9f9;
+        --soft-2: #f5f5f5;
+        --line: #ebebeb;
+        --body: #4d4d4d;
+        --mute: #888;
+        --danger: #d41313;
+        --success: #16803c;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--soft-2);
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          sans-serif;
+        line-height: 1.4;
+      }
+      button {
+        font: inherit;
+      }
+      .page-header {
+        padding: 16px 24px;
+        background: var(--ink);
+        color: #fff;
+      }
+      .page-header h1 {
+        margin: 0;
+        font-size: 18px;
+      }
+      .page-header p {
+        margin: 3px 0 0;
+        color: #bdbdbd;
+        font-size: 13px;
+      }
+      .tabs {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        overflow-x: auto;
+        padding: 0 24px;
+        background: #fff;
+        border-bottom: 1px solid var(--line);
+      }
+      .tab {
+        padding: 12px 20px;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        background: transparent;
+        color: var(--mute);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .tab.active {
+        color: var(--ink);
+        border-bottom-color: var(--ink);
+      }
+      .viewport-panel {
+        display: none;
+        padding: 24px;
+      }
+      .viewport-panel.active {
+        display: block;
+      }
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .device {
+        min-width: 0;
+        overflow: hidden;
+        border-radius: 12px;
+        background: var(--canvas);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      }
+      .device-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .device-label {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .device-label.current {
+        color: var(--danger);
+      }
+      .device-label.proposed {
+        color: var(--success);
+      }
+      .device-size {
+        color: var(--mute);
+        font:
+          11px ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+      }
+      .screen {
+        overflow: auto;
+        margin: 8px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+      }
+      .screen-mobile {
+        width: 375px;
+        height: 650px;
+      }
+      .screen-tablet {
+        width: 768px;
+        height: 560px;
+      }
+      .screen-desktop {
+        width: 1280px;
+        height: 520px;
+      }
+      .screen-inner {
+        min-height: 100%;
+        padding: 16px;
+      }
+      .annotation {
+        margin: 0 0 12px;
+        padding: 10px 12px;
+        border: 1px dashed currentColor;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+      .current-area .annotation {
+        color: var(--danger);
+        background: #fff7f7;
+      }
+      .proposed-area .annotation {
+        color: var(--success);
+        background: #f4fff7;
+      }
+
+      /* Header shell */
+      .shop-header {
+        position: relative;
+        background: #fff;
+        border-bottom: 1px solid var(--line);
+      }
+      .header-row {
+        display: grid;
+        grid-template-columns: 180px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 24px;
+        min-height: 80px;
+        padding: 16px 24px;
+      }
+      .logo {
+        font-size: 25px;
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        white-space: nowrap;
+      }
+      .logo span {
+        font-weight: 300;
+        letter-spacing: 0.08em;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+      }
+      .icon-button {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border: 0;
+        background: #fff;
+        font-size: 17px;
+      }
+      .search-region {
+        position: relative;
+        min-width: 0;
+      }
+      .search-form {
+        display: flex;
+        width: 100%;
+        height: 48px;
+      }
+      .search-input {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        flex: 1;
+        padding: 0 16px;
+        border: 1px solid #cfcfcf;
+        border-right: 0;
+        border-radius: 4px 0 0 4px;
+        color: var(--body);
+        background: #fff;
+        font-size: 15px;
+      }
+      .search-button {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        flex: 0 0 48px;
+        border: 0;
+        border-radius: 0 4px 4px 0;
+        background: #000;
+        color: #fff;
+        font-size: 22px;
+      }
+      .category-nav {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        padding: 16px;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .page-content {
+        padding: 28px 24px;
+      }
+      .line {
+        height: 12px;
+        margin-bottom: 12px;
+        border-radius: 2px;
+        background: #eee;
+      }
+      .line.short {
+        width: 32%;
+      }
+      .line.medium {
+        width: 58%;
+      }
+      .line.long {
+        width: 90%;
+      }
+
+      /* Current autocomplete */
+      .current-dropdown {
+        position: absolute;
+        z-index: 10;
+        top: 48px;
+        left: 0;
+        width: 280px;
+        border: 1px solid #cfcfcf;
+        background: #fff;
+      }
+      .current-result {
+        padding: 14px 16px;
+        color: var(--body);
+        font-size: 15px;
+      }
+
+      /* Proposed autocomplete */
+      .autocomplete {
+        position: absolute;
+        z-index: 10;
+        top: calc(100% + 4px);
+        inset-inline: 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: #fff;
+      }
+      .result-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .result {
+        display: grid;
+        grid-template-columns: 48px minmax(0, 1fr) 24px;
+        align-items: center;
+        gap: 12px;
+        min-height: 72px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .result.active {
+        background: var(--soft-2);
+        outline: 2px solid #000;
+        outline-offset: -2px;
+      }
+      .result-image {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: var(--soft);
+        font-size: 22px;
+      }
+      .result-image.keyword {
+        border: 0;
+        background: transparent;
+        font-size: 18px;
+      }
+      .result-title {
+        overflow: hidden;
+        font-size: 14px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .result-type {
+        margin-top: 3px;
+        color: var(--body);
+        font-size: 12px;
+      }
+      .result-arrow {
+        color: var(--body);
+        text-align: center;
+      }
+      .view-all {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 48px;
+        padding: 0 16px;
+        background: #000;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .result-count {
+        font-weight: 400;
+        color: #d4d4d4;
+        font-size: 12px;
+      }
+
+      /* Mobile layout */
+      .mobile-header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 12px 16px 8px;
+      }
+      .mobile-header-row .logo {
+        font-size: 24px;
+      }
+      .mobile-header-row .actions {
+        gap: 0;
+      }
+      .mobile-search {
+        padding: 4px 16px 12px;
+      }
+      .mobile-menu {
+        margin: 0 16px;
+        padding: 15px 16px;
+        background: #000;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .mobile-search .autocomplete {
+        top: calc(100% - 8px);
+        inset-inline: 16px;
+        max-height: 348px;
+        overflow-y: auto;
+      }
+      .mobile-search .result {
+        min-height: 68px;
+        padding: 10px 12px;
+      }
+      .mobile-search .view-all {
+        position: sticky;
+        bottom: 0;
+      }
+
+      /* Tablet layout */
+      .tablet-row {
+        grid-template-columns: 150px minmax(0, 1fr) auto;
+        gap: 16px;
+        padding-inline: 16px;
+      }
+      .tablet-row .logo {
+        font-size: 22px;
+      }
+
+      .spec {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 24px 32px;
+      }
+      .spec h2 {
+        margin: 0 0 8px;
+        font-size: 15px;
+      }
+      .spec ul {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--body);
+        font-size: 13px;
+      }
+      .spec li {
+        margin-bottom: 5px;
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+      @media (max-width: 600px) {
+        .viewport-panel {
+          padding: 12px;
+        }
+        .tabs {
+          padding: 0 12px;
+        }
+        .tab {
+          padding: 12px 14px;
+        }
+        .spec {
+          padding-inline: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Arity Shop search autocomplete wireframe</h1>
+      <p>Align autocomplete with the redesigned responsive header.</p>
+    </header>
+
+    <nav class="tabs" aria-label="Viewport selection">
+      <button class="tab active" data-viewport="mobile">Mobile 375px</button>
+      <button class="tab" data-viewport="tablet">Tablet 768px</button>
+      <button class="tab" data-viewport="desktop">Desktop 1280px</button>
+    </nav>
+
+    <section class="viewport-panel active" id="mobile">
+      <div class="comparison">
+        <article class="device current-area">
+          <div class="device-header">
+            <span class="device-label current">Current</span
+            ><span class="device-size">375 × 650</span>
+          </div>
+          <div class="screen screen-mobile">
+            <div class="screen-inner">
+              <p class="annotation">
+                <strong>Problem:</strong> the legacy dropdown keeps a fixed
+                narrow width and plain text row, disconnected from the
+                full-width mobile search control.
+              </p>
+              <div class="shop-header">
+                <div class="mobile-header-row">
+                  <div class="logo">arity <span>shop</span></div>
+                  <div class="actions">
+                    <button class="icon-button">♙</button
+                    ><button class="icon-button">♡</button
+                    ><button class="icon-button">▢</button>
+                  </div>
+                </div>
+                <div class="mobile-search">
+                  <div class="search-region">
+                    <div class="search-form">
+                      <div class="search-input">fir</div>
+                      <button class="search-button">⌕</button>
+                    </div>
+                    <div class="current-dropdown">
+                      <div class="current-result">First Prize Pies</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mobile-menu">CATEGORIES　　　　　　　　　⚙</div>
+              <div class="page-content">
+                <div class="line long"></div>
+                <div class="line medium"></div>
+                <div class="line short"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="device proposed-area">
+          <div class="device-header">
+            <span class="device-label proposed">Proposed</span
+            ><span class="device-size">375 × 650</span>
+          </div>
+          <div class="screen screen-mobile">
+            <div class="screen-inner">
+              <p class="annotation">
+                <strong>Proposal:</strong> use the complete mobile search rail,
+                68px touch-friendly rows, optional product images, a clear
+                keyboard state, and a persistent “view all” action.
+              </p>
+              <div class="shop-header">
+                <div class="mobile-header-row">
+                  <div class="logo">arity <span>shop</span></div>
+                  <div class="actions">
+                    <button class="icon-button">♙</button
+                    ><button class="icon-button">♡</button
+                    ><button class="icon-button">▢</button>
+                  </div>
+                </div>
+                <div class="mobile-search">
+                  <div class="search-region">
+                    <div class="search-form">
+                      <div class="search-input">fir</div>
+                      <button class="search-button">⌕</button>
+                    </div>
+                    <div class="autocomplete">
+                      <ul class="result-list">
+                        <li class="result active">
+                          <div class="result-image">▧</div>
+                          <div>
+                            <div class="result-title">First Prize Pies</div>
+                            <div class="result-type">Product</div>
+                          </div>
+                          <div class="result-arrow">›</div>
+                        </li>
+                        <li class="result">
+                          <div class="result-image">▧</div>
+                          <div>
+                            <div class="result-title">First Aid Kit</div>
+                            <div class="result-type">Product</div>
+                          </div>
+                          <div class="result-arrow">›</div>
+                        </li>
+                        <li class="result">
+                          <div class="result-image keyword">⌕</div>
+                          <div>
+                            <div class="result-title">Search for “fir”</div>
+                            <div class="result-type">Keyword suggestion</div>
+                          </div>
+                          <div class="result-arrow">›</div>
+                        </li>
+                      </ul>
+                      <div class="view-all">
+                        <span>View all results for “fir”</span><span>→</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mobile-menu">CATEGORIES　　　　　　　　　⚙</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="viewport-panel" id="tablet">
+      <div class="comparison">
+        <article class="device current-area">
+          <div class="device-header">
+            <span class="device-label current">Current</span
+            ><span class="device-size">768 × 560</span>
+          </div>
+          <div class="screen screen-tablet">
+            <div class="screen-inner">
+              <p class="annotation">
+                <strong>Problem:</strong> the 280px legacy menu ignores the
+                wider search field and creates an arbitrary left-aligned panel.
+              </p>
+              <div class="shop-header">
+                <div class="header-row tablet-row">
+                  <div class="logo">arity <span>shop</span></div>
+                  <div class="search-region">
+                    <div class="search-form">
+                      <div class="search-input">fir</div>
+                      <button class="search-button">⌕</button>
+                    </div>
+                    <div class="current-dropdown">
+                      <div class="current-result">First Prize Pies</div>
+                    </div>
+                  </div>
+                  <div class="actions">
+                    <button class="icon-button">♙</button
+                    ><button class="icon-button">♡</button
+                    ><button class="icon-button">▢</button>
+                  </div>
+                </div>
+              </div>
+              <div class="category-nav">
+                Computers　 Electronics　 Apparel　 Books
+              </div>
+              <div class="page-content">
+                <div class="line long"></div>
+                <div class="line medium"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="device proposed-area">
+          <div class="device-header">
+            <span class="device-label proposed">Proposed</span
+            ><span class="device-size">768 × 560</span>
+          </div>
+          <div class="screen screen-tablet">
+            <div class="screen-inner">
+              <p class="annotation">
+                <strong>Proposal:</strong> anchor the menu to both edges of the
+                search region, preserving the header’s visual grid.
+              </p>
+              <div class="shop-header">
+                <div class="header-row tablet-row">
+                  <div class="logo">arity <span>shop</span></div>
+                  <div class="search-region">
+                    <div class="search-form">
+                      <div class="search-input">fir</div>
+                      <button class="search-button">⌕</button>
+                    </div>
+                    <div class="autocomplete">
+                      <ul class="result-list">
+                        <li class="result active">
+                          <div class="result-image">▧</div>
+                          <div>
+                            <div class="result-title">First Prize Pies</div>
+                            <div class="result-type">Product</div>
+                          </div>
+                          <div class="result-arrow">›</div>
+                        </li>
+                        <li class="result">
+                          <div class="result-image keyword">⌕</div>
+                          <div>
+                            <div class="result-title">Search for “fir”</div>
+                            <div class="result-type">Keyword suggestion</div>
+                          </div>
+                          <div class="result-arrow">›</div>
+                        </li>
+                      </ul>
+                      <div class="view-all">
+                        <span>View all results for “fir”</span><span>→</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="actions">
+                    <button class="icon-button">♙</button
+                    ><button class="icon-button">♡</button
+                    ><button class="icon-button">▢</button>
+                  </div>
+                </div>
+              </div>
+              <div class="category-nav">
+                Computers　 Electronics　 Apparel　 Books
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="viewport-panel" id="desktop">
+      <div class="comparison">
+        <article class="device current-area">
+          <div class="device-header">
+            <span class="device-label current">Current</span
+            ><span class="device-size">1280 × 520</span>
+          </div>
+          <div class="screen screen-desktop">
+            <div class="screen-inner">
+              <p class="annotation">
+                <strong>Problem:</strong> the result panel is much narrower than
+                the redesigned search box, has no content hierarchy, and
+                overlaps the navigation without a deliberate responsive surface.
+              </p>
+              <div class="shop-header">
+                <div class="header-row">
+                  <div class="logo">arity <span>shop</span></div>
+                  <div class="search-region">
+                    <div class="search-form">
+                      <div class="search-input">fir</div>
+                      <button class="search-button">⌕</button>
+                    </div>
+                    <div class="current-dropdown">
+                      <div class="current-result">First Prize Pies</div>
+                    </div>
+                  </div>
+                  <div class="actions">
+                    <button class="icon-button">♙</button
+                    ><button class="icon-button">♡</button
+                    ><button class="icon-button">▢</button>
+                  </div>
+                </div>
+              </div>
+              <div class="category-nav">
+                Computers　 Electronics　 Apparel　 Digital downloads　 Books　
+                Jewelry　 Gift Cards
+              </div>
+              <div class="page-content">
+                <div class="line long"></div>
+                <div class="line medium"></div>
+                <div class="line short"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="device proposed-area">
+          <div class="device-header">
+            <span class="device-label proposed">Proposed</span
+            ><span class="device-size">1280 × 520</span>
+          </div>
+          <div class="screen screen-desktop">
+            <div class="screen-inner">
+              <p class="annotation">
+                <strong>Proposal:</strong> make autocomplete exactly as wide as
+                the search region, with structured 72px rows and a high-contrast
+                final action.
+              </p>
+              <div class="shop-header">
+                <div class="header-row">
+                  <div class="logo">arity <span>shop</span></div>
+                  <div class="search-region">
+                    <div class="search-form">
+                      <div class="search-input">fir</div>
+                      <button class="search-button">⌕</button>
+                    </div>
+                    <div class="autocomplete">
+                      <ul class="result-list">
+                        <li class="result active">
+                          <div class="result-image">▧</div>
+                          <div>
+                            <div class="result-title">First Prize Pies</div>
+                            <div class="result-type">Product</div>
+                          </div>
+                          <div class="result-arrow">›</div>
+                        </li>
+                        <li class="result">
+                          <div class="result-image">▧</div>
+                          <div>
+                            <div class="result-title">First Aid Kit</div>
+                            <div class="result-type">Product</div>
+                          </div>
+                          <div class="result-arrow">›</div>
+                        </li>
+                        <li class="result">
+                          <div class="result-image keyword">⌕</div>
+                          <div>
+                            <div class="result-title">Search for “fir”</div>
+                            <div class="result-type">Keyword suggestion</div>
+                          </div>
+                          <div class="result-arrow">›</div>
+                        </li>
+                      </ul>
+                      <div class="view-all">
+                        <span>View all results for “fir”</span
+                        ><span class="result-count">3 results　→</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="actions">
+                    <button class="icon-button">♙</button
+                    ><button class="icon-button">♡</button
+                    ><button class="icon-button">▢</button>
+                  </div>
+                </div>
+              </div>
+              <div class="category-nav">
+                Computers　 Electronics　 Apparel　 Digital downloads　 Books　
+                Jewelry　 Gift Cards
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="spec">
+      <h2>Implementation constraints captured by this wireframe</h2>
+      <ul>
+        <li>
+          Use only data already available from autocomplete: result label,
+          optional product image/link, keyword state, and the existing “view all
+          results” link.
+        </li>
+        <li>
+          Dropdown width follows <code>.search-box</code>; no fixed 280px width.
+        </li>
+        <li>
+          Rows are at least 68px on mobile and 72px elsewhere; the final action
+          is at least 48px.
+        </li>
+        <li>
+          Up/down keys move the visible focus state; Enter selects it; Escape
+          closes the panel.
+        </li>
+        <li>
+          The panel overlays page navigation instead of changing header height.
+        </li>
+        <li>
+          Black, white, and structural greys only. No decorative red, gradients,
+          or drop shadows.
+        </li>
+      </ul>
+    </section>
+
+    <script>
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab")
+            .forEach((item) => item.classList.remove("active"));
+          document
+            .querySelectorAll(".viewport-panel")
+            .forEach((panel) => panel.classList.remove("active"));
+          tab.classList.add("active");
+          document
+            .querySelector(`#${tab.dataset.viewport}`)
+            .classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>

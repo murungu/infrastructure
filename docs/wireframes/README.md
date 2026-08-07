@@ -71,6 +71,7 @@ If not → iterate.
 | 09 | [product-detail-full.html](09-product-detail-full.html) | Product Detail | Generic layout, no specs | 375px |
 | 10 | [wishlist.html](10-wishlist.html) | Wishlist | Small buttons, no stock info | 375px |
 | 15 | [header-layout.html](15-header-layout.html) | Header | Single-row markup overflows on mobile | 375/768/1280px |
+| 16 | [search-autocomplete.html](16-search-autocomplete.html) | Header search | Fixed-width autocomplete does not match responsive search | 375/768/1280px |
 
 ---
 
