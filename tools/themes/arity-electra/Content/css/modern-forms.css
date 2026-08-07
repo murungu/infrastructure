@@ -1,0 +1,797 @@
+/*******************************************************************************
+  Arity Shop — Modern Form Overrides
+  Tailwind UI-inspired styling for nopCommerce forms.
+  Drop this into your theme folder and reference it in Head.cshtml.
+
+  Design system: Arity (black/white) + Solar Amber accent
+  Font: Inter
+  Target: all .page forms (login, register, contact, checkout, account)
+*******************************************************************************/
+
+/* ────────────────────────────────────────────────────────────────────────────
+   CSS Custom Properties — form-specific tokens
+   ──────────────────────────────────────────────────────────────────────────── */
+:root {
+	--form-bg: #ffffff;
+	--form-bg-soft: #f9fafb; /* Tailwind gray-50 */
+	--form-border: #e5e7eb; /* Tailwind gray-200 */
+	--form-border-hover: #d1d5db; /* Tailwind gray-300 */
+	--form-border-focus: #000000;
+	--form-text: #111827; /* Tailwind gray-900 */
+	--form-label: #6b7280; /* Tailwind gray-500 */
+	--form-placeholder: #9ca3af; /* Tailwind gray-400 */
+	--form-error: #dc2626; /* Tailwind red-600 */
+	--form-error-bg: #fef2f2; /* Tailwind red-50 */
+	--form-success: #059669; /* Tailwind emerald-600 */
+	--form-radius: 8px;
+	--form-radius-sm: 6px;
+	--form-shadow-focus: 0 0 0 3px rgba(0, 0, 0, 0.06);
+	--form-shadow-card:
+		0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+	--form-transition:
+		border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   1. Page container — center, breathe
+   ──────────────────────────────────────────────────────────────────────────── */
+.page.login-page,
+.page.registration-page,
+.page.contact-page,
+.page.password-recovery-page,
+.page.account-page,
+.page.email-revalidation-page,
+.page.account-activation-page,
+.page.return-request-page {
+	max-width: 560px;
+	margin: 0 auto;
+	padding: 24px 16px 80px;
+}
+
+@media (min-width: 640px) {
+	.page.login-page,
+	.page.registration-page,
+	.page.contact-page,
+	.page.password-recovery-page,
+	.page.account-page,
+	.page.email-revalidation-page,
+	.page.account-activation-page,
+	.page.return-request-page {
+		padding: 48px 24px 100px;
+	}
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   2. Page title — cleaner, bigger
+   ──────────────────────────────────────────────────────────────────────────── */
+.page.login-page .page-title,
+.page.registration-page .page-title,
+.page.contact-page .page-title {
+	border-bottom: none;
+	padding: 0;
+	margin: 0 0 32px;
+	text-align: left;
+}
+
+.page.login-page .page-title h1,
+.page.registration-page .page-title h1,
+.page.contact-page .page-title h1 {
+	font-size: 28px;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	color: var(--arity-primary, #000);
+	line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+	.page.login-page .page-title h1,
+	.page.registration-page .page-title h1,
+	.page.contact-page .page-title h1 {
+		font-size: 32px;
+	}
+}
+
+/* Subtitle text under heading */
+.page.login-page .page-body .text,
+.page.registration-page .page-body .text {
+	font-size: 14px;
+	color: var(--form-label);
+	line-height: 1.6;
+	margin: 0 0 24px;
+	text-align: left;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   3. Fieldset / form card — white card with hairline border
+   ──────────────────────────────────────────────────────────────────────────── */
+.fieldset {
+	background: var(--form-bg);
+	border: 1px solid var(--arity-hairline, #ebebeb);
+	border-radius: 12px;
+	padding: 28px 24px;
+	margin: 0 0 24px;
+	box-shadow: var(--form-shadow-card);
+}
+
+.fieldset .title {
+	font-size: 12px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--arity-body, #4d4d4d);
+	margin: 0 0 20px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid var(--arity-hairline, #ebebeb);
+	text-align: left;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   4. Form-fields container — remove grey box, keep clean
+   ──────────────────────────────────────────────────────────────────────────── */
+.form-fields {
+	border-top: none;
+	background: transparent;
+	padding: 0;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   5. Inputs — the big one: modern stacked layout
+   ──────────────────────────────────────────────────────────────────────────── */
+.inputs {
+	text-align: left;
+	white-space: normal;
+	font-size: inherit;
+	margin: 0 0 20px;
+}
+
+.inputs:last-child {
+	margin-bottom: 0;
+}
+
+/* Labels — modern: small, uppercase, grey, left-aligned */
+.inputs label {
+	display: block;
+	width: auto;
+	margin: 0 0 6px;
+	text-align: left;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--form-label);
+	cursor: pointer;
+}
+
+/* Required asterisk */
+.inputs .required {
+	margin: 0 0 0 3px;
+	font-size: 14px;
+	color: var(--form-error);
+	vertical-align: top;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   6. Input fields — modern sizing, radius, focus ring
+   ──────────────────────────────────────────────────────────────────────────── */
+.inputs input[type="text"],
+.inputs input[type="email"],
+.inputs input[type="tel"],
+.inputs input[type="password"],
+.inputs input[type="number"],
+.inputs input[type="url"],
+.inputs select,
+.inputs textarea {
+	width: 100%;
+	max-width: 100%;
+	background-color: var(--form-bg-soft);
+	border: 1px solid var(--form-border);
+	border-radius: var(--form-radius);
+	padding: 12px 14px;
+	font-size: 14px;
+	line-height: 1.4;
+	color: var(--form-text);
+	transition: var(--form-transition);
+	outline: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+.inputs textarea {
+	min-height: 120px;
+	resize: vertical;
+}
+
+.inputs select {
+	height: auto;
+	padding-right: 36px; /* room for custom arrow */
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+}
+
+/* Placeholder colour */
+.inputs input::placeholder,
+.inputs textarea::placeholder {
+	color: var(--form-placeholder);
+	opacity: 1;
+}
+
+/* Hover */
+.inputs input[type="text"]:hover,
+.inputs input[type="email"]:hover,
+.inputs input[type="tel"]:hover,
+.inputs input[type="password"]:hover,
+.inputs input[type="number"]:hover,
+.inputs select:hover,
+.inputs textarea:hover {
+	border-color: var(--form-border-hover);
+}
+
+/* Focus — the magic state */
+.inputs input[type="text"]:focus,
+.inputs input[type="email"]:focus,
+.inputs input[type="tel"]:focus,
+.inputs input[type="password"]:focus,
+.inputs input[type="number"]:focus,
+.inputs select:focus,
+.inputs textarea:focus {
+	background-color: var(--form-bg);
+	border-color: var(--form-border-focus);
+	box-shadow: var(--form-shadow-focus);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   7. Checkboxes & radios
+   ──────────────────────────────────────────────────────────────────────────── */
+.inputs input[type="checkbox"],
+.inputs input[type="radio"] {
+	width: auto;
+	height: auto;
+	margin-right: 8px;
+	accent-color: var(--arity-primary, #000);
+	cursor: pointer;
+}
+
+.inputs.reversed {
+	text-align: left;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0 0 20px;
+}
+
+.inputs.reversed label {
+	margin: 0;
+	font-size: 13px;
+	font-weight: 400;
+	text-transform: none;
+	letter-spacing: normal;
+	color: var(--form-text);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   8. Error / validation messages
+   ──────────────────────────────────────────────────────────────────────────── */
+.message-error,
+.field-validation-error,
+.username-not-available-status,
+.password-error {
+	text-align: left;
+	font-size: 12px;
+	font-weight: 500;
+	color: var(--form-error);
+	margin-top: 6px;
+	padding: 8px 12px;
+	background: var(--form-error-bg);
+	border-radius: var(--form-radius-sm);
+	border-left: 3px solid var(--form-error);
+}
+
+.field-validation-valid,
+.username-available-status {
+	text-align: left;
+	font-size: 12px;
+	font-weight: 500;
+	color: var(--form-success);
+	margin-top: 6px;
+}
+
+/* Inline validation: position below input, not centered */
+.inputs span.field-validation-error {
+	display: block;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   9. Buttons — modern, no uppercase, softer radius
+   ──────────────────────────────────────────────────────────────────────────── */
+.button-1,
+button[type="submit"],
+input[type="submit"] {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	width: 100%;
+	min-width: auto;
+	border: none;
+	border-radius: var(--form-radius);
+	background-color: var(--arity-primary, #000);
+	color: #fff;
+	padding: 14px 24px;
+	font-size: 15px;
+	font-weight: 600;
+	font-family: var(--arity-font, "Inter", sans-serif);
+	letter-spacing: -0.01em;
+	line-height: 1.4;
+	cursor: pointer;
+	transition:
+		background-color 0.15s ease,
+		transform 0.1s ease,
+		box-shadow 0.15s ease;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.button-1:hover,
+button[type="submit"]:hover,
+input[type="submit"]:hover {
+	background-color: var(--arity-body, #333);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.button-1:active,
+button[type="submit"]:active,
+input[type="submit"]:active {
+	transform: translateY(0);
+}
+
+/* Secondary / outline button */
+.button-2 {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	border: 1px solid var(--form-border);
+	border-radius: var(--form-radius);
+	background-color: transparent;
+	color: var(--form-text);
+	padding: 14px 24px;
+	font-size: 15px;
+	font-weight: 600;
+	font-family: var(--arity-font, "Inter", sans-serif);
+	letter-spacing: -0.01em;
+	cursor: pointer;
+	transition:
+		border-color 0.15s ease,
+		background-color 0.15s ease;
+}
+
+.button-2:hover {
+	border-color: var(--form-border-focus);
+	background-color: var(--form-bg-soft);
+}
+
+/* Desktop: buttons auto-width */
+@media (min-width: 640px) {
+	.button-1,
+	.button-2,
+	button[type="submit"],
+	input[type="submit"] {
+		width: auto;
+	}
+
+	/* Login / Register page specific button sizing */
+	.login-page .button-1,
+	.registration-page .button-1 {
+		min-width: 160px;
+	}
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   10. Buttons wrapper
+   ──────────────────────────────────────────────────────────────────────────── */
+.buttons {
+	margin: 24px 0 0;
+	text-align: left;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   11. Forgot password / secondary links
+   ──────────────────────────────────────────────────────────────────────────── */
+.forgot-password {
+	display: inline-block;
+	font-size: 13px;
+	font-weight: 500;
+	margin-left: auto;
+}
+
+.forgot-password a {
+	color: var(--arity-body, #4d4d4d);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+	transition: color 0.15s ease;
+}
+
+.forgot-password a:hover {
+	color: var(--arity-primary, #000);
+}
+
+/* Remember-me + forgot layout */
+.inputs.reversed {
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   12. External auth / social buttons
+   ──────────────────────────────────────────────────────────────────────────── */
+.external-authentication {
+	margin-top: 24px;
+	padding-top: 24px;
+	border-top: 1px solid var(--arity-hairline, #ebebeb);
+}
+
+.external-authentication .buttons {
+	text-align: left;
+}
+
+.external-authentication button {
+	width: 100%;
+	margin-bottom: 10px;
+	background: var(--form-bg-soft);
+	border: 1px solid var(--form-border);
+	color: var(--form-text);
+	font-size: 14px;
+	font-weight: 500;
+	border-radius: var(--form-radius);
+	padding: 12px;
+	transition:
+		background 0.15s ease,
+		border-color 0.15s ease;
+}
+
+.external-authentication button:hover {
+	background: #fff;
+	border-color: var(--form-border-hover);
+}
+
+@media (min-width: 640px) {
+	.external-authentication .buttons {
+		display: flex;
+		gap: 12px;
+	}
+	.external-authentication button {
+		width: auto;
+		flex: 1;
+	}
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   13. Login-specific: two-column layout (returning vs new)
+   ──────────────────────────────────────────────────────────────────────────── */
+.customer-blocks {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+@media (min-width: 768px) {
+	.login-page .customer-blocks {
+		flex-direction: row;
+		align-items: flex-start;
+	}
+	.login-page .customer-blocks .new-wrapper,
+	.login-page .customer-blocks .returning-wrapper {
+		flex: 1;
+	}
+	.login-page .customer-blocks .new-wrapper {
+		order: 2;
+	}
+	.login-page .customer-blocks .returning-wrapper {
+		order: 1;
+	}
+}
+
+.new-wrapper.register-block,
+.new-wrapper.checkout-as-guest-or-register-block {
+	background: var(--form-bg-soft);
+	border: 1px solid var(--form-border);
+	border-radius: 12px;
+	padding: 24px;
+}
+
+.new-wrapper .title {
+	font-size: 16px;
+	font-weight: 700;
+	margin-bottom: 8px;
+	color: var(--form-text);
+}
+
+.new-wrapper .text {
+	font-size: 14px;
+	color: var(--form-label);
+	margin-bottom: 16px;
+	line-height: 1.5;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   14. Consent / privacy checkboxes
+   ──────────────────────────────────────────────────────────────────────────── */
+.inputs.accept-consent {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	text-align: left;
+}
+
+.inputs.accept-consent input[type="checkbox"] {
+	margin-top: 2px;
+	flex-shrink: 0;
+}
+
+.inputs.accept-consent label {
+	margin: 0;
+	font-size: 13px;
+	font-weight: 400;
+	text-transform: none;
+	letter-spacing: normal;
+	color: var(--form-text);
+	line-height: 1.4;
+}
+
+.inputs.accept-consent .read {
+	font-size: 12px;
+	color: var(--arity-body, #4d4d4d);
+	text-decoration: underline;
+	margin-left: 4px;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   15. Mode switcher (email ↔ phone login)
+   ──────────────────────────────────────────────────────────────────────────── */
+.mode-switcher {
+	margin-top: 16px;
+	text-align: left;
+}
+
+.mode-button {
+	background: transparent;
+	border: none;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--arity-body, #4d4d4d);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+	cursor: pointer;
+	padding: 0;
+	transition: color 0.15s ease;
+}
+
+.mode-button:hover {
+	color: var(--arity-primary, #000);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   16. Password toggle eye
+   ──────────────────────────────────────────────────────────────────────────── */
+.login-password {
+	position: relative;
+}
+
+.login-password input {
+	padding-right: 44px;
+}
+
+.password-eye {
+	position: absolute;
+	right: 12px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+	opacity: 0.5;
+	transition: opacity 0.15s ease;
+}
+
+.password-eye:hover {
+	opacity: 0.8;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   17. Gender / option-list radio buttons
+   ──────────────────────────────────────────────────────────────────────────── */
+.gender {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.gender span {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.gender input[type="radio"] {
+	width: 18px;
+	height: 18px;
+	accent-color: var(--arity-primary, #000);
+	cursor: pointer;
+}
+
+.gender label.forcheckbox {
+	font-size: 14px;
+	font-weight: 400;
+	text-transform: none;
+	letter-spacing: normal;
+	color: var(--form-text);
+	cursor: pointer;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   18. Date of birth — inline selects
+   ──────────────────────────────────────────────────────────────────────────── */
+.date-of-birth .date-picker-wrapper {
+	display: flex;
+	gap: 8px;
+}
+
+.date-of-birth select {
+	flex: 1;
+	min-width: 0;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   19. Option-list attributes (product filters, etc.)
+   ──────────────────────────────────────────────────────────────────────────── */
+.inputs .option-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	max-width: 100%;
+}
+
+.inputs .option-list li {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0;
+	border: 1px solid var(--form-border);
+	background-color: var(--form-bg);
+	padding: 8px 14px;
+	border-radius: var(--form-radius-sm);
+	font-size: 13px;
+	cursor: pointer;
+	transition:
+		border-color 0.15s ease,
+		background-color 0.15s ease;
+}
+
+.inputs .option-list li:hover {
+	border-color: var(--form-border-hover);
+	background-color: var(--form-bg-soft);
+}
+
+.inputs .option-list li.selected {
+	border-color: var(--arity-primary, #000);
+	background-color: var(--form-bg);
+}
+
+.inputs .option-list label {
+	display: inline;
+	width: auto;
+	margin: 0;
+	font-size: 13px;
+	font-weight: 400;
+	text-transform: none;
+	letter-spacing: normal;
+	cursor: pointer;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   20. Success / result messages
+   ──────────────────────────────────────────────────────────────────────────── */
+.result {
+	background: #ecfdf5;
+	border: 1px solid #a7f3d0;
+	border-radius: var(--form-radius);
+	padding: 16px 20px;
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--form-success);
+	margin: 0 0 24px;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   21. Newsletter subscription checkboxes
+   ──────────────────────────────────────────────────────────────────────────── */
+.attributes ul {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.attributes ul li {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.attributes ul li label {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 400;
+	text-transform: none;
+	letter-spacing: normal;
+	color: var(--form-text);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   22. Captcha box
+   ──────────────────────────────────────────────────────────────────────────── */
+.captcha-box {
+	text-align: left;
+	line-height: normal;
+	margin-top: 4px;
+}
+
+.captcha-box > div {
+	display: inline-block;
+	max-width: 100%;
+}
+
+.captcha-box input {
+	height: auto;
+	margin-top: 8px;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   23. Responsive: wide pages (checkout, address add/edit)
+   ──────────────────────────────────────────────────────────────────────────── */
+@media (min-width: 768px) {
+	.page.address-edit-page,
+	.page.address-add-page {
+		max-width: 720px;
+	}
+
+	/* Two-column grid for related fields */
+	.address-edit-page .form-fields,
+	.address-add-page .form-fields,
+	.checkout-page .form-fields {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0 20px;
+	}
+
+	.address-edit-page .form-fields .inputs:nth-child(1),
+	.address-add-page .form-fields .inputs:nth-child(2),
+	.address-edit-page .form-fields .inputs:nth-child(5),
+	.address-add-page .form-fields .inputs:nth-child(6),
+	.checkout-page .form-fields .inputs:nth-child(1),
+	.checkout-page .form-fields .inputs:nth-child(2) {
+		/* First/Last name side by side */
+	}
+
+	/* Full-width exceptions */
+	.address-edit-page .form-fields .inputs:has(textarea),
+	.address-add-page .form-fields .inputs:has(textarea),
+	.address-edit-page .form-fields .inputs:has(select[name*="Country"]),
+	.address-add-page .form-fields .inputs:has(select[name*="Country"]) {
+		grid-column: 1 / -1;
+	}
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   24. Print styles
+   ──────────────────────────────────────────────────────────────────────────── */
+@media print {
+	.button-1,
+	.button-2,
+	.external-authentication,
+	.mode-switcher {
+		display: none !important;
+	}
+}

@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Form Modernisation — Target Design (Responsive)</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: #f5f5f5;
+        color: #1a1a1a;
+        line-height: 1.5;
+        padding: 24px;
+      }
+      h1 {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 24px;
+      }
+
+      /* Viewport toggle tabs */
+      .tabs {
+        display: flex;
+        gap: 0;
+        background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        margin-bottom: 24px;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .tab {
+        padding: 12px 24px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        background: none;
+        color: #6b7280;
+        border-bottom: 2px solid transparent;
+      }
+      .tab.active {
+        color: #000;
+        border-bottom-color: #000;
+      }
+      .tab:hover {
+        color: #000;
+      }
+      .viewport-panel {
+        display: none;
+      }
+      .viewport-panel.active {
+        display: block;
+      }
+
+      /* ════════════════════════════════════════════════════════════
+     DESKTOP (≥768px): Labels on LEFT of inputs
+     ════════════════════════════════════════════════════════════ */
+      .desktop-frame {
+        max-width: 1280px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        padding: 24px;
+      }
+      .desktop-frame .page-title {
+        text-align: center;
+        font-size: 30px;
+        font-weight: normal;
+        margin-bottom: 24px;
+      }
+
+      /* Login: two-column side by side */
+      .desktop-login-grid {
+        display: flex;
+        gap: 24px;
+        justify-content: center;
+      }
+      .desktop-card {
+        background: #fff;
+        border: 1px solid #ebebeb;
+        border-radius: 12px;
+        padding: 24px;
+        width: 420px;
+      }
+      .desktop-card-title {
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 16px;
+        color: #111827;
+      }
+
+      /* Desktop: label LEFT of input, centred block */
+      .desktop-form-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+        justify-content: center;
+      }
+      .desktop-form-row .form-label {
+        flex-shrink: 0;
+        width: 120px;
+        text-align: right;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #6b7280;
+      }
+      .desktop-form-row .form-input {
+        flex: 1;
+        max-width: 360px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-size: 14px;
+        color: #111827;
+      }
+
+      /* Desktop: gender */
+      .desktop-gender-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        justify-content: center;
+      }
+      .desktop-gender-row .form-label {
+        width: 120px;
+        text-align: right;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #6b7280;
+      }
+      .desktop-gender-options {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+      }
+      .desktop-gender-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .desktop-gender-option input {
+        width: 20px;
+        height: 20px;
+        accent-color: #000;
+      }
+
+      /* Desktop: remember me */
+      .desktop-remember {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 24px;
+        margin: 16px 0;
+        font-size: 13px;
+      }
+      .desktop-remember label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+      }
+      .desktop-remember a {
+        color: #4d4d4d;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        font-weight: 500;
+      }
+
+      /* Buttons */
+      .btn-primary {
+        display: inline-block;
+        min-width: 160px;
+        background: #000;
+        color: #fff;
+        padding: 14px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        cursor: pointer;
+        text-align: center;
+      }
+      .btn-secondary {
+        display: inline-block;
+        min-width: 160px;
+        background: transparent;
+        color: #111827;
+        padding: 14px 30px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: center;
+      }
+      .btn-text {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #4d4d4d;
+        cursor: pointer;
+      }
+
+      /* Register sections */
+      .desktop-section-card {
+        background: #fff;
+        border: 1px solid #ebebeb;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+      }
+      .desktop-section-title {
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 20px;
+        color: #111827;
+      }
+
+      /* ════════════════════════════════════════════════════════════
+     MOBILE (<768px): Labels ABOVE inputs
+     Matches wireframe 06-login-register.html recommendations
+     ════════════════════════════════════════════════════════════ */
+      .mobile-frame {
+        max-width: 375px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        padding: 16px;
+      }
+      .mobile-frame .page-title {
+        text-align: center;
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        letter-spacing: -0.01em;
+      }
+
+      .mobile-card {
+        background: #fff;
+        border: 1px solid #ebebeb;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+      }
+      .mobile-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 12px;
+      }
+
+      /* Mobile: label ABOVE input */
+      .mobile-form-group {
+        margin-bottom: 16px;
+      }
+      .mobile-form-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        color: #111827;
+        margin-bottom: 6px;
+      }
+      .mobile-form-input {
+        width: 100%;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 14px;
+        font-size: 16px;
+        color: #111827;
+      }
+      .mobile-form-input::placeholder {
+        color: #9ca3af;
+      }
+
+      /* Mobile: gender */
+      .mobile-gender-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        color: #111827;
+        margin-bottom: 8px;
+      }
+      .mobile-gender-options {
+        display: flex;
+        gap: 24px;
+      }
+      .mobile-gender-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+      }
+      .mobile-gender-option input {
+        width: 20px;
+        height: 20px;
+        accent-color: #000;
+      }
+
+      /* Mobile: remember me */
+      .mobile-remember {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 16px 0;
+        font-size: 13px;
+      }
+      .mobile-remember label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .mobile-remember a {
+        color: #4d4d4d;
+        text-decoration: underline;
+      }
+
+      /* Mobile: full-width button */
+      .mobile-btn-primary {
+        display: block;
+        width: 100%;
+        background: #000;
+        color: #fff;
+        padding: 16px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: center;
+        margin-bottom: 12px;
+      }
+      .mobile-btn-secondary {
+        display: block;
+        width: 100%;
+        background: transparent;
+        color: #111827;
+        padding: 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: center;
+      }
+      .mobile-btn-text {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #4d4d4d;
+        cursor: pointer;
+        text-align: center;
+      }
+
+      /* Notes */
+      .notes {
+        max-width: 1280px;
+        margin: 24px auto 0;
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px 24px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      }
+      .notes h3 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .notes ul {
+        font-size: 13px;
+        color: #4b5563;
+        padding-left: 20px;
+        line-height: 1.8;
+      }
+      .notes li {
+        margin-bottom: 4px;
+      }
+      .notes code {
+        background: #f3f4f6;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "SF Mono", monospace;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🎯 Form Modernisation — Target Design</h1>
+    <p class="subtitle">
+      Responsive: labels on LEFT (desktop) · labels ABOVE (mobile)
+    </p>
+
+    <!-- Viewport Tabs ─────────────────────────────────────────────────────── -->
+    <div class="tabs">
+      <button class="tab active" onclick="showViewport('desktop')">
+        💻 Desktop (≥768px)
+      </button>
+      <button class="tab" onclick="showViewport('mobile')">
+        📱 Mobile (<768px)
+      </button>
+    </div>
+
+    <script>
+      function showViewport(vp) {
+        document
+          .querySelectorAll(".viewport-panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        document.getElementById(vp).classList.add("active");
+        event.target.classList.add("active");
+      }
+    </script>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+     DESKTOP VIEW
+     ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="viewport-panel active" id="desktop">
+      <!-- LOGIN PAGE ────────────────────────────────────────────────────────── -->
+      <div class="desktop-frame">
+        <div class="page-title">Welcome, Please Sign In!</div>
+
+        <div class="desktop-login-grid">
+          <!-- New Customer -->
+          <div class="desktop-card">
+            <div class="desktop-card-title">New Customer</div>
+            <p
+              style="
+                font-size: 14px;
+                color: #6b7280;
+                line-height: 1.5;
+                text-align: center;
+                margin-bottom: 20px;
+              "
+            >
+              By creating an account on our website, you will be able to shop
+              faster, be up to date on an order's status, and keep track of the
+              orders you have previously made.
+            </p>
+            <div style="text-align: center">
+              <button class="btn-secondary">Register</button>
+            </div>
+          </div>
+
+          <!-- Returning Customer -->
+          <div class="desktop-card">
+            <div class="desktop-card-title">Returning Customer</div>
+
+            <div class="desktop-form-row">
+              <span class="form-label">Email:</span>
+              <input
+                type="email"
+                class="form-input"
+                placeholder="name@company.com"
+              />
+            </div>
+
+            <div class="desktop-form-row">
+              <span class="form-label">Password:</span>
+              <input
+                type="password"
+                class="form-input"
+                placeholder="••••••••"
+              />
+            </div>
+
+            <div class="desktop-remember">
+              <label><input type="checkbox" /> Remember me?</label>
+              <a href="#">Forgot password?</a>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 12px">
+              <button class="btn-primary">Log in</button>
+            </div>
+
+            <div style="text-align: center">
+              <button class="btn-text">Login with phone</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height: 32px"></div>
+
+      <!-- REGISTER PAGE ────────────────────────────────────────────────────── -->
+      <div class="desktop-frame">
+        <div class="page-title">Register</div>
+
+        <div
+          class="desktop-section-card"
+          style="max-width: 680px; margin: 0 auto 24px"
+        >
+          <div class="desktop-section-title">Your Personal Details</div>
+
+          <!-- Gender: label LEFT, options inline -->
+          <div class="desktop-gender-row" style="margin-bottom: 16px">
+            <span class="form-label">Gender:</span>
+            <div class="desktop-gender-options">
+              <label class="desktop-gender-option">
+                <input type="radio" name="gender" />
+                <span>Male</span>
+              </label>
+              <label class="desktop-gender-option">
+                <input type="radio" name="gender" />
+                <span>Female</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="desktop-form-row">
+            <span class="form-label">First name:</span>
+            <input type="text" class="form-input" />
+          </div>
+
+          <div class="desktop-form-row">
+            <span class="form-label">Last name:</span>
+            <input type="text" class="form-input" />
+          </div>
+
+          <div class="desktop-form-row">
+            <span class="form-label">Email:</span>
+            <input type="email" class="form-input" />
+          </div>
+        </div>
+
+        <div
+          class="desktop-section-card"
+          style="max-width: 680px; margin: 0 auto 24px"
+        >
+          <div class="desktop-section-title">Your Password</div>
+
+          <div class="desktop-form-row">
+            <span class="form-label">Password:</span>
+            <input type="password" class="form-input" />
+          </div>
+
+          <div class="desktop-form-row">
+            <span class="form-label">Confirm password:</span>
+            <input type="password" class="form-input" />
+          </div>
+        </div>
+
+        <div style="text-align: center">
+          <button class="btn-primary">Register</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+     MOBILE VIEW
+     ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="viewport-panel" id="mobile">
+      <!-- LOGIN PAGE ────────────────────────────────────────────────────────── -->
+      <div class="mobile-frame">
+        <div class="page-title">Sign in to Arity Shop</div>
+
+        <div class="mobile-card">
+          <div class="mobile-card-title">Returning Customer</div>
+
+          <div class="mobile-form-group">
+            <span class="mobile-form-label">Email or phone</span>
+            <input
+              type="email"
+              class="mobile-form-input"
+              placeholder="name@company.com"
+            />
+          </div>
+
+          <div class="mobile-form-group">
+            <span class="mobile-form-label">Password</span>
+            <input
+              type="password"
+              class="mobile-form-input"
+              placeholder="••••••••"
+            />
+          </div>
+
+          <div class="mobile-remember">
+            <label><input type="checkbox" /> Remember me</label>
+            <a href="#">Forgot password?</a>
+          </div>
+
+          <button class="mobile-btn-primary">Sign In</button>
+          <button class="mobile-btn-text">Login with phone</button>
+        </div>
+
+        <div class="mobile-card" style="background: #f9fafb">
+          <div style="text-align: center; font-size: 13px; color: #6b7280">
+            <strong>Why sign in?</strong><br />
+            Track orders, save wishlists, reorder quickly.
+          </div>
+        </div>
+
+        <div class="mobile-card">
+          <div class="mobile-card-title">New Customer</div>
+          <p
+            style="
+              font-size: 14px;
+              color: #6b7280;
+              line-height: 1.5;
+              text-align: center;
+              margin-bottom: 16px;
+            "
+          >
+            By creating an account, you'll shop faster and keep track of orders.
+          </p>
+          <button class="mobile-btn-secondary">Create Account</button>
+        </div>
+      </div>
+
+      <div style="height: 32px"></div>
+
+      <!-- REGISTER PAGE ────────────────────────────────────────────────────── -->
+      <div class="mobile-frame">
+        <div class="page-title">Create Account</div>
+
+        <div class="mobile-card">
+          <div class="mobile-card-title">Your Personal Details</div>
+
+          <div class="mobile-form-group">
+            <span class="mobile-gender-label">Gender</span>
+            <div class="mobile-gender-options">
+              <label class="mobile-gender-option">
+                <input type="radio" name="gender" />
+                <span>Male</span>
+              </label>
+              <label class="mobile-gender-option">
+                <input type="radio" name="gender" />
+                <span>Female</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="mobile-form-group">
+            <span class="mobile-form-label">First name</span>
+            <input type="text" class="mobile-form-input" />
+          </div>
+
+          <div class="mobile-form-group">
+            <span class="mobile-form-label">Last name</span>
+            <input type="text" class="mobile-form-input" />
+          </div>
+
+          <div class="mobile-form-group">
+            <span class="mobile-form-label">Email</span>
+            <input type="email" class="mobile-form-input" />
+          </div>
+        </div>
+
+        <div class="mobile-card">
+          <div class="mobile-card-title">Your Password</div>
+
+          <div class="mobile-form-group">
+            <span class="mobile-form-label">Password</span>
+            <input type="password" class="mobile-form-input" />
+          </div>
+
+          <div class="mobile-form-group">
+            <span class="mobile-form-label">Confirm password</span>
+            <input type="password" class="mobile-form-input" />
+          </div>
+        </div>
+
+        <button class="mobile-btn-primary">Register</button>
+      </div>
+    </div>
+
+    <!-- DESIGN NOTES ──────────────────────────────────────────────────────── -->
+    <div class="notes">
+      <h3>Responsive Design Spec</h3>
+      <ul>
+        <li>
+          <strong>Desktop (≥768px)</strong> — Labels on <strong>left</strong> of
+          inputs. <code>120px label width</code>, right-aligned. Input fills
+          remainder. Gender options inline.
+        </li>
+        <li>
+          <strong>Mobile (<768px)</strong> — Labels
+          <strong>above</strong> inputs (stacked). Inputs full-width.
+          <code>16px font-size</code> for touch targets. Buttons full-width.
+        </li>
+        <li>
+          <strong>Card containers</strong> — White <code>#fff</code> + hairline
+          border <code>#ebebeb</code> + <code>border-radius: 12px</code>.
+          Replaces grey box.
+        </li>
+        <li>
+          <strong>Section titles</strong> —
+          <code>14px / weight 600 / sentence case</code>. Identical on both
+          cards.
+        </li>
+        <li>
+          <strong>Labels</strong> —
+          <code>11px / uppercase / grey #6b7280</code> (desktop).
+          <code>13px / weight 500 / sentence case</code> (mobile).
+        </li>
+        <li>
+          <strong>Inputs</strong> —
+          <code>8px radius / grey idle #f9fafb → white on focus</code>. Focus
+          ring: black border + soft shadow.
+        </li>
+        <li>
+          <strong>Buttons</strong> — Sentence case. Primary: black fill.
+          Secondary: outline. Hover lift + shadow.
+        </li>
+        <li>
+          <strong>Gender</strong> — Desktop: label left, options inline with
+          <code>32px gap</code>. Mobile: label above, options horizontal.
+        </li>
+        <li>
+          <strong>Login mobile</strong> — Single "Sign in" card with email +
+          password stacked. "Create Account" card below. Matches wireframe 06.
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>

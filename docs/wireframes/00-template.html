@@ -1,558 +1,638 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Arity Shop — Multi-Viewport Wireframe Template</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f5f5f5;
-    color: #1a1a1a;
-    line-height: 1.5;
-  }
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arity Shop — Multi-Viewport Wireframe Template</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background: #f5f5f5;
+        color: #1a1a1a;
+        line-height: 1.5;
+      }
 
-  /* Page header */
-  .page-header {
-    background: #000;
-    color: #fff;
-    padding: 16px 24px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .page-header h1 {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-  .page-header .subtitle {
-    font-size: 13px;
-    color: #9ca3af;
-    margin-top: 2px;
-  }
+      /* Page header */
+      .page-header {
+        background: #000;
+        color: #fff;
+        padding: 16px 24px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .page-header h1 {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .page-header .subtitle {
+        font-size: 13px;
+        color: #9ca3af;
+        margin-top: 2px;
+      }
 
-  /* Viewport tabs */
-  .tabs {
-    display: flex;
-    gap: 0;
-    background: #fff;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 0 24px;
-    position: sticky;
-    top: 58px;
-    z-index: 90;
-  }
-  .tab {
-    padding: 12px 20px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    color: #6b7280;
-    background: none;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-  }
-  .tab.active {
-    color: #000;
-    border-bottom-color: #000;
-  }
-  .tab:hover {
-    color: #000;
-  }
+      /* Viewport tabs */
+      .tabs {
+        display: flex;
+        gap: 0;
+        background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 0 24px;
+        position: sticky;
+        top: 58px;
+        z-index: 90;
+      }
+      .tab {
+        padding: 12px 20px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        color: #6b7280;
+        background: none;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+      }
+      .tab.active {
+        color: #000;
+        border-bottom-color: #000;
+      }
+      .tab:hover {
+        color: #000;
+      }
 
-  /* Viewport panels */
-  .viewport-panel {
-    display: none;
-    padding: 24px;
-  }
-  .viewport-panel.active {
-    display: block;
-  }
+      /* Viewport panels */
+      .viewport-panel {
+        display: none;
+        padding: 24px;
+      }
+      .viewport-panel.active {
+        display: block;
+      }
 
-  /* Comparison layout */
-  .comparison {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-  @media (max-width: 900px) {
-    .comparison {
-      grid-template-columns: 1fr;
-    }
-  }
+      /* Comparison layout */
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      @media (max-width: 900px) {
+        .comparison {
+          grid-template-columns: 1fr;
+        }
+      }
 
-  /* Phone / tablet / desktop frames */
-  .device {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-    overflow: hidden;
-  }
-  .device-header {
-    padding: 12px 16px;
-    border-bottom: 1px solid #f3f4f6;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .device-label {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .device-label.current { color: #dc2626; }
-  .device-label.proposed { color: #16a34a; }
-  .device-size {
-    font-size: 11px;
-    color: #9ca3af;
-    font-family: 'SF Mono', Monaco, monospace;
-  }
+      /* Phone / tablet / desktop frames */
+      .device {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
+      .device-header {
+        padding: 12px 16px;
+        border-bottom: 1px solid #f3f4f6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .device-label {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .device-label.current {
+        color: #dc2626;
+      }
+      .device-label.proposed {
+        color: #16a34a;
+      }
+      .device-size {
+        font-size: 11px;
+        color: #9ca3af;
+        font-family: "SF Mono", Monaco, monospace;
+      }
 
-  /* Screen area */
-  .screen {
-    border: 1px solid #e5e7eb;
-    margin: 8px;
-    border-radius: 8px;
-    overflow: auto;
-    background: #fff;
-  }
+      /* Screen area */
+      .screen {
+        border: 1px solid #e5e7eb;
+        margin: 8px;
+        border-radius: 8px;
+        overflow: auto;
+        background: #fff;
+      }
 
-  /* Viewport-specific screen sizes */
-  .screen-mobile { width: 375px; height: 812px; }
-  .screen-tablet { width: 768px; height: 600px; }
-  .screen-desktop { width: 1280px; height: 500px; }
+      /* Viewport-specific screen sizes */
+      .screen-mobile {
+        width: 375px;
+        height: 812px;
+      }
+      .screen-tablet {
+        width: 768px;
+        height: 600px;
+      }
+      .screen-desktop {
+        width: 1280px;
+        height: 500px;
+      }
 
-  /* Inner content */
-  .screen-inner {
-    padding: 16px;
-    min-height: 100%;
-  }
+      /* Inner content */
+      .screen-inner {
+        padding: 16px;
+        min-height: 100%;
+      }
 
-  /* Arity Shop UI elements */
-  .arity-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid #f3f4f6;
-    margin-bottom: 12px;
-  }
-  .arity-logo {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-  .arity-search {
-    flex: 1;
-    background: #f3f4f6;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    color: #9ca3af;
-  }
-  .arity-nav {
-    background: #000;
-    color: #fff;
-    padding: 10px 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-    font-weight: 500;
-    border-radius: 4px;
-    margin-bottom: 12px;
-  }
+      /* Arity Shop UI elements */
+      .arity-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+        margin-bottom: 12px;
+      }
+      .arity-logo {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .arity-search {
+        flex: 1;
+        background: #f3f4f6;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #9ca3af;
+      }
+      .arity-nav {
+        background: #000;
+        color: #fff;
+        padding: 10px 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 4px;
+        margin-bottom: 12px;
+      }
 
-  /* Placeholder blocks */
-  .block {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 12px;
-  }
-  .block-title {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  .placeholder {
-    background: #e5e7eb;
-    border-radius: 4px;
-  }
-  .placeholder-img {
-    background: #e5e7eb;
-    border-radius: 8px;
-  }
-  .placeholder-text {
-    height: 12px;
-    background: #e5e7eb;
-    border-radius: 2px;
-    margin-bottom: 8px;
-  }
+      /* Placeholder blocks */
+      .block {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 12px;
+      }
+      .block-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .placeholder {
+        background: #e5e7eb;
+        border-radius: 4px;
+      }
+      .placeholder-img {
+        background: #e5e7eb;
+        border-radius: 8px;
+      }
+      .placeholder-text {
+        height: 12px;
+        background: #e5e7eb;
+        border-radius: 2px;
+        margin-bottom: 8px;
+      }
 
-  /* Current vs proposed styling */
-  .current-area .screen { border-color: #fee2e2; }
-  .current-area .block { background: #fef2f2; border-color: #fecaca; }
-  .proposed-area .screen { border-color: #dcfce7; }
-  .proposed-area .block { background: #f0fdf4; border-color: #bbf7d0; }
+      /* Current vs proposed styling */
+      .current-area .screen {
+        border-color: #fee2e2;
+      }
+      .current-area .block {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+      .proposed-area .screen {
+        border-color: #dcfce7;
+      }
+      .proposed-area .block {
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+      }
 
-  /* Notes section */
-  .notes {
-    max-width: 1400px;
-    margin: 24px auto 0;
-    padding: 0 24px;
-  }
-  .notes h3 {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  .notes ul {
-    font-size: 13px;
-    color: #4b5563;
-    padding-left: 20px;
-  }
-  .notes li {
-    margin-bottom: 4px;
-  }
+      /* Notes section */
+      .notes {
+        max-width: 1400px;
+        margin: 24px auto 0;
+        padding: 0 24px;
+      }
+      .notes h3 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .notes ul {
+        font-size: 13px;
+        color: #4b5563;
+        padding-left: 20px;
+      }
+      .notes li {
+        margin-bottom: 4px;
+      }
 
-  /* Instructions overlay */
-  .instructions {
-    background: #fef3c7;
-    border: 1px solid #f59e0b;
-    border-radius: 8px;
-    padding: 16px;
-    margin: 16px 24px 0;
-    max-width: 1400px;
-  }
-  .instructions h3 {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #92400e;
-  }
-  .instructions p, .instructions li {
-    font-size: 13px;
-    color: #78350f;
-  }
-  .instructions ul {
-    padding-left: 20px;
-    margin-top: 4px;
-  }
-  .instructions code {
-    background: rgba(0,0,0,0.05);
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-family: 'SF Mono', Monaco, monospace;
-    font-size: 12px;
-  }
-</style>
-</head>
-<body>
+      /* Instructions overlay */
+      .instructions {
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 16px 24px 0;
+        max-width: 1400px;
+      }
+      .instructions h3 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #92400e;
+      }
+      .instructions p,
+      .instructions li {
+        font-size: 13px;
+        color: #78350f;
+      }
+      .instructions ul {
+        padding-left: 20px;
+        margin-top: 4px;
+      }
+      .instructions code {
+        background: rgba(0, 0, 0, 0.05);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "SF Mono", Monaco, monospace;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>📐 [Page Name] Wireframe</h1>
+      <div class="subtitle">Issue #X — [Brief description of the problem]</div>
+    </div>
 
-<!-- Page Header -->
-<div class="page-header">
-  <h1>📐 [Page Name] Wireframe</h1>
-  <div class="subtitle">Issue #X — [Brief description of the problem]</div>
-</div>
+    <!-- Viewport Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-viewport="mobile">📱 Mobile 375px</button>
+      <button class="tab" data-viewport="tablet">📱 Tablet 768px</button>
+      <button class="tab" data-viewport="desktop">💻 Desktop 1280px</button>
+    </div>
 
-<!-- Viewport Tabs -->
-<div class="tabs">
-  <button class="tab active" data-viewport="mobile">📱 Mobile 375px</button>
-  <button class="tab" data-viewport="tablet">📱 Tablet 768px</button>
-  <button class="tab" data-viewport="desktop">💻 Desktop 1280px</button>
-</div>
+    <!-- Instructions -->
+    <div class="instructions">
+      <h3>How to use this template</h3>
+      <ul>
+        <li>Click the tabs above to switch between viewports</li>
+        <li>
+          Edit the <code>CURRENT</code> sections to show the existing layout
+        </li>
+        <li>
+          Edit the <code>PROPOSED</code> sections to show your improved layout
+        </li>
+        <li>Review all three viewports before writing any CSS</li>
+        <li>When done, rename this file and remove these instructions</li>
+      </ul>
+    </div>
 
-<!-- Instructions -->
-<div class="instructions">
-  <h3>How to use this template</h3>
-  <ul>
-    <li>Click the tabs above to switch between viewports</li>
-    <li>Edit the <code>CURRENT</code> sections to show the existing layout</li>
-    <li>Edit the <code>PROPOSED</code> sections to show your improved layout</li>
-    <li>Review all three viewports before writing any CSS</li>
-    <li>When done, rename this file and remove these instructions</li>
-  </ul>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- MOBILE VIEWPORT: 375px                                       -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="viewport-panel active" id="mobile">
-  <div class="comparison">
-
-    <!-- CURRENT: Mobile -->
-    <div class="device current-area">
-      <div class="device-header">
-        <span class="device-label current">❌ Current</span>
-        <span class="device-size">375 × 812</span>
-      </div>
-      <div class="screen screen-mobile">
-        <div class="screen-inner">
-          <!-- EDIT CURRENT MOBILE LAYOUT BELOW -->
-          <div class="arity-header">
-            <div class="arity-logo">arity shop</div>
-            <div class="arity-search">Search store</div>
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- MOBILE VIEWPORT: 375px                                       -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="viewport-panel active" id="mobile">
+      <div class="comparison">
+        <!-- CURRENT: Mobile -->
+        <div class="device current-area">
+          <div class="device-header">
+            <span class="device-label current">❌ Current</span>
+            <span class="device-size">375 × 812</span>
           </div>
-          <div class="arity-nav">
-            <span>CATEGORIES</span>
-            <span>☰</span>
+          <div class="screen screen-mobile">
+            <div class="screen-inner">
+              <!-- EDIT CURRENT MOBILE LAYOUT BELOW -->
+              <div class="arity-header">
+                <div class="arity-logo">arity shop</div>
+                <div class="arity-search">Search store</div>
+              </div>
+              <div class="arity-nav">
+                <span>CATEGORIES</span>
+                <span>☰</span>
+              </div>
+              <div class="block">
+                <div class="block-title">Current Layout</div>
+                <div class="placeholder-text" style="width: 80%"></div>
+                <div class="placeholder-text" style="width: 60%"></div>
+                <div class="placeholder-text" style="width: 90%"></div>
+              </div>
+              <div class="block">
+                <div class="block-title">Problem Description</div>
+                <p style="font-size: 13px; color: #6b7280">
+                  Describe the mobile problem here.
+                </p>
+              </div>
+              <!-- END CURRENT MOBILE LAYOUT -->
+            </div>
           </div>
-          <div class="block">
-            <div class="block-title">Current Layout</div>
-            <div class="placeholder-text" style="width: 80%;"></div>
-            <div class="placeholder-text" style="width: 60%;"></div>
-            <div class="placeholder-text" style="width: 90%;"></div>
+        </div>
+
+        <!-- PROPOSED: Mobile -->
+        <div class="device proposed-area">
+          <div class="device-header">
+            <span class="device-label proposed">✅ Proposed</span>
+            <span class="device-size">375 × 812</span>
           </div>
-          <div class="block">
-            <div class="block-title">Problem Description</div>
-            <p style="font-size: 13px; color: #6b7280;">
-              Describe the mobile problem here.
-            </p>
+          <div class="screen screen-mobile">
+            <div class="screen-inner">
+              <!-- EDIT PROPOSED MOBILE LAYOUT BELOW -->
+              <div class="arity-header">
+                <div class="arity-logo">arity shop</div>
+                <div class="arity-search">Search store</div>
+              </div>
+              <div class="arity-nav">
+                <span>CATEGORIES</span>
+                <span>☰</span>
+              </div>
+              <div class="block">
+                <div class="block-title">Proposed Layout</div>
+                <div class="placeholder-text" style="width: 100%"></div>
+                <div class="placeholder-text" style="width: 75%"></div>
+                <div class="placeholder-text" style="width: 85%"></div>
+              </div>
+              <div class="block">
+                <div class="block-title">Solution Description</div>
+                <p style="font-size: 13px; color: #6b7280">
+                  Describe the mobile solution here.
+                </p>
+              </div>
+              <!-- END PROPOSED MOBILE LAYOUT -->
+            </div>
           </div>
-          <!-- END CURRENT MOBILE LAYOUT -->
         </div>
       </div>
     </div>
 
-    <!-- PROPOSED: Mobile -->
-    <div class="device proposed-area">
-      <div class="device-header">
-        <span class="device-label proposed">✅ Proposed</span>
-        <span class="device-size">375 × 812</span>
-      </div>
-      <div class="screen screen-mobile">
-        <div class="screen-inner">
-          <!-- EDIT PROPOSED MOBILE LAYOUT BELOW -->
-          <div class="arity-header">
-            <div class="arity-logo">arity shop</div>
-            <div class="arity-search">Search store</div>
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TABLET VIEWPORT: 768px                                       -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="viewport-panel" id="tablet">
+      <div class="comparison">
+        <!-- CURRENT: Tablet -->
+        <div class="device current-area">
+          <div class="device-header">
+            <span class="device-label current">❌ Current</span>
+            <span class="device-size">768 × 600</span>
           </div>
-          <div class="arity-nav">
-            <span>CATEGORIES</span>
-            <span>☰</span>
+          <div class="screen screen-tablet">
+            <div class="screen-inner">
+              <!-- EDIT CURRENT TABLET LAYOUT BELOW -->
+              <div class="arity-header">
+                <div class="arity-logo">arity shop</div>
+                <div class="arity-search" style="max-width: 300px">
+                  Search store
+                </div>
+              </div>
+              <div class="arity-nav">
+                <span>Solar Panels | Batteries | Inverters | Controllers</span>
+              </div>
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: 200px 1fr;
+                  gap: 16px;
+                "
+              >
+                <div class="block">
+                  <div class="block-title">Sidebar</div>
+                  <div class="placeholder-text"></div>
+                  <div class="placeholder-text"></div>
+                </div>
+                <div class="block">
+                  <div class="block-title">Main Content</div>
+                  <div class="placeholder-text"></div>
+                  <div class="placeholder-text"></div>
+                </div>
+              </div>
+              <!-- END CURRENT TABLET LAYOUT -->
+            </div>
           </div>
-          <div class="block">
-            <div class="block-title">Proposed Layout</div>
-            <div class="placeholder-text" style="width: 100%;"></div>
-            <div class="placeholder-text" style="width: 75%;"></div>
-            <div class="placeholder-text" style="width: 85%;"></div>
+        </div>
+
+        <!-- PROPOSED: Tablet -->
+        <div class="device proposed-area">
+          <div class="device-header">
+            <span class="device-label proposed">✅ Proposed</span>
+            <span class="device-size">768 × 600</span>
           </div>
-          <div class="block">
-            <div class="block-title">Solution Description</div>
-            <p style="font-size: 13px; color: #6b7280;">
-              Describe the mobile solution here.
-            </p>
+          <div class="screen screen-tablet">
+            <div class="screen-inner">
+              <!-- EDIT PROPOSED TABLET LAYOUT BELOW -->
+              <div class="arity-header">
+                <div class="arity-logo">arity shop</div>
+                <div class="arity-search" style="max-width: 300px">
+                  Search store
+                </div>
+              </div>
+              <div class="arity-nav">
+                <span>Solar Panels | Batteries | Inverters | Controllers</span>
+              </div>
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: 200px 1fr;
+                  gap: 16px;
+                "
+              >
+                <div class="block">
+                  <div class="block-title">Sidebar</div>
+                  <div class="placeholder-text"></div>
+                  <div class="placeholder-text"></div>
+                </div>
+                <div class="block">
+                  <div class="block-title">Main Content</div>
+                  <div class="placeholder-text"></div>
+                  <div class="placeholder-text"></div>
+                </div>
+              </div>
+              <!-- END PROPOSED TABLET LAYOUT -->
+            </div>
           </div>
-          <!-- END PROPOSED MOBILE LAYOUT -->
         </div>
       </div>
     </div>
 
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- TABLET VIEWPORT: 768px                                       -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="viewport-panel" id="tablet">
-  <div class="comparison">
-
-    <!-- CURRENT: Tablet -->
-    <div class="device current-area">
-      <div class="device-header">
-        <span class="device-label current">❌ Current</span>
-        <span class="device-size">768 × 600</span>
-      </div>
-      <div class="screen screen-tablet">
-        <div class="screen-inner">
-          <!-- EDIT CURRENT TABLET LAYOUT BELOW -->
-          <div class="arity-header">
-            <div class="arity-logo">arity shop</div>
-            <div class="arity-search" style="max-width: 300px;">Search store</div>
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- DESKTOP VIEWPORT: 1280px                                     -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="viewport-panel" id="desktop">
+      <div class="comparison">
+        <!-- CURRENT: Desktop -->
+        <div class="device current-area">
+          <div class="device-header">
+            <span class="device-label current">❌ Current</span>
+            <span class="device-size">1280 × 500</span>
           </div>
-          <div class="arity-nav">
-            <span>Solar Panels | Batteries | Inverters | Controllers</span>
-          </div>
-          <div style="display: grid; grid-template-columns: 200px 1fr; gap: 16px;">
-            <div class="block">
-              <div class="block-title">Sidebar</div>
-              <div class="placeholder-text"></div>
-              <div class="placeholder-text"></div>
+          <div class="screen screen-desktop">
+            <div class="screen-inner">
+              <!-- EDIT CURRENT DESKTOP LAYOUT BELOW -->
+              <div class="arity-header">
+                <div class="arity-logo">arity shop</div>
+                <div class="arity-search" style="max-width: 400px">
+                  Search store
+                </div>
+                <div style="display: flex; gap: 16px; font-size: 13px">
+                  <span>Account</span>
+                  <span>Cart</span>
+                </div>
+              </div>
+              <div class="arity-nav">
+                <span
+                  >Solar Panels | Batteries | Inverters | Charge Controllers |
+                  Accessories</span
+                >
+              </div>
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: 250px 1fr 250px;
+                  gap: 24px;
+                "
+              >
+                <div class="block">
+                  <div class="block-title">Left Sidebar</div>
+                  <div class="placeholder-text"></div>
+                  <div class="placeholder-text"></div>
+                </div>
+                <div class="block">
+                  <div class="block-title">Main Content</div>
+                  <div class="placeholder-text"></div>
+                  <div class="placeholder-text"></div>
+                  <div class="placeholder-text"></div>
+                </div>
+                <div class="block">
+                  <div class="block-title">Right Sidebar</div>
+                  <div class="placeholder-text"></div>
+                </div>
+              </div>
+              <!-- END CURRENT DESKTOP LAYOUT -->
             </div>
-            <div class="block">
-              <div class="block-title">Main Content</div>
-              <div class="placeholder-text"></div>
-              <div class="placeholder-text"></div>
+          </div>
+        </div>
+
+        <!-- PROPOSED: Desktop -->
+        <div class="device proposed-area">
+          <div class="device-header">
+            <span class="device-label proposed">✅ Proposed</span>
+            <span class="device-size">1280 × 500</span>
+          </div>
+          <div class="screen screen-desktop">
+            <div class="screen-inner">
+              <!-- EDIT PROPOSED DESKTOP LAYOUT BELOW -->
+              <div class="arity-header">
+                <div class="arity-logo">arity shop</div>
+                <div class="arity-search" style="max-width: 400px">
+                  Search store
+                </div>
+                <div style="display: flex; gap: 16px; font-size: 13px">
+                  <span>Account</span>
+                  <span>Cart</span>
+                </div>
+              </div>
+              <div class="arity-nav">
+                <span
+                  >Solar Panels | Batteries | Inverters | Charge Controllers |
+                  Accessories</span
+                >
+              </div>
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: 250px 1fr 250px;
+                  gap: 24px;
+                "
+              >
+                <div class="block">
+                  <div class="block-title">Left Sidebar</div>
+                  <div class="placeholder-text"></div>
+                  <div class="placeholder-text"></div>
+                </div>
+                <div class="block">
+                  <div class="block-title">Main Content</div>
+                  <div class="placeholder-text"></div>
+                  <div class="placeholder-text"></div>
+                  <div class="placeholder-text"></div>
+                </div>
+                <div class="block">
+                  <div class="block-title">Right Sidebar</div>
+                  <div class="placeholder-text"></div>
+                </div>
+              </div>
+              <!-- END PROPOSED DESKTOP LAYOUT -->
             </div>
           </div>
-          <!-- END CURRENT TABLET LAYOUT -->
         </div>
       </div>
     </div>
 
-    <!-- PROPOSED: Tablet -->
-    <div class="device proposed-area">
-      <div class="device-header">
-        <span class="device-label proposed">✅ Proposed</span>
-        <span class="device-size">768 × 600</span>
-      </div>
-      <div class="screen screen-tablet">
-        <div class="screen-inner">
-          <!-- EDIT PROPOSED TABLET LAYOUT BELOW -->
-          <div class="arity-header">
-            <div class="arity-logo">arity shop</div>
-            <div class="arity-search" style="max-width: 300px;">Search store</div>
-          </div>
-          <div class="arity-nav">
-            <span>Solar Panels | Batteries | Inverters | Controllers</span>
-          </div>
-          <div style="display: grid; grid-template-columns: 200px 1fr; gap: 16px;">
-            <div class="block">
-              <div class="block-title">Sidebar</div>
-              <div class="placeholder-text"></div>
-              <div class="placeholder-text"></div>
-            </div>
-            <div class="block">
-              <div class="block-title">Main Content</div>
-              <div class="placeholder-text"></div>
-              <div class="placeholder-text"></div>
-            </div>
-          </div>
-          <!-- END PROPOSED TABLET LAYOUT -->
-        </div>
-      </div>
+    <!-- Notes -->
+    <div class="notes">
+      <h3>Review Checklist</h3>
+      <ul>
+        <li>
+          ✅ Mobile (375px): Touch targets ≥ 44×44px, no horizontal scroll,
+          primary action visible
+        </li>
+        <li>
+          ✅ Tablet (768px): Two-column layouts work, text is readable,
+          navigation accessible
+        </li>
+        <li>
+          ✅ Desktop (1280px): Content is centered, whitespace is balanced, no
+          stretched elements
+        </li>
+        <li>✅ All viewports: Layout scales gracefully between breakpoints</li>
+      </ul>
     </div>
 
-  </div>
-</div>
+    <script>
+      // Tab switching
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          // Remove active from all tabs and panels
+          document
+            .querySelectorAll(".tab")
+            .forEach((t) => t.classList.remove("active"));
+          document
+            .querySelectorAll(".viewport-panel")
+            .forEach((p) => p.classList.remove("active"));
 
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- DESKTOP VIEWPORT: 1280px                                     -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="viewport-panel" id="desktop">
-  <div class="comparison">
-
-    <!-- CURRENT: Desktop -->
-    <div class="device current-area">
-      <div class="device-header">
-        <span class="device-label current">❌ Current</span>
-        <span class="device-size">1280 × 500</span>
-      </div>
-      <div class="screen screen-desktop">
-        <div class="screen-inner">
-          <!-- EDIT CURRENT DESKTOP LAYOUT BELOW -->
-          <div class="arity-header">
-            <div class="arity-logo">arity shop</div>
-            <div class="arity-search" style="max-width: 400px;">Search store</div>
-            <div style="display: flex; gap: 16px; font-size: 13px;">
-              <span>Account</span>
-              <span>Cart</span>
-            </div>
-          </div>
-          <div class="arity-nav">
-            <span>Solar Panels | Batteries | Inverters | Charge Controllers | Accessories</span>
-          </div>
-          <div style="display: grid; grid-template-columns: 250px 1fr 250px; gap: 24px;">
-            <div class="block">
-              <div class="block-title">Left Sidebar</div>
-              <div class="placeholder-text"></div>
-              <div class="placeholder-text"></div>
-            </div>
-            <div class="block">
-              <div class="block-title">Main Content</div>
-              <div class="placeholder-text"></div>
-              <div class="placeholder-text"></div>
-              <div class="placeholder-text"></div>
-            </div>
-            <div class="block">
-              <div class="block-title">Right Sidebar</div>
-              <div class="placeholder-text"></div>
-            </div>
-          </div>
-          <!-- END CURRENT DESKTOP LAYOUT -->
-        </div>
-      </div>
-    </div>
-
-    <!-- PROPOSED: Desktop -->
-    <div class="device proposed-area">
-      <div class="device-header">
-        <span class="device-label proposed">✅ Proposed</span>
-        <span class="device-size">1280 × 500</span>
-      </div>
-      <div class="screen screen-desktop">
-        <div class="screen-inner">
-          <!-- EDIT PROPOSED DESKTOP LAYOUT BELOW -->
-          <div class="arity-header">
-            <div class="arity-logo">arity shop</div>
-            <div class="arity-search" style="max-width: 400px;">Search store</div>
-            <div style="display: flex; gap: 16px; font-size: 13px;">
-              <span>Account</span>
-              <span>Cart</span>
-            </div>
-          </div>
-          <div class="arity-nav">
-            <span>Solar Panels | Batteries | Inverters | Charge Controllers | Accessories</span>
-          </div>
-          <div style="display: grid; grid-template-columns: 250px 1fr 250px; gap: 24px;">
-            <div class="block">
-              <div class="block-title">Left Sidebar</div>
-              <div class="placeholder-text"></div>
-              <div class="placeholder-text"></div>
-            </div>
-            <div class="block">
-              <div class="block-title">Main Content</div>
-              <div class="placeholder-text"></div>
-              <div class="placeholder-text"></div>
-              <div class="placeholder-text"></div>
-            </div>
-            <div class="block">
-              <div class="block-title">Right Sidebar</div>
-              <div class="placeholder-text"></div>
-            </div>
-          </div>
-          <!-- END PROPOSED DESKTOP LAYOUT -->
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- Notes -->
-<div class="notes">
-  <h3>Review Checklist</h3>
-  <ul>
-    <li>✅ Mobile (375px): Touch targets ≥ 44×44px, no horizontal scroll, primary action visible</li>
-    <li>✅ Tablet (768px): Two-column layouts work, text is readable, navigation accessible</li>
-    <li>✅ Desktop (1280px): Content is centered, whitespace is balanced, no stretched elements</li>
-    <li>✅ All viewports: Layout scales gracefully between breakpoints</li>
-  </ul>
-</div>
-
-<script>
-  // Tab switching
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      // Remove active from all tabs and panels
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.viewport-panel').forEach(p => p.classList.remove('active'));
-
-      // Add active to clicked tab and matching panel
-      tab.classList.add('active');
-      document.getElementById(tab.dataset.viewport).classList.add('active');
-    });
-  });
-</script>
-
-</body>
+          // Add active to clicked tab and matching panel
+          tab.classList.add("active");
+          document.getElementById(tab.dataset.viewport).classList.add("active");
+        });
+      });
+    </script>
+  </body>
 </html>
