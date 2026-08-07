@@ -1,0 +1,1122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arity Shop — Menu navigation review</title>
+    <style>
+      :root {
+        --ink: #000;
+        --canvas: #fff;
+        --soft: #f9f9f9;
+        --soft-2: #f5f5f5;
+        --line: #ebebeb;
+        --body: #4d4d4d;
+        --mute: #888;
+        --danger: #d41313;
+        --success: #16803c;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--soft-2);
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          sans-serif;
+        line-height: 1.4;
+      }
+      button {
+        font: inherit;
+      }
+      .page-header {
+        padding: 16px 24px;
+        background: var(--ink);
+        color: var(--canvas);
+      }
+      .page-header h1 {
+        margin: 0;
+        font-size: 18px;
+      }
+      .page-header p {
+        margin: 3px 0 0;
+        color: #bdbdbd;
+        font-size: 13px;
+      }
+      .tabs {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        overflow-x: auto;
+        padding: 0 24px;
+        background: var(--canvas);
+        border-bottom: 1px solid var(--line);
+      }
+      .tab {
+        padding: 12px 20px;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        background: transparent;
+        color: var(--mute);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .tab.active {
+        color: var(--ink);
+        border-bottom-color: var(--ink);
+      }
+      .viewport-panel {
+        display: none;
+        padding: 24px;
+      }
+      .viewport-panel.active {
+        display: block;
+      }
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .device {
+        min-width: 0;
+        overflow: hidden;
+        border-radius: 12px;
+        background: var(--canvas);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      }
+      .device-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .device-label {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .device-label.current {
+        color: var(--danger);
+      }
+      .device-label.proposed {
+        color: var(--success);
+      }
+      .device-size {
+        color: var(--mute);
+        font:
+          11px ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+      }
+      .screen {
+        overflow: auto;
+        margin: 8px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--canvas);
+      }
+      .screen-mobile {
+        width: 375px;
+        height: 670px;
+      }
+      .screen-tablet {
+        width: 768px;
+        height: 600px;
+      }
+      .screen-desktop {
+        width: 1280px;
+        height: 520px;
+      }
+      .annotation {
+        margin: 0 0 12px;
+        padding: 10px 12px;
+        border: 1px dashed currentColor;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+      .current-area .annotation {
+        color: var(--danger);
+        background: #fff7f7;
+      }
+      .proposed-area .annotation {
+        color: var(--success);
+        background: #f4fff7;
+      }
+
+      /* Shared store header */
+      .store {
+        min-height: 100%;
+        background: var(--canvas);
+      }
+      .store-header {
+        display: grid;
+        grid-template-columns: 200px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 24px;
+        min-height: 80px;
+        padding: 16px 32px;
+        border-bottom: 1px solid var(--line);
+      }
+      .logo {
+        font-size: 27px;
+        font-weight: 800;
+        letter-spacing: -0.06em;
+        white-space: nowrap;
+      }
+      .logo .dot {
+        color: var(--danger);
+      }
+      .logo .shop {
+        font-weight: 300;
+        letter-spacing: 0.05em;
+      }
+      .search {
+        display: flex;
+        min-width: 0;
+        height: 48px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .search span {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        padding: 0 16px;
+        color: var(--mute);
+        font-size: 14px;
+      }
+      .search b {
+        display: grid;
+        width: 48px;
+        place-items: center;
+        background: var(--ink);
+        color: var(--canvas);
+        font-size: 19px;
+        font-weight: 400;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+      }
+      .icon-button {
+        display: grid;
+        width: 44px;
+        height: 44px;
+        place-items: center;
+        border: 0;
+        background: var(--canvas);
+        font-size: 17px;
+      }
+      .page-placeholder {
+        margin: 32px auto;
+        padding: 32px;
+        max-width: 980px;
+        background: var(--soft);
+        color: var(--body);
+        text-align: center;
+      }
+      .page-placeholder strong {
+        display: block;
+        color: var(--ink);
+        font-size: 24px;
+      }
+
+      /* Current mobile/tablet menu */
+      .legacy-menu {
+        margin: 0 16px;
+      }
+      .legacy-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-height: 48px;
+        padding: 0 16px;
+        background: var(--ink);
+        color: var(--canvas);
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .legacy-gear {
+        font-size: 23px;
+      }
+      .legacy-row {
+        display: flex;
+        min-height: 58px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 18px;
+        border-bottom: 2px solid var(--canvas);
+        background: #f6f6f6;
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .legacy-chevrons {
+        display: grid;
+        color: var(--body);
+        font-size: 15px;
+        line-height: 10px;
+      }
+      .legacy-children {
+        display: grid;
+        gap: 0;
+        padding: 4px 18px 8px;
+        background: var(--canvas);
+      }
+      .legacy-child {
+        min-height: 54px;
+        padding: 16px 0 16px 16px;
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .legacy-child::before {
+        content: "▪";
+        margin-right: 12px;
+        color: #ddd;
+      }
+
+      /* Proposed mobile/tablet menu */
+      .new-menu {
+        position: relative;
+        margin: 0 16px;
+      }
+      .new-trigger {
+        display: flex;
+        width: 100%;
+        min-height: 48px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+        border: 0;
+        border-radius: 4px;
+        background: var(--ink);
+        color: var(--canvas);
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        text-align: left;
+      }
+      .trigger-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .grid-icon {
+        display: grid;
+        grid-template-columns: repeat(2, 5px);
+        gap: 3px;
+      }
+      .grid-icon i {
+        width: 5px;
+        height: 5px;
+        background: currentColor;
+      }
+      .caret {
+        font-size: 17px;
+        transition: transform 0.2s ease;
+      }
+      .new-menu[data-open="false"] .caret {
+        transform: rotate(180deg);
+      }
+      .new-panel {
+        position: absolute;
+        z-index: 5;
+        top: calc(100% + 4px);
+        inset-inline: 0;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: var(--canvas);
+      }
+      .new-menu[data-open="false"] .new-panel {
+        display: none;
+      }
+      .new-row,
+      .new-parent-line {
+        display: flex;
+        width: 100%;
+        min-height: 52px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        background: var(--canvas);
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 500;
+        text-align: left;
+      }
+      .new-parent-line {
+        padding: 0;
+      }
+      .new-parent-link {
+        display: flex;
+        min-height: 52px;
+        flex: 1;
+        align-items: center;
+        padding: 0 16px;
+        font-weight: 650;
+      }
+      .disclosure {
+        display: grid;
+        width: 52px;
+        height: 52px;
+        place-items: center;
+        border: 0;
+        border-inline-start: 1px solid var(--line);
+        background: var(--canvas);
+        font-size: 17px;
+      }
+      .new-children {
+        padding: 4px 16px 8px 24px;
+        border-bottom: 1px solid var(--line);
+        background: var(--soft);
+      }
+      .new-child {
+        display: flex;
+        min-height: 44px;
+        align-items: center;
+        padding: 0 12px;
+        border-inline-start: 2px solid var(--ink);
+        font-size: 14px;
+      }
+      .new-row:last-child {
+        border-bottom: 0;
+      }
+      .all-products {
+        font-weight: 650;
+      }
+
+      /* Current desktop menu */
+      .legacy-desktop-nav {
+        width: calc(100% - 96px);
+        margin: 0 auto;
+        border-bottom: 1px solid #ddd;
+      }
+      .legacy-desktop-list {
+        display: flex;
+        min-height: 74px;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      .legacy-desktop-item {
+        position: relative;
+        padding: 4px 30px;
+        border-inline-end: 1px solid #ddd;
+        font-size: 18px;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .legacy-desktop-item:last-child {
+        border-inline-end: 0;
+      }
+      .legacy-flyout {
+        position: absolute;
+        z-index: 3;
+        top: 48px;
+        left: 20px;
+        width: 200px;
+        padding: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 2px;
+        background: var(--canvas);
+      }
+      .legacy-flyout div {
+        padding: 5px 20px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .legacy-flyout div::before {
+        content: "▪";
+        margin-right: 10px;
+        color: #ddd;
+      }
+
+      /* Proposed desktop menu */
+      .new-desktop-nav {
+        position: relative;
+        width: calc(100% - 64px);
+        margin: 0 auto;
+        border-bottom: 1px solid var(--line);
+      }
+      .new-desktop-list {
+        display: flex;
+        min-height: 56px;
+        align-items: stretch;
+        gap: 24px;
+      }
+      .new-desktop-item {
+        position: relative;
+        display: flex;
+        min-height: 56px;
+        align-items: center;
+        gap: 6px;
+        border-bottom: 2px solid transparent;
+        color: var(--body);
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .new-desktop-item.open {
+        color: var(--ink);
+        border-bottom-color: var(--ink);
+      }
+      .new-desktop-item .small-caret {
+        font-size: 12px;
+      }
+      .desktop-panel {
+        position: absolute;
+        z-index: 4;
+        top: 56px;
+        left: 94px;
+        width: 408px;
+        border: 1px solid var(--line);
+        border-top: 2px solid var(--ink);
+        border-radius: 0 0 4px 4px;
+        background: var(--canvas);
+      }
+      .desktop-panel-head {
+        display: flex;
+        min-height: 56px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        border-bottom: 1px solid var(--line);
+      }
+      .desktop-panel-head strong {
+        font-size: 16px;
+      }
+      .desktop-panel-head span {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .desktop-panel-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding: 8px;
+      }
+      .desktop-panel-link {
+        display: flex;
+        min-height: 48px;
+        align-items: center;
+        padding: 0 12px;
+        border-radius: 4px;
+        color: var(--body);
+        font-size: 14px;
+      }
+      .desktop-panel-link:first-child {
+        background: var(--soft);
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      /* Responsive header details */
+      .mobile .store-header,
+      .tablet .store-header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 8px 16px;
+      }
+      .mobile .logo {
+        width: 50%;
+        font-size: 25px;
+      }
+      .mobile .actions,
+      .tablet .actions {
+        margin-inline-start: auto;
+      }
+      .mobile .search,
+      .tablet .search {
+        order: 3;
+        width: 100%;
+        flex: 1 1 100%;
+      }
+      .mobile .store-header {
+        min-height: 120px;
+      }
+      .tablet .store-header {
+        min-height: 120px;
+      }
+      .tablet .logo {
+        width: 220px;
+      }
+      .tablet .legacy-menu,
+      .tablet .new-menu {
+        margin: 0 16px;
+      }
+      .tablet .new-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .tablet .new-menu[data-open="false"] .new-panel {
+        display: none;
+      }
+      .tablet .new-parent-block {
+        grid-row: span 3;
+        border-inline-end: 1px solid var(--line);
+      }
+      .tablet .new-row {
+        min-height: 56px;
+      }
+      .mobile .page-placeholder {
+        margin-top: 32px;
+      }
+      .proposed-area .page-placeholder {
+        margin-top: 48px;
+      }
+
+      /* Review summary */
+      .review-summary {
+        max-width: 1400px;
+        margin: 0 auto 32px;
+        padding: 0 24px;
+      }
+      .review-summary h2 {
+        margin: 0 0 12px;
+        font-size: 20px;
+      }
+      .findings {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+      }
+      .finding {
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--canvas);
+      }
+      .finding h3 {
+        margin: 0 0 8px;
+        font-size: 15px;
+      }
+      .finding p {
+        margin: 0;
+        color: var(--body);
+        font-size: 13px;
+      }
+      .decisions {
+        max-width: 1400px;
+        margin: 0 auto 48px;
+        padding: 0 24px;
+      }
+      .decisions h2 {
+        margin: 0 0 12px;
+        font-size: 20px;
+      }
+      .decision-list {
+        margin: 0;
+        padding: 16px 16px 16px 36px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--canvas);
+        color: var(--body);
+        font-size: 14px;
+      }
+      .decision-list li + li {
+        margin-top: 8px;
+      }
+      @media (min-width: 900px) {
+        .comparison {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Menu navigation review</h1>
+      <p>
+        Current behaviour compared with a clearer, touch-safe category menu.
+      </p>
+    </header>
+
+    <nav class="tabs" aria-label="Viewport previews">
+      <button class="tab active" data-target="mobile-panel">
+        Mobile · 375px
+      </button>
+      <button class="tab" data-target="tablet-panel">Tablet · 768px</button>
+      <button class="tab" data-target="desktop-panel">Desktop · 1280px</button>
+    </nav>
+
+    <main>
+      <section id="mobile-panel" class="viewport-panel active">
+        <div class="comparison">
+          <article class="device current-area">
+            <div class="device-header">
+              <span class="device-label current">Current</span>
+              <span class="device-size">375 × 670</span>
+            </div>
+            <div class="annotation">
+              The menu works, but the gear-like icon is unclear, expanded
+              parents show two chevrons, and the category link and disclosure
+              action are combined.
+            </div>
+            <div class="screen screen-mobile mobile">
+              <div class="store">
+                <div class="store-header">
+                  <div class="logo">
+                    arity<span class="dot">·</span
+                    ><span class="shop">shop</span>
+                  </div>
+                  <div class="actions">
+                    <span class="icon-button">♙</span
+                    ><span class="icon-button">♡</span
+                    ><span class="icon-button">▢</span>
+                  </div>
+                  <div class="search"><span>Search store</span><b>⌕</b></div>
+                </div>
+                <div class="legacy-menu">
+                  <div class="legacy-trigger">
+                    <span>Categories</span><span class="legacy-gear">⚙</span>
+                  </div>
+                  <div class="legacy-row">
+                    <span>Computers</span
+                    ><span class="legacy-chevrons">⌃<br />⌄</span>
+                  </div>
+                  <div class="legacy-children">
+                    <div class="legacy-child">Desktops</div>
+                    <div class="legacy-child">Notebooks</div>
+                    <div class="legacy-child">Software</div>
+                  </div>
+                  <div class="legacy-row">
+                    <span>Electronics</span
+                    ><span class="legacy-chevrons">⌃<br />⌄</span>
+                  </div>
+                  <div class="legacy-row">
+                    <span>Apparel</span
+                    ><span class="legacy-chevrons">⌃<br />⌄</span>
+                  </div>
+                  <div class="legacy-row"><span>Digital downloads</span></div>
+                  <div class="legacy-row"><span>Books</span></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="device proposed-area">
+            <div class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">375 × 670 · interactive</span>
+            </div>
+            <div class="annotation">
+              Keep one familiar full-width trigger, open a panel over the page,
+              use the intended catalog, and separate “visit category” from “show
+              children.”
+            </div>
+            <div class="screen screen-mobile mobile">
+              <div class="store">
+                <div class="store-header">
+                  <div class="logo">
+                    arity<span class="dot">·</span
+                    ><span class="shop">shop</span>
+                  </div>
+                  <div class="actions">
+                    <span class="icon-button">♙</span
+                    ><span class="icon-button">♡</span
+                    ><span class="icon-button">▢</span>
+                  </div>
+                  <div class="search"><span>Search store</span><b>⌕</b></div>
+                </div>
+                <div class="new-menu" data-open="true">
+                  <button
+                    class="new-trigger"
+                    type="button"
+                    aria-expanded="true"
+                  >
+                    <span class="trigger-label"
+                      ><span class="grid-icon"
+                        ><i></i><i></i><i></i><i></i></span
+                      >Shop categories</span
+                    ><span class="caret">⌃</span>
+                  </button>
+                  <div class="new-panel">
+                    <div class="new-row all-products">
+                      All products <span>→</span>
+                    </div>
+                    <div class="new-parent-block">
+                      <div class="new-parent-line">
+                        <span class="new-parent-link">Solar panels</span
+                        ><button
+                          class="disclosure"
+                          type="button"
+                          aria-label="Collapse Solar panels"
+                        >
+                          ⌃
+                        </button>
+                      </div>
+                      <div class="new-children">
+                        <div class="new-child">Monocrystalline</div>
+                        <div class="new-child">Polycrystalline</div>
+                        <div class="new-child">Mounting kits</div>
+                      </div>
+                    </div>
+                    <div class="new-row">Batteries <span>⌄</span></div>
+                    <div class="new-row">Inverters <span>⌄</span></div>
+                    <div class="new-row">Charge controllers <span>⌄</span></div>
+                    <div class="new-row">Accessories <span>→</span></div>
+                  </div>
+                </div>
+                <div class="page-placeholder">
+                  <strong>Power your home.</strong>Catalog content remains in
+                  place while the menu opens above it.
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="tablet-panel" class="viewport-panel">
+        <div class="comparison">
+          <article class="device current-area">
+            <div class="device-header">
+              <span class="device-label current">Current</span
+              ><span class="device-size">768 × 600</span>
+            </div>
+            <div class="annotation">
+              At 768px the same single-column mobile accordion leaves a large
+              amount of unused horizontal space.
+            </div>
+            <div class="screen screen-tablet tablet">
+              <div class="store">
+                <div class="store-header">
+                  <div class="logo">
+                    arity<span class="dot">·</span
+                    ><span class="shop">shop</span>
+                  </div>
+                  <div class="actions">
+                    <span class="icon-button">♙</span
+                    ><span class="icon-button">♡</span
+                    ><span class="icon-button">▢</span>
+                  </div>
+                  <div class="search"><span>Search store</span><b>⌕</b></div>
+                </div>
+                <div class="legacy-menu">
+                  <div class="legacy-trigger">
+                    <span>Categories</span><span class="legacy-gear">⚙</span>
+                  </div>
+                  <div class="legacy-row">
+                    <span>Computers</span
+                    ><span class="legacy-chevrons">⌃<br />⌄</span>
+                  </div>
+                  <div class="legacy-children">
+                    <div class="legacy-child">Desktops</div>
+                    <div class="legacy-child">Notebooks</div>
+                    <div class="legacy-child">Software</div>
+                  </div>
+                  <div class="legacy-row">
+                    <span>Electronics</span
+                    ><span class="legacy-chevrons">⌃<br />⌄</span>
+                  </div>
+                  <div class="legacy-row">
+                    <span>Apparel</span
+                    ><span class="legacy-chevrons">⌃<br />⌄</span>
+                  </div>
+                  <div class="legacy-row"><span>Digital downloads</span></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="device proposed-area">
+            <div class="device-header">
+              <span class="device-label proposed">Proposed</span
+              ><span class="device-size">768 × 600 · interactive</span>
+            </div>
+            <div class="annotation">
+              Retain the touch-first trigger at the breakpoint, but use a
+              two-column panel so categories remain scannable without becoming a
+              desktop hover menu.
+            </div>
+            <div class="screen screen-tablet tablet">
+              <div class="store">
+                <div class="store-header">
+                  <div class="logo">
+                    arity<span class="dot">·</span
+                    ><span class="shop">shop</span>
+                  </div>
+                  <div class="actions">
+                    <span class="icon-button">♙</span
+                    ><span class="icon-button">♡</span
+                    ><span class="icon-button">▢</span>
+                  </div>
+                  <div class="search"><span>Search store</span><b>⌕</b></div>
+                </div>
+                <div class="new-menu" data-open="true">
+                  <button
+                    class="new-trigger"
+                    type="button"
+                    aria-expanded="true"
+                  >
+                    <span class="trigger-label"
+                      ><span class="grid-icon"
+                        ><i></i><i></i><i></i><i></i></span
+                      >Shop categories</span
+                    ><span class="caret">⌃</span>
+                  </button>
+                  <div class="new-panel">
+                    <div class="new-parent-block">
+                      <div class="new-parent-line">
+                        <span class="new-parent-link">Solar panels</span
+                        ><button
+                          class="disclosure"
+                          type="button"
+                          aria-label="Collapse Solar panels"
+                        >
+                          ⌃
+                        </button>
+                      </div>
+                      <div class="new-children">
+                        <div class="new-child">Monocrystalline</div>
+                        <div class="new-child">Polycrystalline</div>
+                        <div class="new-child">Mounting kits</div>
+                      </div>
+                    </div>
+                    <div class="new-row all-products">
+                      All products <span>→</span>
+                    </div>
+                    <div class="new-row">Batteries <span>⌄</span></div>
+                    <div class="new-row">Inverters <span>⌄</span></div>
+                    <div class="new-row">Charge controllers <span>⌄</span></div>
+                    <div class="new-row">Accessories <span>→</span></div>
+                  </div>
+                </div>
+                <div class="page-placeholder">
+                  <strong>Power your home.</strong>Touch behaviour stays
+                  consistent with mobile.
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="desktop-panel" class="viewport-panel">
+        <div class="comparison">
+          <article class="device current-area">
+            <div class="device-header">
+              <span class="device-label current">Current</span
+              ><span class="device-size">1280 × 520</span>
+            </div>
+            <div class="annotation">
+              The 18px labels and separators dominate the header. Expandable
+              items have no cue, while the open submenu is only 200px wide with
+              roughly 30px links.
+            </div>
+            <div class="screen screen-desktop desktop">
+              <div class="store">
+                <div class="store-header">
+                  <div class="logo">
+                    arity<span class="dot">·</span
+                    ><span class="shop">shop</span>
+                  </div>
+                  <div class="search"><span>Search store</span><b>⌕</b></div>
+                  <div class="actions">
+                    <span class="icon-button">♙</span
+                    ><span class="icon-button">♡</span
+                    ><span class="icon-button">▢</span>
+                  </div>
+                </div>
+                <div class="legacy-desktop-nav">
+                  <div class="legacy-desktop-list">
+                    <div class="legacy-desktop-item">
+                      Computers
+                      <div class="legacy-flyout">
+                        <div>Desktops</div>
+                        <div>Notebooks</div>
+                        <div>Software</div>
+                      </div>
+                    </div>
+                    <div class="legacy-desktop-item">Electronics</div>
+                    <div class="legacy-desktop-item">Apparel</div>
+                    <div class="legacy-desktop-item">Digital downloads</div>
+                    <div class="legacy-desktop-item">Books</div>
+                    <div class="legacy-desktop-item">Jewelry</div>
+                    <div class="legacy-desktop-item">Gift Cards</div>
+                  </div>
+                </div>
+                <div class="page-placeholder">
+                  <strong>Welcome to our store</strong>The submenu relies on
+                  hover and gives little context.
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="device proposed-area">
+            <div class="device-header">
+              <span class="device-label proposed">Proposed</span
+              ><span class="device-size">1280 × 520</span>
+            </div>
+            <div class="annotation">
+              Use a quieter 56px navigation row, visible disclosure cues, a
+              strong active state, and a compact panel sized for real category
+              names and 48px links.
+            </div>
+            <div class="screen screen-desktop desktop">
+              <div class="store">
+                <div class="store-header">
+                  <div class="logo">
+                    arity<span class="dot">·</span
+                    ><span class="shop">shop</span>
+                  </div>
+                  <div class="search"><span>Search products</span><b>⌕</b></div>
+                  <div class="actions">
+                    <span class="icon-button">♙</span
+                    ><span class="icon-button">♡</span
+                    ><span class="icon-button">▢</span>
+                  </div>
+                </div>
+                <div class="new-desktop-nav">
+                  <div class="new-desktop-list">
+                    <div class="new-desktop-item">Shop all</div>
+                    <div class="new-desktop-item open">
+                      Solar panels <span class="small-caret">⌃</span>
+                    </div>
+                    <div class="new-desktop-item">
+                      Batteries <span class="small-caret">⌄</span>
+                    </div>
+                    <div class="new-desktop-item">
+                      Inverters <span class="small-caret">⌄</span>
+                    </div>
+                    <div class="new-desktop-item">
+                      Charge controllers <span class="small-caret">⌄</span>
+                    </div>
+                    <div class="new-desktop-item">Accessories</div>
+                  </div>
+                  <div class="desktop-panel">
+                    <div class="desktop-panel-head">
+                      <strong>Solar panels</strong><span>View all →</span>
+                    </div>
+                    <div class="desktop-panel-grid">
+                      <div class="desktop-panel-link">Monocrystalline</div>
+                      <div class="desktop-panel-link">400–499 W</div>
+                      <div class="desktop-panel-link">Polycrystalline</div>
+                      <div class="desktop-panel-link">500 W and above</div>
+                      <div class="desktop-panel-link">Mounting kits</div>
+                      <div class="desktop-panel-link">Solar panel guide</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="page-placeholder">
+                  <strong>Power your home.</strong>The panel supports click,
+                  keyboard, and pointer interaction—not hover alone.
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <section class="review-summary">
+      <h2>What the review found</h2>
+      <div class="findings">
+        <article class="finding">
+          <h3>1. The catalog language is still generic</h3>
+          <p>
+            Computers, Apparel, Books, and Jewelry do not describe Arity Shop.
+            The proposed menu uses Solar panels, Batteries, Inverters, Charge
+            controllers, and Accessories.
+          </p>
+        </article>
+        <article class="finding">
+          <h3>2. Mobile disclosure is ambiguous</h3>
+          <p>
+            The current icon reads like settings, expanded parents show both
+            chevrons, and the category link also behaves like a toggle. Use one
+            stateful chevron and separate link and disclosure targets.
+          </p>
+        </article>
+        <article class="finding">
+          <h3>3. Desktop hierarchy is too loud</h3>
+          <p>
+            The current 18px row and vertical dividers compete with the header.
+            A 14px/56px row with spacing and an underline gives the products
+            more visual priority.
+          </p>
+        </article>
+        <article class="finding">
+          <h3>4. Interaction semantics need correction</h3>
+          <p>
+            Links are marked as buttons, expanded state can become stale, and
+            Escape/outside-click behaviour is absent. Use real links for
+            navigation and buttons only for disclosure.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="decisions">
+      <h2>Recommended direction to approve</h2>
+      <ol class="decision-list">
+        <li>
+          <strong>Mobile:</strong> full-width “Shop categories” trigger with an
+          anchored overlay panel, not a menu that pushes the entire page down.
+        </li>
+        <li>
+          <strong>Tablet:</strong> keep touch-first behaviour at 768px, using
+          two columns inside the open panel.
+        </li>
+        <li>
+          <strong>Desktop:</strong> use compact anchored dropdowns (about
+          408px), not a full-width mega menu until the catalog is large enough
+          to need one.
+        </li>
+        <li>
+          <strong>Information architecture:</strong> place “Shop all” first,
+          then the five renewable-energy categories.
+        </li>
+        <li>
+          <strong>Accessibility:</strong> links navigate; adjacent buttons
+          disclose; all controls are at least 44px; support Enter, Space,
+          Escape, outside click, and visible focus.
+        </li>
+      </ol>
+    </section>
+
+    <script>
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab")
+            .forEach((item) => item.classList.remove("active"));
+          document
+            .querySelectorAll(".viewport-panel")
+            .forEach((panel) => panel.classList.remove("active"));
+          tab.classList.add("active");
+          document
+            .querySelector(`#${tab.dataset.target}`)
+            .classList.add("active");
+        });
+      });
+
+      document.querySelectorAll(".new-trigger").forEach((trigger) => {
+        trigger.addEventListener("click", () => {
+          const menu = trigger.closest(".new-menu");
+          const isOpen = menu.dataset.open === "true";
+          menu.dataset.open = String(!isOpen);
+          trigger.setAttribute("aria-expanded", String(!isOpen));
+          trigger.querySelector(".caret").textContent = isOpen ? "⌄" : "⌃";
+        });
+      });
+    </script>
+  </body>
+</html>
