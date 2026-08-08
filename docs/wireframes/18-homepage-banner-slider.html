@@ -1,0 +1,1489 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arity Shop — Homepage banner slider review</title>
+    <style>
+      :root {
+        --ink: #000;
+        --canvas: #fff;
+        --soft: #f9f9f9;
+        --soft-2: #f5f5f5;
+        --line: #ebebeb;
+        --body: #4d4d4d;
+        --mute: #888;
+        --danger: #d41313;
+        --success: #16803c;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--soft-2);
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          sans-serif;
+        line-height: 1.4;
+      }
+      button,
+      a {
+        font: inherit;
+      }
+      button:focus-visible,
+      a:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 3px;
+      }
+      .page-header {
+        padding: 16px 24px;
+        background: var(--ink);
+        color: var(--canvas);
+      }
+      .page-header h1 {
+        margin: 0;
+        font-size: 18px;
+      }
+      .page-header p {
+        margin: 3px 0 0;
+        color: #bdbdbd;
+        font-size: 13px;
+      }
+      .tabs {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        overflow-x: auto;
+        padding: 0 24px;
+        border-bottom: 1px solid var(--line);
+        background: var(--canvas);
+      }
+      .tab {
+        padding: 12px 20px;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        background: transparent;
+        color: var(--mute);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .tab.active {
+        border-bottom-color: var(--ink);
+        color: var(--ink);
+      }
+      .viewport-panel {
+        display: none;
+        padding: 24px;
+      }
+      .viewport-panel.active {
+        display: block;
+      }
+      .comparison {
+        display: grid;
+        gap: 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .device {
+        min-width: 0;
+        overflow: hidden;
+        border-radius: 12px;
+        background: var(--canvas);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      }
+      .device-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .device-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .device-label.current {
+        color: var(--danger);
+      }
+      .device-label.proposed {
+        color: var(--success);
+      }
+      .device-size {
+        color: var(--mute);
+        font:
+          11px ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+      }
+      .annotation {
+        margin: 0;
+        padding: 10px 16px;
+        border-bottom: 1px dashed currentColor;
+        font-size: 12px;
+      }
+      .current-area .annotation {
+        background: #fff7f7;
+        color: var(--danger);
+      }
+      .proposed-area .annotation {
+        background: #f4fff7;
+        color: var(--success);
+      }
+      .screen-shell {
+        overflow: auto;
+        padding: 8px;
+      }
+      .screen {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--canvas);
+      }
+      .screen-mobile {
+        width: 375px;
+        min-height: 720px;
+      }
+      .screen-tablet {
+        width: 768px;
+        min-height: 650px;
+      }
+      .screen-desktop {
+        width: 1280px;
+        min-height: 650px;
+      }
+
+      /* Representative store chrome. The review target starts below this. */
+      .store-header {
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 24px;
+        min-height: 80px;
+        padding: 16px 32px;
+        border-bottom: 1px solid var(--line);
+      }
+      .logo {
+        font-size: 29px;
+        font-weight: 800;
+        letter-spacing: -0.06em;
+        white-space: nowrap;
+      }
+      .logo .dot {
+        color: var(--danger);
+      }
+      .logo .shop {
+        font-weight: 300;
+        letter-spacing: 0.05em;
+      }
+      .search {
+        display: flex;
+        min-width: 0;
+        height: 48px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+      }
+      .search span {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        padding: 0 16px;
+        color: var(--mute);
+        font-size: 14px;
+      }
+      .search b {
+        display: grid;
+        width: 48px;
+        place-items: center;
+        background: var(--ink);
+        color: var(--canvas);
+        font-size: 18px;
+        font-weight: 400;
+      }
+      .actions {
+        display: flex;
+        gap: 4px;
+      }
+      .icon-button {
+        display: grid;
+        width: 44px;
+        height: 44px;
+        place-items: center;
+        font-size: 17px;
+      }
+      .desktop-nav {
+        display: flex;
+        min-height: 56px;
+        align-items: center;
+        gap: 24px;
+        padding: 0 32px;
+        border-bottom: 1px solid var(--line);
+        color: var(--body);
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .mobile-nav {
+        display: none;
+        min-height: 48px;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 16px;
+        padding: 0 16px;
+        border-radius: 4px;
+        background: var(--ink);
+        color: var(--canvas);
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .grid-mark {
+        margin-inline-end: 8px;
+      }
+
+      /* Current banner: one fixed 1200 × 500 image at every viewport. */
+      .legacy-rail {
+        width: calc(100% - 64px);
+        max-width: 980px;
+        margin: 30px auto 0;
+      }
+      .legacy-banner {
+        position: relative;
+      }
+      .legacy-banner img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .legacy-dots {
+        position: absolute;
+        inset-inline: 0;
+        bottom: 8px;
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+      }
+      .legacy-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.25);
+      }
+      .legacy-dot.active {
+        background: #fff;
+      }
+      .legacy-welcome {
+        margin: 0 auto;
+        padding: 0 0 28px;
+        border-bottom: 1px solid var(--line);
+        text-align: center;
+      }
+      .legacy-welcome h2 {
+        margin: 0;
+        font-size: 30px;
+        line-height: 1.2;
+      }
+      .legacy-welcome p {
+        margin: 24px 0 0;
+        color: var(--body);
+        font-size: 14px;
+        text-align: start;
+      }
+
+      /* Proposed banner: real text and actions beside a clean media field. */
+      .new-rail {
+        width: calc(100% - 64px);
+        max-width: 1600px;
+        margin: 32px auto 0;
+      }
+      .hero-carousel {
+        position: relative;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--canvas);
+      }
+      .hero-slide {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        min-height: 420px;
+      }
+      .hero-slide[hidden] {
+        display: none;
+      }
+      .hero-copy {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 48px;
+      }
+      .eyebrow {
+        margin: 0 0 16px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .hero-copy h2 {
+        max-width: 480px;
+        margin: 0;
+        font-size: 42px;
+        line-height: 1.04;
+        letter-spacing: -0.035em;
+      }
+      .hero-copy p {
+        max-width: 450px;
+        margin: 20px 0 0;
+        color: var(--body);
+        font-size: 17px;
+        line-height: 1.55;
+      }
+      .hero-cta {
+        display: inline-flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        margin-top: 28px;
+        padding: 0 24px;
+        border-radius: 4px;
+        background: var(--ink);
+        color: var(--canvas);
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .hero-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: auto;
+        padding-top: 28px;
+      }
+      .carousel-button {
+        display: grid;
+        width: 44px;
+        height: 44px;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: var(--canvas);
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 18px;
+      }
+      .carousel-count {
+        min-width: 56px;
+        color: var(--body);
+        font-size: 13px;
+        text-align: center;
+      }
+      .hero-media {
+        position: relative;
+        min-height: 420px;
+        overflow: hidden;
+        background: var(--soft-2);
+      }
+      .media-label {
+        position: absolute;
+        inset-inline-end: 16px;
+        bottom: 12px;
+        color: var(--body);
+        font-size: 11px;
+      }
+      .energy-scene {
+        position: absolute;
+        inset: 0;
+      }
+      .battery {
+        position: absolute;
+        z-index: 2;
+        width: 162px;
+        height: 260px;
+        inset-inline-start: 44%;
+        top: 70px;
+        border-radius: 8px;
+        background: var(--ink);
+        color: var(--canvas);
+        transform: translateX(-50%);
+      }
+      .battery::before {
+        content: "arity shop";
+        position: absolute;
+        inset-inline-start: 20px;
+        top: 22px;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .battery::after {
+        content: "5 kWh";
+        position: absolute;
+        inset-inline-start: 20px;
+        bottom: 22px;
+        color: #fff;
+        font-size: 24px;
+        font-weight: 700;
+      }
+      .battery-light {
+        position: absolute;
+        z-index: 3;
+        width: 8px;
+        height: 8px;
+        inset-inline-start: calc(44% + 53px);
+        top: 96px;
+        border: 1px solid #fff;
+        border-radius: 999px;
+        background: #fff;
+      }
+      .solar-panel {
+        position: absolute;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+        width: 250px;
+        height: 166px;
+        inset-inline-end: -34px;
+        bottom: 38px;
+        padding: 2px;
+        border: 8px solid #222;
+        background: #333;
+        transform: skewY(-8deg);
+      }
+      .solar-panel i {
+        background: #222;
+      }
+      .scene-two .battery {
+        width: 190px;
+        height: 210px;
+        inset-inline-start: 62%;
+        top: 90px;
+      }
+      .scene-two .battery::after {
+        content: "Hybrid";
+      }
+      .scene-two .battery-light {
+        inset-inline-start: calc(62% + 65px);
+        top: 116px;
+      }
+      .scene-two .solar-panel {
+        width: 280px;
+        height: 190px;
+        inset-inline-start: -54px;
+        inset-inline-end: auto;
+        bottom: 30px;
+      }
+      .hero-after {
+        padding: 28px 0 34px;
+        text-align: center;
+      }
+      .hero-after h3 {
+        margin: 0;
+        font-size: 26px;
+      }
+      .hero-after p {
+        margin: 8px 0 0;
+        color: var(--body);
+        font-size: 14px;
+      }
+
+      .review-summary,
+      .decisions,
+      .implementation-note {
+        max-width: 1400px;
+        margin: 0 auto 32px;
+        padding: 0 24px;
+      }
+      .review-summary h2,
+      .decisions h2,
+      .implementation-note h2 {
+        margin: 0 0 12px;
+        font-size: 20px;
+      }
+      .findings {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+      }
+      .finding,
+      .decision-list,
+      .implementation-note p {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--canvas);
+      }
+      .finding {
+        padding: 16px;
+      }
+      .finding h3 {
+        margin: 0 0 8px;
+        font-size: 15px;
+      }
+      .finding p,
+      .implementation-note p {
+        margin: 0;
+        color: var(--body);
+        font-size: 13px;
+      }
+      .decision-list {
+        margin: 0;
+        padding: 16px 16px 16px 36px;
+        color: var(--body);
+        font-size: 14px;
+      }
+      .decision-list li + li {
+        margin-top: 8px;
+      }
+      .implementation-note p {
+        padding: 16px;
+      }
+
+      .mobile .store-header,
+      .tablet .store-header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 12px;
+        min-height: 120px;
+        padding: 8px 16px;
+      }
+      .mobile .logo {
+        width: 50%;
+        font-size: 25px;
+      }
+      .tablet .logo {
+        width: 220px;
+      }
+      .mobile .actions,
+      .tablet .actions {
+        margin-inline-start: auto;
+      }
+      .mobile .search,
+      .tablet .search {
+        order: 3;
+        width: 100%;
+        flex: 1 1 100%;
+      }
+      .mobile .desktop-nav,
+      .tablet .desktop-nav {
+        display: none;
+      }
+      .mobile .mobile-nav,
+      .tablet .mobile-nav {
+        display: flex;
+      }
+      .mobile .legacy-rail {
+        width: calc(100% - 38px);
+        margin-top: 40px;
+      }
+      .tablet .legacy-rail {
+        width: calc(100% - 58px);
+        margin-top: 40px;
+      }
+      .mobile .legacy-welcome h2 {
+        font-size: 29px;
+      }
+      .mobile .legacy-welcome p {
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      .mobile .new-rail {
+        width: calc(100% - 32px);
+        margin-top: 24px;
+      }
+      .tablet .new-rail {
+        width: calc(100% - 48px);
+        margin-top: 32px;
+      }
+      .mobile .hero-slide {
+        display: flex;
+        min-height: 0;
+        flex-direction: column;
+      }
+      .mobile .hero-slide[hidden] {
+        display: none;
+      }
+      .mobile .hero-copy {
+        min-height: 330px;
+        padding: 28px 20px 20px;
+      }
+      .mobile .eyebrow {
+        margin-bottom: 12px;
+      }
+      .mobile .hero-copy h2 {
+        font-size: 34px;
+      }
+      .mobile .hero-copy p {
+        margin-top: 16px;
+        font-size: 16px;
+      }
+      .mobile .hero-cta {
+        width: 100%;
+        margin-top: 24px;
+      }
+      .mobile .hero-controls {
+        padding-top: 20px;
+      }
+      .mobile .hero-media {
+        min-height: 220px;
+      }
+      .mobile .battery {
+        width: 112px;
+        height: 164px;
+        inset-inline-start: 40%;
+        top: 28px;
+      }
+      .mobile .battery::before {
+        inset-inline-start: 12px;
+        top: 13px;
+        font-size: 10px;
+      }
+      .mobile .battery::after {
+        inset-inline-start: 12px;
+        bottom: 13px;
+        font-size: 17px;
+      }
+      .mobile .battery-light {
+        inset-inline-start: calc(40% + 36px);
+        top: 44px;
+      }
+      .mobile .solar-panel {
+        width: 165px;
+        height: 106px;
+        inset-inline-end: -18px;
+        bottom: 25px;
+        border-width: 5px;
+      }
+      .mobile .scene-two .battery {
+        width: 136px;
+        height: 152px;
+        inset-inline-start: 62%;
+        top: 34px;
+      }
+      .mobile .scene-two .battery-light {
+        inset-inline-start: calc(62% + 46px);
+        top: 50px;
+      }
+      .mobile .scene-two .solar-panel {
+        width: 180px;
+        height: 120px;
+        inset-inline-start: -26px;
+        bottom: 22px;
+      }
+      .tablet .hero-slide {
+        grid-template-columns: 1fr 0.88fr;
+        min-height: 390px;
+      }
+      .tablet .hero-copy {
+        padding: 36px;
+      }
+      .tablet .hero-copy h2 {
+        font-size: 36px;
+      }
+      .tablet .hero-copy p {
+        font-size: 16px;
+      }
+      .tablet .hero-media {
+        min-height: 390px;
+      }
+      .tablet .battery {
+        width: 132px;
+        height: 220px;
+        inset-inline-start: 40%;
+        top: 70px;
+      }
+      .tablet .battery-light {
+        inset-inline-start: calc(40% + 43px);
+        top: 96px;
+      }
+      .tablet .solar-panel {
+        width: 190px;
+        height: 130px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          scroll-behavior: auto !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Homepage banner slider review</h1>
+      <p>
+        Current image-only promotion compared with a responsive, accessible
+        Arity Shop hero.
+      </p>
+    </header>
+
+    <nav class="tabs" aria-label="Viewport previews">
+      <button class="tab active" data-target="mobile-panel">
+        Mobile · 375px
+      </button>
+      <button class="tab" data-target="tablet-panel">Tablet · 768px</button>
+      <button class="tab" data-target="desktop-panel">Desktop · 1280px</button>
+    </nav>
+
+    <main>
+      <section id="mobile-panel" class="viewport-panel active">
+        <div class="comparison">
+          <article class="device current-area">
+            <div class="device-header">
+              <span class="device-label current">Current</span>
+              <span class="device-size">375px · measured hero 338 × 141</span>
+            </div>
+            <p class="annotation">
+              The desktop artwork shrinks to 28% of its source size. The text,
+              fake button, and 10px pagination become too small to read or tap.
+            </p>
+            <div class="screen-shell">
+              <div class="screen screen-mobile mobile">
+                <div class="store-header">
+                  <div class="logo">
+                    arity<span class="dot">·</span
+                    ><span class="shop">shop</span>
+                  </div>
+                  <div class="actions" aria-hidden="true">
+                    <span class="icon-button">♙</span
+                    ><span class="icon-button">♡</span
+                    ><span class="icon-button">▢</span>
+                  </div>
+                  <div class="search"><span>Search store</span><b>⌕</b></div>
+                </div>
+                <div class="mobile-nav">
+                  <span><span class="grid-mark">⊞</span>Shop categories</span
+                  ><span>⌄</span>
+                </div>
+                <div class="legacy-rail">
+                  <div class="legacy-banner">
+                    <img
+                      src="assets/banner-current-iphone.webp"
+                      alt="Current iPhone banner with all copy baked into the image"
+                    />
+                    <div class="legacy-dots" aria-hidden="true">
+                      <span class="legacy-dot active"></span
+                      ><span class="legacy-dot"></span>
+                    </div>
+                  </div>
+                  <div class="legacy-welcome">
+                    <h2>Welcome to our store</h2>
+                    <p>
+                      Online shopping is the process consumers go through to
+                      purchase products or services over the Internet.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="device proposed-area">
+            <div class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">375px · interactive</span>
+            </div>
+            <p class="annotation">
+              Keep copy, CTA, controls, and product media separate. On mobile,
+              show readable copy first, one full-width action, then a
+              purpose-made image.
+            </p>
+            <div class="screen-shell">
+              <div class="screen screen-mobile mobile">
+                <div class="store-header">
+                  <div class="logo">
+                    arity<span class="dot">·</span
+                    ><span class="shop">shop</span>
+                  </div>
+                  <div class="actions" aria-hidden="true">
+                    <span class="icon-button">♙</span
+                    ><span class="icon-button">♡</span
+                    ><span class="icon-button">▢</span>
+                  </div>
+                  <div class="search"><span>Search products</span><b>⌕</b></div>
+                </div>
+                <div class="mobile-nav">
+                  <span><span class="grid-mark">⊞</span>Shop categories</span
+                  ><span>⌄</span>
+                </div>
+                <div class="new-rail">
+                  <div
+                    class="hero-carousel"
+                    data-carousel
+                    role="region"
+                    aria-label="Featured energy solutions"
+                    aria-roledescription="carousel"
+                  >
+                    <section
+                      class="hero-slide"
+                      data-slide="0"
+                      role="group"
+                      aria-roledescription="slide"
+                      aria-label="1 of 2"
+                    >
+                      <div class="hero-copy">
+                        <p class="eyebrow">Home energy</p>
+                        <h2>Power through outages.</h2>
+                        <p>
+                          Reliable battery systems selected for Zimbabwean homes
+                          and businesses.
+                        </p>
+                        <a class="hero-cta" href="#"
+                          >Plan your battery system</a
+                        >
+                        <div class="hero-controls">
+                          <button
+                            class="carousel-button"
+                            data-prev
+                            aria-label="Previous promotion"
+                          >
+                            ←
+                          </button>
+                          <span class="carousel-count" aria-live="polite"
+                            >1 / 2</span
+                          >
+                          <button
+                            class="carousel-button"
+                            data-next
+                            aria-label="Next promotion"
+                          >
+                            →
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        class="hero-media"
+                        role="img"
+                        aria-label="Black home battery beside a solar panel"
+                      >
+                        <div class="energy-scene" aria-hidden="true">
+                          <div class="battery"></div>
+                          <div class="battery-light"></div>
+                          <div class="solar-panel"></div>
+                        </div>
+                        <span class="media-label"
+                          >Purpose-made mobile crop</span
+                        >
+                      </div>
+                    </section>
+                    <section
+                      class="hero-slide"
+                      data-slide="1"
+                      role="group"
+                      aria-roledescription="slide"
+                      aria-label="2 of 2"
+                      hidden
+                    >
+                      <div class="hero-copy">
+                        <p class="eyebrow">Solar essentials</p>
+                        <h2>Build a system that fits.</h2>
+                        <p>
+                          Pair panels, inverters, and storage with practical
+                          local guidance.
+                        </p>
+                        <a class="hero-cta" href="#">Plan your solar system</a>
+                        <div class="hero-controls">
+                          <button
+                            class="carousel-button"
+                            data-prev
+                            aria-label="Previous promotion"
+                          >
+                            ←
+                          </button>
+                          <span class="carousel-count" aria-live="polite"
+                            >2 / 2</span
+                          >
+                          <button
+                            class="carousel-button"
+                            data-next
+                            aria-label="Next promotion"
+                          >
+                            →
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        class="hero-media"
+                        role="img"
+                        aria-label="Hybrid inverter beside a solar panel"
+                      >
+                        <div class="energy-scene scene-two" aria-hidden="true">
+                          <div class="battery"></div>
+                          <div class="battery-light"></div>
+                          <div class="solar-panel"></div>
+                        </div>
+                        <span class="media-label"
+                          >Purpose-made mobile crop</span
+                        >
+                      </div>
+                    </section>
+                  </div>
+                  <div class="hero-after">
+                    <h3>Shop by solution</h3>
+                    <p>The next section starts after a clear 24px gap.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="tablet-panel" class="viewport-panel">
+        <div class="comparison">
+          <article class="device current-area">
+            <div class="device-header">
+              <span class="device-label current">Current</span>
+              <span class="device-size">768px · measured hero 710 × 296</span>
+            </div>
+            <p class="annotation">
+              The artwork becomes more legible, but text and CTA remain pixels
+              inside one generic electronics image and cannot reflow or
+              localise.
+            </p>
+            <div class="screen-shell">
+              <div class="screen screen-tablet tablet">
+                <div class="store-header">
+                  <div class="logo">
+                    arity<span class="dot">·</span
+                    ><span class="shop">shop</span>
+                  </div>
+                  <div class="actions" aria-hidden="true">
+                    <span class="icon-button">♙</span
+                    ><span class="icon-button">♡</span
+                    ><span class="icon-button">▢</span>
+                  </div>
+                  <div class="search"><span>Search store</span><b>⌕</b></div>
+                </div>
+                <div class="mobile-nav">
+                  <span><span class="grid-mark">⊞</span>Shop categories</span
+                  ><span>⌄</span>
+                </div>
+                <div class="legacy-rail">
+                  <div class="legacy-banner">
+                    <img
+                      src="assets/banner-current-iphone.webp"
+                      alt="Current iPhone banner with all copy baked into the image"
+                    />
+                    <div class="legacy-dots" aria-hidden="true">
+                      <span class="legacy-dot active"></span
+                      ><span class="legacy-dot"></span>
+                    </div>
+                  </div>
+                  <div class="legacy-welcome">
+                    <h2>Welcome to our store</h2>
+                    <p>
+                      Online shopping is the process consumers go through to
+                      purchase products or services over the Internet.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="device proposed-area">
+            <div class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">768px · interactive</span>
+            </div>
+            <p class="annotation">
+              At tablet width, use a balanced split hero. Copy stays at 16px+
+              while product media gains enough room to remain useful.
+            </p>
+            <div class="screen-shell">
+              <div class="screen screen-tablet tablet">
+                <div class="store-header">
+                  <div class="logo">
+                    arity<span class="dot">·</span
+                    ><span class="shop">shop</span>
+                  </div>
+                  <div class="actions" aria-hidden="true">
+                    <span class="icon-button">♙</span
+                    ><span class="icon-button">♡</span
+                    ><span class="icon-button">▢</span>
+                  </div>
+                  <div class="search"><span>Search products</span><b>⌕</b></div>
+                </div>
+                <div class="mobile-nav">
+                  <span><span class="grid-mark">⊞</span>Shop categories</span
+                  ><span>⌄</span>
+                </div>
+                <div class="new-rail">
+                  <div
+                    class="hero-carousel"
+                    data-carousel
+                    role="region"
+                    aria-label="Featured energy solutions"
+                    aria-roledescription="carousel"
+                  >
+                    <section
+                      class="hero-slide"
+                      data-slide="0"
+                      role="group"
+                      aria-roledescription="slide"
+                      aria-label="1 of 2"
+                    >
+                      <div class="hero-copy">
+                        <p class="eyebrow">Home energy</p>
+                        <h2>Power through outages.</h2>
+                        <p>
+                          Reliable battery systems selected for Zimbabwean homes
+                          and businesses.
+                        </p>
+                        <a class="hero-cta" href="#"
+                          >Plan your battery system</a
+                        >
+                        <div class="hero-controls">
+                          <button
+                            class="carousel-button"
+                            data-prev
+                            aria-label="Previous promotion"
+                          >
+                            ←</button
+                          ><span class="carousel-count" aria-live="polite"
+                            >1 / 2</span
+                          ><button
+                            class="carousel-button"
+                            data-next
+                            aria-label="Next promotion"
+                          >
+                            →
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        class="hero-media"
+                        role="img"
+                        aria-label="Black home battery beside a solar panel"
+                      >
+                        <div class="energy-scene" aria-hidden="true">
+                          <div class="battery"></div>
+                          <div class="battery-light"></div>
+                          <div class="solar-panel"></div>
+                        </div>
+                        <span class="media-label"
+                          >Responsive product media</span
+                        >
+                      </div>
+                    </section>
+                    <section
+                      class="hero-slide"
+                      data-slide="1"
+                      role="group"
+                      aria-roledescription="slide"
+                      aria-label="2 of 2"
+                      hidden
+                    >
+                      <div class="hero-copy">
+                        <p class="eyebrow">Solar essentials</p>
+                        <h2>Build a system that fits.</h2>
+                        <p>
+                          Pair panels, inverters, and storage with practical
+                          local guidance.
+                        </p>
+                        <a class="hero-cta" href="#">Plan your solar system</a>
+                        <div class="hero-controls">
+                          <button
+                            class="carousel-button"
+                            data-prev
+                            aria-label="Previous promotion"
+                          >
+                            ←</button
+                          ><span class="carousel-count" aria-live="polite"
+                            >2 / 2</span
+                          ><button
+                            class="carousel-button"
+                            data-next
+                            aria-label="Next promotion"
+                          >
+                            →
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        class="hero-media"
+                        role="img"
+                        aria-label="Hybrid inverter beside a solar panel"
+                      >
+                        <div class="energy-scene scene-two" aria-hidden="true">
+                          <div class="battery"></div>
+                          <div class="battery-light"></div>
+                          <div class="solar-panel"></div>
+                        </div>
+                        <span class="media-label"
+                          >Responsive product media</span
+                        >
+                      </div>
+                    </section>
+                  </div>
+                  <div class="hero-after">
+                    <h3>Shop by solution</h3>
+                    <p>Structured content follows the promotion.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="desktop-panel" class="viewport-panel">
+        <div class="comparison">
+          <article class="device current-area">
+            <div class="device-header">
+              <span class="device-label current">Current</span>
+              <span class="device-size">1280px · measured hero 980 × 408</span>
+            </div>
+            <p class="annotation">
+              The desktop image is readable, but its blue field and yellow fake
+              button do not match Arity. The whole slide is one link and rotates
+              every 3 seconds.
+            </p>
+            <div class="screen-shell">
+              <div class="screen screen-desktop desktop">
+                <div class="store-header">
+                  <div class="logo">
+                    arity<span class="dot">·</span
+                    ><span class="shop">shop</span>
+                  </div>
+                  <div class="search"><span>Search store</span><b>⌕</b></div>
+                  <div class="actions" aria-hidden="true">
+                    <span class="icon-button">♙</span
+                    ><span class="icon-button">♡</span
+                    ><span class="icon-button">▢</span>
+                  </div>
+                </div>
+                <div class="desktop-nav">
+                  <span>Computers</span><span>Electronics</span
+                  ><span>Apparel</span><span>Digital downloads</span
+                  ><span>Books</span><span>Jewelry</span><span>Gift Cards</span>
+                </div>
+                <div class="legacy-rail">
+                  <div class="legacy-banner">
+                    <img
+                      src="assets/banner-current-iphone.webp"
+                      alt="Current iPhone banner with all copy baked into the image"
+                    />
+                    <div class="legacy-dots" aria-hidden="true">
+                      <span class="legacy-dot active"></span
+                      ><span class="legacy-dot"></span>
+                    </div>
+                  </div>
+                  <div class="legacy-welcome">
+                    <h2>Welcome to our store</h2>
+                    <p>
+                      Online shopping is the process consumers go through to
+                      purchase products or services over the Internet.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="device proposed-area">
+            <div class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">1280px · interactive</span>
+            </div>
+            <p class="annotation">
+              Let the hero use nearly the full viewport with 32px gutters, a
+              quiet split layout, real HTML copy, and explicit controls that do
+              not cover the product.
+            </p>
+            <div class="screen-shell">
+              <div class="screen screen-desktop desktop">
+                <div class="store-header">
+                  <div class="logo">
+                    arity<span class="dot">·</span
+                    ><span class="shop">shop</span>
+                  </div>
+                  <div class="search"><span>Search products</span><b>⌕</b></div>
+                  <div class="actions" aria-hidden="true">
+                    <span class="icon-button">♙</span
+                    ><span class="icon-button">♡</span
+                    ><span class="icon-button">▢</span>
+                  </div>
+                </div>
+                <div class="desktop-nav">
+                  <span>Shop all</span><span>Solar panels</span
+                  ><span>Batteries</span><span>Inverters</span
+                  ><span>Charge controllers</span><span>Accessories</span>
+                </div>
+                <div class="new-rail">
+                  <div
+                    class="hero-carousel"
+                    data-carousel
+                    role="region"
+                    aria-label="Featured energy solutions"
+                    aria-roledescription="carousel"
+                  >
+                    <section
+                      class="hero-slide"
+                      data-slide="0"
+                      role="group"
+                      aria-roledescription="slide"
+                      aria-label="1 of 2"
+                    >
+                      <div class="hero-copy">
+                        <p class="eyebrow">Home energy</p>
+                        <h2>Power through outages.</h2>
+                        <p>
+                          Reliable battery systems selected for Zimbabwean homes
+                          and businesses.
+                        </p>
+                        <a class="hero-cta" href="#"
+                          >Plan your battery system</a
+                        >
+                        <div class="hero-controls">
+                          <button
+                            class="carousel-button"
+                            data-prev
+                            aria-label="Previous promotion"
+                          >
+                            ←</button
+                          ><span class="carousel-count" aria-live="polite"
+                            >1 / 2</span
+                          ><button
+                            class="carousel-button"
+                            data-next
+                            aria-label="Next promotion"
+                          >
+                            →
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        class="hero-media"
+                        role="img"
+                        aria-label="Black home battery beside a solar panel"
+                      >
+                        <div class="energy-scene" aria-hidden="true">
+                          <div class="battery"></div>
+                          <div class="battery-light"></div>
+                          <div class="solar-panel"></div>
+                        </div>
+                        <span class="media-label"
+                          >Clean product photography · no baked-in text</span
+                        >
+                      </div>
+                    </section>
+                    <section
+                      class="hero-slide"
+                      data-slide="1"
+                      role="group"
+                      aria-roledescription="slide"
+                      aria-label="2 of 2"
+                      hidden
+                    >
+                      <div class="hero-copy">
+                        <p class="eyebrow">Solar essentials</p>
+                        <h2>Build a system that fits.</h2>
+                        <p>
+                          Pair panels, inverters, and storage with practical
+                          local guidance.
+                        </p>
+                        <a class="hero-cta" href="#">Plan your solar system</a>
+                        <div class="hero-controls">
+                          <button
+                            class="carousel-button"
+                            data-prev
+                            aria-label="Previous promotion"
+                          >
+                            ←</button
+                          ><span class="carousel-count" aria-live="polite"
+                            >2 / 2</span
+                          ><button
+                            class="carousel-button"
+                            data-next
+                            aria-label="Next promotion"
+                          >
+                            →
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        class="hero-media"
+                        role="img"
+                        aria-label="Hybrid inverter beside a solar panel"
+                      >
+                        <div class="energy-scene scene-two" aria-hidden="true">
+                          <div class="battery"></div>
+                          <div class="battery-light"></div>
+                          <div class="solar-panel"></div>
+                        </div>
+                        <span class="media-label"
+                          >Clean product photography · no baked-in text</span
+                        >
+                      </div>
+                    </section>
+                  </div>
+                  <div class="hero-after">
+                    <h3>Shop by solution</h3>
+                    <p>
+                      The banner supports the catalog instead of dominating it.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <section class="review-summary">
+      <h2>What the live review found</h2>
+      <div class="findings">
+        <article class="finding">
+          <h3>1. Mobile copy is not usable</h3>
+          <p>
+            The 1200 × 500 artwork renders at 338 × 141 on a 375px viewport.
+            Headline, body, and CTA are image pixels—not responsive content.
+          </p>
+        </article>
+        <article class="finding">
+          <h3>2. The visual language is off-brand</h3>
+          <p>
+            Blue artwork, a yellow button, generic phones, and embedded
+            typography conflict with Arity’s black, white, and structural-grey
+            system.
+          </p>
+        </article>
+        <article class="finding">
+          <h3>3. Rotation is too aggressive</h3>
+          <p>
+            The live carousel auto-advances every 3 seconds. It has no pause
+            control, no arrow controls, and keyboard control is disabled.
+          </p>
+        </article>
+        <article class="finding">
+          <h3>4. Semantics are incomplete</h3>
+          <p>
+            Swiper labels slide positions and bullets, but the outer carousel
+            region has no accessible name. The whole artwork is one link, while
+            the visible fake button is not a real control.
+          </p>
+        </article>
+        <article class="finding">
+          <h3>5. Pagination is undersized</h3>
+          <p>
+            The bullets measure 10 × 10px at all viewports. They are below the
+            44px target and depend on image contrast.
+          </p>
+        </article>
+        <article class="finding">
+          <h3>6. Hidden links remain focusable</h3>
+          <p>
+            With the fade effect, an inactive slide is transparent but its link
+            stays in the keyboard sequence. Inactive slides must be hidden or
+            inert.
+          </p>
+        </article>
+        <article class="finding">
+          <h3>7. Hero loading can improve</h3>
+          <p>
+            The first, above-the-fold image is marked lazy. Reserve its
+            dimensions and load slide one eagerly; lazy-load only later slides.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="decisions">
+      <h2>Recommended direction to approve</h2>
+      <ol class="decision-list">
+        <li>
+          <strong>Campaign count:</strong> prefer one static, prioritised hero.
+          If merchandising requires multiple campaigns, retain the manual
+          carousel shown in this wireframe.
+        </li>
+        <li>
+          <strong>Structure:</strong> separate headline, body, CTA, controls,
+          and media. Never bake promotional copy or buttons into the image.
+        </li>
+        <li>
+          <strong>Mobile:</strong> stack copy above a purpose-made crop; keep
+          the 48px CTA visible and full width.
+        </li>
+        <li>
+          <strong>Tablet and desktop:</strong> use a split hero with 24px tablet
+          gutters, 32px desktop gutters, a 1600px safety cap, and a 420px target
+          height.
+        </li>
+        <li>
+          <strong>Brand:</strong> white/soft-grey surfaces, black text and CTA,
+          Inter for UI copy, and no decorative red, gradients, or shadows.
+        </li>
+        <li>
+          <strong>Content:</strong> promote renewable-energy outcomes and real
+          catalog destinations—not generic consumer electronics.
+        </li>
+        <li>
+          <strong>Motion:</strong> do not auto-advance by default. If autoplay
+          is retained, use at least 8 seconds, expose Pause, stop on
+          hover/focus, and honour reduced motion.
+        </li>
+        <li>
+          <strong>Controls:</strong> provide 44 × 44px Previous/Next buttons,
+          slide position, swipe support, keyboard support, and visible focus.
+          Make every inactive slide hidden or inert.
+        </li>
+        <li>
+          <strong>Performance:</strong> eager-load slide one with reserved
+          dimensions; lazy-load subsequent media and supply mobile/desktop image
+          sources.
+        </li>
+      </ol>
+    </section>
+
+    <section class="implementation-note">
+      <h2>Implementation boundary</h2>
+      <p>
+        The current Swiper output is image-only, so CSS alone cannot produce
+        this structure. Approval of the proposed direction implies a theme-owned
+        markup solution inside <strong>ArityTheme</strong>; nopCommerce core
+        remains untouched.
+      </p>
+    </section>
+
+    <script>
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab")
+            .forEach((item) => item.classList.remove("active"));
+          document
+            .querySelectorAll(".viewport-panel")
+            .forEach((panel) => panel.classList.remove("active"));
+          tab.classList.add("active");
+          document
+            .querySelector(`#${tab.dataset.target}`)
+            .classList.add("active");
+        });
+      });
+
+      document.querySelectorAll("[data-carousel]").forEach((carousel) => {
+        const slides = [...carousel.querySelectorAll("[data-slide]")];
+        let current = 0;
+        const show = (next) => {
+          current = (next + slides.length) % slides.length;
+          slides.forEach((slide, index) => {
+            slide.hidden = index !== current;
+          });
+        };
+        carousel.addEventListener("click", (event) => {
+          if (event.target.closest("[data-prev]")) show(current - 1);
+          if (event.target.closest("[data-next]")) show(current + 1);
+        });
+      });
+    </script>
+  </body>
+</html>

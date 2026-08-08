@@ -73,6 +73,7 @@ If not → iterate.
 | 15 | [header-layout.html](15-header-layout.html) | Header | Single-row markup overflows on mobile | 375/768/1280px |
 | 16 | [search-autocomplete.html](16-search-autocomplete.html) | Header search | Fixed-width autocomplete does not match responsive search | 375/768/1280px |
 | 17 | [menu-navigation.html](17-menu-navigation.html) | Main menu | Ambiguous mobile disclosure and undersized desktop dropdown | 375/768/1280px |
+| 18 | [homepage-banner-slider.html](18-homepage-banner-slider.html) | Homepage hero | Image-only promotion is unreadable on mobile and lacks safe carousel controls | 375/768/1280px |
 
 ---
 
