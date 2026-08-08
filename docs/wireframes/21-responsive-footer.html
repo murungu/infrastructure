@@ -1,0 +1,1512 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arity Shop — Responsive footer review</title>
+    <style>
+      :root {
+        --ink: #000;
+        --canvas: #fff;
+        --canvas-soft: #f9f9f9;
+        --canvas-soft-2: #f5f5f5;
+        --body: #4d4d4d;
+        --mute: #888;
+        --hairline: #ebebeb;
+        --dark-hairline: #333;
+        --dark-body: #cfcfcf;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-width: 320px;
+        background: var(--canvas-soft-2);
+        color: var(--ink);
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      a {
+        font: inherit;
+      }
+
+      .page-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        padding: 16px 24px;
+        background: var(--ink);
+        color: var(--canvas);
+      }
+
+      .page-header h1 {
+        font-size: 18px;
+        line-height: 1.25;
+      }
+
+      .page-header p {
+        margin-top: 4px;
+        color: var(--dark-body);
+        font-size: 13px;
+      }
+
+      .tabs {
+        position: sticky;
+        top: 79px;
+        z-index: 9;
+        display: flex;
+        overflow-x: auto;
+        border-bottom: 1px solid var(--hairline);
+        background: var(--canvas);
+        padding-inline: 16px;
+      }
+
+      .tab {
+        min-height: 48px;
+        padding-inline: 20px;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        background: transparent;
+        color: var(--body);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .tab:hover,
+      .tab:focus-visible,
+      .tab.active {
+        border-bottom-color: var(--ink);
+        color: var(--ink);
+        outline: 0;
+      }
+
+      .viewport-panel {
+        display: none;
+        padding: 24px;
+      }
+
+      .viewport-panel.active {
+        display: block;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        max-width: 1480px;
+        margin-inline: auto;
+      }
+
+      .comparison.wide {
+        grid-template-columns: 1fr;
+      }
+
+      .device {
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid #d9d9d9;
+        border-radius: 8px;
+        background: var(--canvas);
+      }
+
+      .device-header {
+        display: flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--hairline);
+      }
+
+      .device-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .device-label.proposed::before {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-inline-end: 8px;
+        border-radius: 999px;
+        background: var(--ink);
+        content: "";
+      }
+
+      .device-size {
+        color: var(--mute);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px;
+      }
+
+      .screen-shell {
+        overflow-x: auto;
+        padding: 8px;
+        background: var(--canvas-soft-2);
+      }
+
+      .screen {
+        overflow-y: auto;
+        margin-inline: auto;
+        border: 1px solid var(--hairline);
+        background: var(--canvas);
+      }
+
+      .screen.mobile {
+        width: 375px;
+        height: 820px;
+      }
+
+      .screen.tablet {
+        width: 768px;
+        height: 820px;
+      }
+
+      .screen.desktop {
+        width: 1280px;
+        height: 760px;
+      }
+
+      .previous-section {
+        display: grid;
+        min-height: 64px;
+        place-items: center;
+        border-bottom: 1px solid var(--hairline);
+        background: var(--canvas);
+        color: var(--mute);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      /* Current footer */
+      .current-footer {
+        background: var(--ink);
+        color: var(--canvas);
+        padding: 64px 0 40px;
+      }
+
+      .current-upper {
+        display: flex;
+        width: 95%;
+        margin-inline: auto;
+        flex-flow: row wrap;
+        justify-content: center;
+        gap: 100px;
+        border-bottom: 1px solid var(--dark-hairline);
+        padding-bottom: 40px;
+      }
+
+      .current-navigation {
+        display: flex;
+        width: 85%;
+        flex: 5 1 0;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 30px;
+      }
+
+      .current-menu {
+        width: fit-content;
+        max-width: 280px;
+      }
+
+      .current-title {
+        min-height: 24px;
+        color: var(--canvas);
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .current-toggle {
+        width: 100%;
+        border: 0;
+        background: transparent;
+        color: var(--canvas);
+        cursor: pointer;
+        text-align: start;
+      }
+
+      .current-toggle::after {
+        content: "⌄";
+        float: inline-end;
+        font-size: 18px;
+        font-weight: 400;
+      }
+
+      .current-links {
+        margin-top: 15px;
+        list-style: none;
+      }
+
+      .current-links li {
+        min-height: 30px;
+        color: var(--dark-body);
+        font-size: 14px;
+      }
+
+      .current-follow {
+        min-width: 280px;
+        flex: 2 1 0;
+      }
+
+      .current-kicker {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .current-socials {
+        display: flex;
+        gap: 10px;
+        margin-top: 12px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid var(--dark-hairline);
+      }
+
+      .current-social {
+        display: grid;
+        width: 38px;
+        height: 38px;
+        border: 1px solid #555;
+        border-radius: 999px;
+        place-items: center;
+        color: var(--canvas);
+        font-size: 13px;
+      }
+
+      .current-newsletter {
+        margin-top: 28px;
+      }
+
+      .current-form {
+        display: flex;
+        margin-top: 14px;
+      }
+
+      .current-input {
+        width: 180px;
+        height: 36px;
+        border: 0;
+        background: var(--canvas);
+        padding-inline: 10px;
+        font-size: 13px;
+      }
+
+      .current-subscribe {
+        height: 36px;
+        border: 0;
+        background: var(--ink);
+        color: var(--canvas);
+        padding-inline: 12px;
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      .current-lower {
+        display: flex;
+        width: 980px;
+        margin: 48px auto 0;
+        justify-content: space-between;
+        border-top: 1px solid var(--dark-hairline);
+        padding: 24px 5px 0;
+        color: var(--mute);
+        font-size: 12px;
+      }
+
+      .current-footer.mobile,
+      .current-footer.tablet {
+        min-height: 723px;
+      }
+
+      .current-footer.mobile .current-upper,
+      .current-footer.tablet .current-upper {
+        display: block;
+        padding-bottom: 40px;
+      }
+
+      .current-footer.mobile .current-navigation,
+      .current-footer.tablet .current-navigation {
+        display: block;
+        width: 85%;
+        margin-inline: auto;
+      }
+
+      .current-footer.mobile .current-menu,
+      .current-footer.tablet .current-menu {
+        width: 100%;
+        max-width: none;
+      }
+
+      .current-footer.mobile .current-title,
+      .current-footer.tablet .current-title {
+        display: block;
+        min-height: 44px;
+        padding: 10px 0;
+        font-size: 20px;
+      }
+
+      .current-footer.mobile .current-links,
+      .current-footer.tablet .current-links {
+        display: none;
+      }
+
+      .current-footer.mobile .current-follow,
+      .current-footer.tablet .current-follow {
+        margin-top: 100px;
+        text-align: center;
+      }
+
+      .current-footer.mobile .current-socials,
+      .current-footer.tablet .current-socials {
+        justify-content: center;
+      }
+
+      .current-footer.mobile .current-lower,
+      .current-footer.tablet .current-lower {
+        width: 95%;
+        margin-top: 48px;
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+      }
+
+      .current-footer.mobile .current-form,
+      .current-footer.tablet .current-form {
+        justify-content: center;
+      }
+
+      /* Proposed footer */
+      .proposed-footer {
+        color: var(--ink);
+      }
+
+      .signup-band {
+        background: var(--canvas-soft);
+        padding: 32px 16px;
+      }
+
+      .signup-inner,
+      .footer-main-inner,
+      .footer-legal-inner {
+        max-width: 1600px;
+        margin-inline: auto;
+      }
+
+      .signup-inner {
+        display: grid;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .footer-logo {
+        display: block;
+        width: 172px;
+        height: auto;
+      }
+
+      .signup-copy h2 {
+        margin-top: 20px;
+        font-size: 28px;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+      }
+
+      .signup-copy p {
+        max-width: 520px;
+        margin-top: 8px;
+        color: var(--body);
+        font-size: 14px;
+      }
+
+      .signup-form label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .signup-controls {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+      }
+
+      .signup-controls input,
+      .signup-controls button {
+        min-height: 48px;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .signup-controls input {
+        min-width: 0;
+        border: 1px solid #767676;
+        background: var(--canvas);
+        padding-inline: 14px;
+        color: var(--ink);
+      }
+
+      .signup-controls button {
+        border: 1px solid var(--ink);
+        background: var(--ink);
+        color: var(--canvas);
+        padding-inline: 20px;
+        font-weight: 600;
+      }
+
+      .signup-note {
+        margin-top: 8px;
+        color: var(--body);
+        font-size: 12px;
+      }
+
+      .footer-main {
+        background: var(--ink);
+        color: var(--canvas);
+        padding: 32px 16px;
+      }
+
+      .support-copy h2 {
+        font-size: 22px;
+        line-height: 1.2;
+      }
+
+      .support-copy p {
+        max-width: 300px;
+        margin-top: 8px;
+        color: var(--dark-body);
+        font-size: 14px;
+      }
+
+      .support-action {
+        display: inline-flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        margin-top: 16px;
+        border: 1px solid var(--canvas);
+        border-radius: 4px;
+        color: var(--canvas);
+        font-size: 14px;
+        font-weight: 600;
+        padding-inline: 18px;
+        text-decoration: none;
+      }
+
+      .support-action::after {
+        margin-inline-start: 10px;
+        content: "→";
+      }
+
+      .footer-group {
+        border-top: 1px solid var(--dark-hairline);
+      }
+
+      .footer-group-heading {
+        display: flex;
+        min-height: 52px;
+        align-items: center;
+        color: var(--canvas);
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .footer-group-toggle {
+        display: flex;
+        width: 100%;
+        min-height: 52px;
+        align-items: center;
+        justify-content: space-between;
+        border: 0;
+        background: transparent;
+        color: var(--canvas);
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        text-align: start;
+      }
+
+      .footer-group-toggle::after {
+        font-size: 20px;
+        font-weight: 400;
+        content: "+";
+      }
+
+      .footer-group-toggle[aria-expanded="true"]::after {
+        content: "−";
+      }
+
+      .footer-group-list {
+        display: none;
+        padding-bottom: 12px;
+        list-style: none;
+      }
+
+      .footer-group-list.open {
+        display: block;
+      }
+
+      .footer-group-list a {
+        display: flex;
+        min-height: 44px;
+        align-items: center;
+        color: var(--dark-body);
+        font-size: 14px;
+        text-decoration: none;
+      }
+
+      .footer-legal {
+        border-top: 1px solid var(--dark-hairline);
+        background: var(--ink);
+        color: var(--dark-body);
+        padding: 20px 16px 24px;
+      }
+
+      .footer-legal-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        font-size: 12px;
+      }
+
+      .legal-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 16px;
+      }
+
+      .legal-links a {
+        display: inline-flex;
+        min-width: 44px;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        color: var(--dark-body);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .proposed-footer.mobile .signup-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .proposed-footer.mobile .support-copy {
+        padding-bottom: 28px;
+      }
+
+      .proposed-footer.mobile .footer-legal-inner {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .proposed-footer.tablet .signup-band {
+        padding: 40px 24px;
+      }
+
+      .proposed-footer.tablet .signup-inner {
+        grid-template-columns: minmax(0, 0.8fr) minmax(320px, 1.2fr);
+      }
+
+      .proposed-footer.tablet .signup-copy h2 {
+        margin-top: 16px;
+        font-size: 30px;
+      }
+
+      .proposed-footer.tablet .footer-main {
+        padding: 40px 24px;
+      }
+
+      .proposed-footer.tablet .footer-main-inner {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 32px 48px;
+      }
+
+      .proposed-footer.tablet .footer-group {
+        border-top: 0;
+      }
+
+      .proposed-footer.tablet .footer-group-list {
+        display: block;
+      }
+
+      .proposed-footer.tablet .footer-legal {
+        padding-inline: 24px;
+      }
+
+      .proposed-footer.desktop .signup-band {
+        padding: 40px 32px;
+      }
+
+      .proposed-footer.desktop .signup-inner {
+        grid-template-columns: minmax(290px, 0.8fr) minmax(280px, 0.9fr) minmax(
+            390px,
+            1.1fr
+          );
+        gap: 40px;
+      }
+
+      .proposed-footer.desktop .signup-copy h2 {
+        margin-top: 0;
+        font-size: 30px;
+      }
+
+      .proposed-footer.desktop .footer-main {
+        padding: 48px 32px 40px;
+      }
+
+      .proposed-footer.desktop .footer-main-inner {
+        display: grid;
+        grid-template-columns: minmax(260px, 1.25fr) repeat(
+            3,
+            minmax(150px, 0.75fr)
+          );
+        gap: 48px;
+      }
+
+      .proposed-footer.desktop .footer-group {
+        border-top: 0;
+      }
+
+      .proposed-footer.desktop .footer-group-list {
+        display: block;
+      }
+
+      .proposed-footer.desktop .footer-legal {
+        padding-inline: 32px;
+      }
+
+      .proposed-footer a:focus-visible,
+      .proposed-footer button:focus-visible,
+      .proposed-footer input:focus-visible {
+        outline: 2px solid currentcolor;
+        outline-offset: 3px;
+      }
+
+      .signup-controls input:focus-visible,
+      .signup-controls button:focus-visible {
+        outline-color: var(--ink);
+      }
+
+      .annotation {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        max-width: 1480px;
+        margin: 24px auto 0;
+      }
+
+      .annotation-card {
+        border: 1px solid var(--hairline);
+        border-radius: 8px;
+        background: var(--canvas);
+        padding: 16px;
+      }
+
+      .annotation-card strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 14px;
+      }
+
+      .annotation-card p {
+        color: var(--body);
+        font-size: 13px;
+      }
+
+      .review-summary,
+      .decisions,
+      .implementation-note {
+        max-width: 1000px;
+        margin: 0 auto 24px;
+        border: 1px solid var(--hairline);
+        border-radius: 8px;
+        background: var(--canvas);
+        padding: 24px;
+      }
+
+      .review-summary h2,
+      .decisions h2,
+      .implementation-note h2 {
+        margin-bottom: 16px;
+        font-size: 24px;
+      }
+
+      .review-summary h3 {
+        margin-top: 20px;
+        font-size: 16px;
+      }
+
+      .review-summary p,
+      .decisions li,
+      .implementation-note p {
+        margin-top: 8px;
+        color: var(--body);
+        font-size: 15px;
+      }
+
+      .decisions ol {
+        padding-inline-start: 20px;
+      }
+
+      .decisions li + li {
+        margin-top: 12px;
+      }
+
+      .approval-list {
+        display: grid;
+        gap: 8px;
+        margin-top: 16px;
+        list-style: none;
+      }
+
+      .approval-list li {
+        padding: 12px 16px;
+        border: 1px solid var(--hairline);
+        border-radius: 4px;
+        color: var(--ink);
+      }
+
+      code {
+        padding: 2px 4px;
+        border-radius: 4px;
+        background: var(--canvas-soft-2);
+        color: var(--ink);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9em;
+      }
+
+      @media (max-width: 900px) {
+        .comparison,
+        .annotation {
+          grid-template-columns: 1fr;
+        }
+
+        .viewport-panel {
+          padding: 16px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .page-header {
+          padding-inline: 16px;
+        }
+
+        .tabs {
+          top: 98px;
+        }
+
+        .viewport-panel {
+          padding-inline: 8px;
+        }
+
+        .screen-shell {
+          padding-inline: 0;
+        }
+
+        .review-summary,
+        .decisions,
+        .implementation-note {
+          padding: 20px 16px;
+          border-inline: 0;
+          border-radius: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Responsive footer review</h1>
+      <p>
+        Current generic footer compared with a branded, useful, and accessible
+        store footer.
+      </p>
+    </header>
+
+    <nav class="tabs" aria-label="Viewport previews" role="tablist">
+      <button
+        id="mobile-tab"
+        class="tab active"
+        type="button"
+        role="tab"
+        aria-controls="mobile-panel"
+        aria-selected="true"
+        data-target="mobile-panel"
+      >
+        Mobile · 375px
+      </button>
+      <button
+        id="tablet-tab"
+        class="tab"
+        type="button"
+        role="tab"
+        aria-controls="tablet-panel"
+        aria-selected="false"
+        data-target="tablet-panel"
+        tabindex="-1"
+      >
+        Tablet · 768px
+      </button>
+      <button
+        id="desktop-tab"
+        class="tab"
+        type="button"
+        role="tab"
+        aria-controls="desktop-panel"
+        aria-selected="false"
+        data-target="desktop-panel"
+        tabindex="-1"
+      >
+        Desktop · 1280px
+      </button>
+    </nav>
+
+    <main>
+      <section
+        id="mobile-panel"
+        class="viewport-panel active"
+        role="tabpanel"
+        aria-labelledby="mobile-tab"
+      >
+        <div class="comparison">
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label">Current</span>
+              <span class="device-size">375 × 820</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen mobile">
+                <div class="previous-section">Page content ends above</div>
+                <footer
+                  class="current-footer mobile"
+                  data-current-footer="mobile"
+                ></footer>
+              </div>
+            </div>
+          </article>
+
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">375 × 820</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen mobile">
+                <div class="previous-section">Page content ends above</div>
+                <footer
+                  class="proposed-footer mobile"
+                  data-proposed-footer="mobile"
+                ></footer>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-card">
+            <strong>Use real accordion buttons</strong>
+            <p>
+              Each section uses a 52px button with keyboard support. Closed
+              links leave the tab order instead of receiving invisible focus.
+            </p>
+          </div>
+          <div class="annotation-card">
+            <strong>Remove the empty vertical gaps</strong>
+            <p>
+              A compact sequence of newsletter, support, navigation, and legal
+              content replaces the current 100px gaps.
+            </p>
+          </div>
+          <div class="annotation-card">
+            <strong>Make every control touch-safe</strong>
+            <p>
+              Newsletter controls, the support action, accordion triggers, and
+              visible links are at least 44px high.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="tablet-panel"
+        class="viewport-panel"
+        role="tabpanel"
+        aria-labelledby="tablet-tab"
+        hidden
+      >
+        <div class="comparison wide">
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label">Current</span>
+              <span class="device-size">768 × 820</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen tablet">
+                <div class="previous-section">Page content ends above</div>
+                <footer
+                  class="current-footer tablet"
+                  data-current-footer="tablet"
+                ></footer>
+              </div>
+            </div>
+          </article>
+
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">768 × 820</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen tablet">
+                <div class="previous-section">Page content ends above</div>
+                <footer
+                  class="proposed-footer tablet"
+                  data-proposed-footer="tablet"
+                ></footer>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-card">
+            <strong>Use the available tablet width</strong>
+            <p>
+              At 768px, the recommendation opens navigation into a two-column
+              grid instead of retaining phone-style collapsed sections.
+            </p>
+          </div>
+          <div class="annotation-card">
+            <strong>Stack only where needed</strong>
+            <p>
+              The brand and newsletter share the light band. The email action
+              keeps a clear 48px control without crowding the label.
+            </p>
+          </div>
+          <div class="annotation-card">
+            <strong>Keep normal navigation semantics</strong>
+            <p>
+              Footer destinations remain ordinary lists of links. ARIA menu
+              roles are not used for site navigation.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="desktop-panel"
+        class="viewport-panel"
+        role="tabpanel"
+        aria-labelledby="desktop-tab"
+        hidden
+      >
+        <div class="comparison wide">
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label">Current</span>
+              <span class="device-size">1280 × 760</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen desktop">
+                <div class="previous-section">Page content ends above</div>
+                <footer
+                  class="current-footer desktop"
+                  data-current-footer="desktop"
+                ></footer>
+              </div>
+            </div>
+          </article>
+
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">1280 × 760</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen desktop">
+                <div class="previous-section">Page content ends above</div>
+                <footer
+                  class="proposed-footer desktop"
+                  data-proposed-footer="desktop"
+                ></footer>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-card">
+            <strong>Separate conversion from navigation</strong>
+            <p>
+              A light subscription band gives the brand and form breathing room.
+              The black footer remains the page’s one dark section.
+            </p>
+          </div>
+          <div class="annotation-card">
+            <strong>Align every footer rail</strong>
+            <p>
+              Newsletter, navigation, and legal content use the approved 32px
+              gutter and 1600px cap instead of mixing 95% and 980px widths.
+            </p>
+          </div>
+          <div class="annotation-card">
+            <strong>Prioritise useful destinations</strong>
+            <p>
+              Shop, help, and account groups replace generic nopCommerce links.
+              Direct support receives clear placement; verified social channels
+              can be added later.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="review-summary">
+        <h2>What the live review found</h2>
+
+        <h3>
+          1. The footer publishes nopCommerce’s identity instead of Arity Shop’s
+        </h3>
+        <p>
+          The social buttons point to nopCommerce accounts, and the legal line
+          says “Your store name.” These are admin-data problems, but the current
+          layout gives the store no purpose statement or recognisable brand
+          anchor.
+        </p>
+
+        <h3>2. Mobile accordion headings are not buttons</h3>
+        <p>
+          “Information,” “Customer service,” and “My account” are clickable
+          <code>h2</code> elements. They are not keyboard-focusable controls.
+          The closed navigation also keeps ordinary links in the tab order,
+          which can move keyboard focus into clipped content.
+        </p>
+
+        <h3>3. Several controls are below the Arity touch-target standard</h3>
+        <p>
+          The live social links are 38 × 38px. The newsletter input and button
+          are 36px high. Desktop footer links are about 20px high, and mobile
+          links inside an opened section use a 40px row.
+        </p>
+
+        <h3>4. Tablet retains a phone layout despite having room</h3>
+        <p>
+          At 768px, all three navigation groups stay collapsed and the footer
+          remains about 787px tall. A two-column layout can expose useful links
+          without creating a dense desktop row.
+        </p>
+
+        <h3>5. Spacing creates a long footer without adding value</h3>
+        <p>
+          A 100px flex gap separates the collapsed navigation from social
+          content on mobile and tablet. The result is a large empty region
+          before “Follow us” and another long path to the legal content.
+        </p>
+
+        <h3>6. Desktop uses two unrelated alignment systems</h3>
+        <p>
+          The upper footer uses 95% of the viewport, while the legal row
+          contracts to a fixed 980px wrapper. It no longer aligns with the
+          approved homepage rail used by the hero, categories, and products.
+        </p>
+
+        <h3>7. The footer gives generic links equal weight</h3>
+        <p>
+          “Apply for vendor account,” “Compare products list,” and other default
+          routes compete with delivery, returns, warranty, product categories,
+          and direct support. The footer should reflect the journeys Arity Shop
+          customers actually need.
+        </p>
+
+        <h3>8. Newsletter purpose and expectations are unclear</h3>
+        <p>
+          The current form has only a “Newsletter” heading and placeholder. It
+          does not say what customers will receive or set an expectation about
+          privacy and frequency.
+        </p>
+      </section>
+
+      <section class="decisions">
+        <h2>Recommended direction to approve</h2>
+        <ol>
+          <li>
+            Use a light subscription band above the black footer. Keep the Arity
+            Shop logo on the light surface, add a short benefit statement, and
+            use a visible email label.
+          </li>
+          <li>
+            Use a 48px email input and black subscription button. Keep
+            validation and success messages next to the form and preserve
+            nopCommerce’s existing newsletter behavior.
+          </li>
+          <li>
+            Use three navigation groups: “Shop,” “Help,” and “Account.” Populate
+            them from configured store menus and topics rather than hardcoding
+            category IDs or URLs in the theme.
+          </li>
+          <li>
+            On mobile, use semantic accordion <code>button</code> elements,
+            remove closed lists from the tab order, and give every visible link
+            a 44px row.
+          </li>
+          <li>
+            At 768px, show support and navigation in a two-column grid. At
+            1280px, use one support column plus three navigation columns.
+          </li>
+          <li>
+            Use “Contact us” as the direct support action now. Defer WhatsApp
+            until a real WhatsApp Business destination and an approved
+            theme-owned configuration source both exist.
+          </li>
+          <li>
+            Render only verified Arity Shop social destinations. Do not publish
+            nopCommerce defaults or empty placeholder channels.
+          </li>
+          <li>
+            Use the approved rail throughout: 16px mobile gutters, 24px tablet
+            gutters, 32px desktop gutters, and a 1600px wide-screen cap.
+          </li>
+          <li>
+            Use sentence case, Inter for UI text, black/white surfaces,
+            structural greys, no shadows, no gradients, and no decorative
+            colour. Keep the logo’s red sub-brand dot as the only accent.
+          </li>
+          <li>
+            Keep copyright, tax/shipping text, topic links, widgets, theme
+            selector, and “Powered by nopCommerce” behavior model-driven.
+            Correct the store name in admin rather than hardcoding it in the
+            view.
+          </li>
+        </ol>
+
+        <ul class="approval-list">
+          <li>□ Use the light newsletter band above the black footer.</li>
+          <li>□ Use Shop, Help, and Account as the three navigation groups.</li>
+          <li>□ Use accordions only below the tablet layout.</li>
+          <li>
+            □ Use Contact us now and defer WhatsApp until its destination and
+            configuration source are approved.
+          </li>
+          <li>
+            □ Remove nopCommerce social defaults and irrelevant footer links
+            through configuration.
+          </li>
+        </ul>
+      </section>
+
+      <section class="implementation-note">
+        <h2>Implementation boundary</h2>
+        <p>
+          This file is a wireframe only. No storefront implementation has been
+          changed.
+        </p>
+        <p>
+          After approval, implementation should remain inside ArityTheme.
+          Theme-owned overrides at
+          <code>Views/Shared/Components/Footer/Default.cshtml</code> and
+          <code>Views/Shared/Components/FooterMenu/Default.cshtml</code>, plus
+          the existing <code>Content/css/arity.footer.css</code>, can provide
+          the new composition and responsive behavior. Keep invoking
+          nopCommerce’s newsletter, social, menu, widget, theme-selector,
+          tax/shipping, and legal behavior where applicable. Use the existing
+          <code>arity.menu.js</code> disclosure helper only if it can provide
+          true button semantics and remove closed content from keyboard
+          navigation; otherwise add a small footer-specific theme script.
+          <code>FooterModel</code> has no support URL, and
+          <code>SocialModel</code> has no WhatsApp field. The first
+          implementation should therefore use nopCommerce’s Contact Us route and
+          render only verified built-in social fields. A future WhatsApp action
+          needs a separately approved theme setting, widget, or other
+          configuration seam. Do not modify nopCommerce core. Do not hardcode
+          store data, category IDs, social destinations, or a WhatsApp number.
+        </p>
+      </section>
+    </main>
+
+    <template id="current-footer-template">
+      <section class="current-upper">
+        <nav class="current-navigation" aria-label="Current footer navigation">
+          <section class="current-menu">
+            <h2 class="current-title current-toggle">Information</h2>
+            <ul class="current-links">
+              <li>Sitemap</li>
+              <li>Shipping &amp; returns</li>
+              <li>Privacy notice</li>
+              <li>Conditions of Use</li>
+              <li>About us</li>
+              <li>Contact us</li>
+            </ul>
+          </section>
+          <section class="current-menu">
+            <h2 class="current-title current-toggle">Customer service</h2>
+            <ul class="current-links">
+              <li>Search</li>
+              <li>Blog</li>
+              <li>Recently viewed products</li>
+              <li>Compare products list</li>
+              <li>New products</li>
+            </ul>
+          </section>
+          <section class="current-menu">
+            <h2 class="current-title current-toggle">My account</h2>
+            <ul class="current-links">
+              <li>My account</li>
+              <li>Orders</li>
+              <li>Addresses</li>
+              <li>Shopping cart</li>
+              <li>Wishlist</li>
+              <li>Apply for vendor account</li>
+            </ul>
+          </section>
+        </nav>
+        <section class="current-follow">
+          <div>
+            <h2 class="current-kicker">Follow us</h2>
+            <div class="current-socials" aria-label="Current social links">
+              <span class="current-social">f</span>
+              <span class="current-social">X</span>
+              <span class="current-social">▶</span>
+              <span class="current-social">◎</span>
+            </div>
+          </div>
+          <div class="current-newsletter">
+            <h2 class="current-kicker">Newsletter</h2>
+            <div class="current-form">
+              <input
+                class="current-input"
+                type="email"
+                placeholder="Enter your email here..."
+                aria-label="Email address"
+              />
+              <button class="current-subscribe" type="button">Subscribe</button>
+            </div>
+          </div>
+        </section>
+      </section>
+      <section class="current-lower">
+        <span>Powered by <strong>nopCommerce</strong></span>
+        <span>Copyright © 2026 Your store name. All rights reserved.</span>
+      </section>
+    </template>
+
+    <template id="proposed-footer-template">
+      <section class="signup-band">
+        <div class="signup-inner">
+          <img
+            class="footer-logo"
+            src="assets/arity-shop-logo.png"
+            alt="Arity Shop"
+          />
+          <div class="signup-copy">
+            <h2>Stay ready for reliable power.</h2>
+            <p>
+              Get practical energy guidance, product updates, and occasional
+              offers.
+            </p>
+          </div>
+          <form class="signup-form">
+            <label>Email address</label>
+            <div class="signup-controls">
+              <input
+                type="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+              />
+              <button type="button">Subscribe</button>
+            </div>
+            <p class="signup-note">
+              Useful updates only. Unsubscribe at any time.
+            </p>
+          </form>
+        </div>
+      </section>
+
+      <section class="footer-main">
+        <div class="footer-main-inner">
+          <section class="support-copy">
+            <h2>Need help choosing?</h2>
+            <p>
+              Talk to our team about products, compatibility, delivery, and
+              returns.
+            </p>
+            <a class="support-action" href="#">Contact us</a>
+          </section>
+
+          <section class="footer-group">
+            <h2 class="footer-group-heading">
+              <button
+                class="footer-group-toggle"
+                type="button"
+                aria-expanded="true"
+              >
+                Shop
+              </button>
+            </h2>
+            <ul class="footer-group-list open">
+              <li><a href="#">Solar panels</a></li>
+              <li><a href="#">Batteries</a></li>
+              <li><a href="#">Inverters</a></li>
+              <li><a href="#">Charge controllers</a></li>
+            </ul>
+          </section>
+
+          <section class="footer-group">
+            <h2 class="footer-group-heading">
+              <button
+                class="footer-group-toggle"
+                type="button"
+                aria-expanded="false"
+              >
+                Help
+              </button>
+            </h2>
+            <ul class="footer-group-list">
+              <li><a href="#">Contact us</a></li>
+              <li><a href="#">Delivery &amp; returns</a></li>
+              <li><a href="#">Warranty information</a></li>
+              <li><a href="#">About us</a></li>
+            </ul>
+          </section>
+
+          <section class="footer-group">
+            <h2 class="footer-group-heading">
+              <button
+                class="footer-group-toggle"
+                type="button"
+                aria-expanded="false"
+              >
+                Account
+              </button>
+            </h2>
+            <ul class="footer-group-list">
+              <li><a href="#">My account</a></li>
+              <li><a href="#">Orders</a></li>
+              <li><a href="#">Wishlist</a></li>
+              <li><a href="#">Shopping cart</a></li>
+            </ul>
+          </section>
+        </div>
+      </section>
+
+      <section class="footer-legal">
+        <div class="footer-legal-inner">
+          <span>© 2026 Arity Shop. All rights reserved.</span>
+          <nav class="legal-links" aria-label="Legal links">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <span>Powered by nopCommerce</span>
+          </nav>
+        </div>
+      </section>
+    </template>
+
+    <script>
+      const currentTemplate = document.querySelector(
+        "#current-footer-template",
+      );
+      const proposedTemplate = document.querySelector(
+        "#proposed-footer-template",
+      );
+
+      document.querySelectorAll("[data-current-footer]").forEach((target) => {
+        target.append(currentTemplate.content.cloneNode(true));
+      });
+
+      document.querySelectorAll("[data-proposed-footer]").forEach((target) => {
+        target.append(proposedTemplate.content.cloneNode(true));
+        const layout = target.dataset.proposedFooter;
+        const emailInput = target.querySelector(".signup-controls input");
+        const emailLabel = target.querySelector(".signup-form label");
+        emailInput.id = `footer-email-${layout}`;
+        emailLabel.htmlFor = emailInput.id;
+
+        if (layout !== "mobile") {
+          target.querySelectorAll(".footer-group-toggle").forEach((toggle) => {
+            const heading = toggle.closest(".footer-group-heading");
+            heading.textContent = toggle.textContent.trim();
+          });
+        }
+      });
+
+      document
+        .querySelectorAll(".proposed-footer.mobile .footer-group-toggle")
+        .forEach((toggle) => {
+          toggle.addEventListener("click", () => {
+            const list = toggle
+              .closest(".footer-group")
+              .querySelector(".footer-group-list");
+            const willOpen = toggle.getAttribute("aria-expanded") !== "true";
+            toggle.setAttribute("aria-expanded", String(willOpen));
+            list.classList.toggle("open", willOpen);
+            list.querySelectorAll("a").forEach((link) => {
+              link.tabIndex = willOpen ? 0 : -1;
+            });
+          });
+        });
+
+      document
+        .querySelectorAll(".proposed-footer.mobile .footer-group")
+        .forEach((group) => {
+          const open =
+            group
+              .querySelector(".footer-group-toggle")
+              .getAttribute("aria-expanded") === "true";
+          group.querySelectorAll(".footer-group-list a").forEach((link) => {
+            link.tabIndex = open ? 0 : -1;
+          });
+        });
+
+      const tabs = [...document.querySelectorAll(".tab")];
+
+      function activateTab(nextTab) {
+        tabs.forEach((tab) => {
+          const selected = tab === nextTab;
+          tab.classList.toggle("active", selected);
+          tab.setAttribute("aria-selected", String(selected));
+          tab.tabIndex = selected ? 0 : -1;
+          const panel = document.querySelector(`#${tab.dataset.target}`);
+          panel.classList.toggle("active", selected);
+          panel.hidden = !selected;
+        });
+      }
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => activateTab(tab));
+        tab.addEventListener("keydown", (event) => {
+          if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key))
+            return;
+          event.preventDefault();
+          let nextIndex = index;
+          if (event.key === "ArrowLeft")
+            nextIndex = (index - 1 + tabs.length) % tabs.length;
+          if (event.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
+          if (event.key === "Home") nextIndex = 0;
+          if (event.key === "End") nextIndex = tabs.length - 1;
+          activateTab(tabs[nextIndex]);
+          tabs[nextIndex].focus();
+        });
+      });
+    </script>
+  </body>
+</html>

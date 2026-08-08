@@ -81,8 +81,9 @@ If not → iterate.
 | 18 | [homepage-banner-slider.html](18-homepage-banner-slider.html) | Homepage hero | Image-only promotion is unreadable on mobile and lacks safe carousel controls | 375/768/1280px |
 | 19 | [homepage-introduction-categories.html](19-homepage-introduction-categories.html) | Homepage categories | Generic welcome copy and sample categories create an off-brand, inefficient catalog entry | 375/768/1280px |
 | 20 | [homepage-featured-products.html](20-homepage-featured-products.html) | Homepage featured products | Cramped mobile cards, undersized actions, empty ratings, and a narrow legacy desktop rail weaken product discovery | 375/768/1280px |
+| 21 | [responsive-footer.html](21-responsive-footer.html) | All pages | Generic store identity, inaccessible mobile disclosures, undersized controls, and mismatched desktop rails weaken the footer | 375/768/1280px |
 
-Wireframes 18 and 19 are implemented in ArityTheme. See `Views/Home/Index.cshtml`, `Views/Home/_ArityHomepageHero.cshtml`, `Views/Shared/Components/HomepageCategories/Default.cshtml`, and their homepage-only CSS/JS modules.
+Wireframes 18, 19, and 20 are implemented in ArityTheme. See `Views/Home/Index.cshtml`, `Views/Home/_ArityHomepageHero.cshtml`, `Views/Shared/Components/HomepageCategories/Default.cshtml`, `Views/Shared/Components/HomepageProducts/Default.cshtml`, and their homepage-only CSS/JS modules.
 
 ---
 
