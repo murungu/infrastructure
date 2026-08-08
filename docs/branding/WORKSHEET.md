@@ -248,20 +248,20 @@ From [mobile-first-audit.md](mobile-first-audit.md). All issues verified at 375p
 
 ### Week 2: Mobile UX (4 hours)
 
-6. M1: Move sidebar below products (1 h)
+1. M1: Move sidebar below products (1 h)
 2. M2: Increase touch targets (1 h)
 3. M3: Fix variant selectors (1 h)
 4. M4–M6: Cosmetic fixes (1 h combined)
 
 ### Week 3: Legal Pages Finalize (depends on legal review)
 
-10. L1: Publish Privacy Policy (after legal review)
+1. L1: Publish Privacy Policy (after legal review)
 2. L2: Publish Terms of Use (after legal review)
 3. L3–L6: Publish remaining legal pages
 
 ### Week 4: Content (6 hours)
 
-13. C2: Rename categories (30 min)
+1. C2: Rename categories (30 min)
 2. C1: Write homepage text (1 h)
 3. C3: Write product descriptions (3 h)
 4. C4: Generate product images (3 h)
@@ -269,11 +269,11 @@ From [mobile-first-audit.md](mobile-first-audit.md). All issues verified at 375p
 
 ### Week 5: Theme Polish (4 hours)
 
-18. P1–P4: All polish items
+1. P1–P4: All polish items
 
 ### Week 6: Infrastructure (8 hours)
 
-19. I1: Production database
+1. I1: Production database
 2. I4: Production Docker Compose
 3. I5: Payment gateway (EcoCash + PayNow)
 4. I6: VAT invoicing setup
@@ -282,19 +282,19 @@ From [mobile-first-audit.md](mobile-first-audit.md). All issues verified at 375p
 
 ### Week 7: Soft Launch
 
-25. Internal testing with real orders
+1. Internal testing with real orders
 2. Fix bugs
 3. Performance optimization
 
 ### Week 8: Public Launch
 
-28. Announce
+1. Announce
 2. Monitor
 3. Iterate
 
 ### Month 4: South Africa Expansion
 
-31. Duplicate Zimbabwe setup
+1. Duplicate Zimbabwe setup
 2. Add ZAR pricing
 3. Add SA payment methods
 4. Update legal pages for SA law (POPIA, CPA)
@@ -309,7 +309,7 @@ For every task in this worksheet, confirm before marking complete:
 - [ ] Screenshots at 375/768/1280px look correct
 - [ ] Change is committed on a feature branch
 - [ ] PR is opened and reviewed
-- [ ] PR is merged to `develop`
+- [ ] PR is merged to `main`
 - [ ] This worksheet is updated (change Status to ✅)
 - [ ] This worksheet is committed to `main`
 

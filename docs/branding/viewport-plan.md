@@ -2,7 +2,8 @@
 
 > **Purpose:** One written set of rules for responsive theming. Follow these rules and the theme will not break when nopCommerce, browsers, or our team change things.
 > **Scope:** CSS and views inside `Themes/ArityTheme/` only. No core edits. No new tooling.
-> **Status:** Proposed — merge after review.
+> **Status:** Active.
+> **Last updated:** 2026-08-08.
 
 ---
 
@@ -64,7 +65,7 @@ for (const w of [375, 768, 1280]) {
 
 These are the invariants. If you break one, the theme silently degrades:
 
-1. **Bundle order is fixed.** `Head.cshtml` registers files in this order: `styles.css` → `arity.tokens` → `arity.base` → `arity.nav` → `arity.icons` → `arity.products` → `arity.footer`. Never reorder. Later files win ties. That is the design.
+1. **Shared bundle order is fixed.** `Head.cshtml` registers `styles.css`, tokens, base, navigation, autocomplete, icons, products, footer, forms, and custom overrides. Keep this order. `Views/Home/Index.cshtml` registers the page-only hero assets.
 2. **After any CSS change, clear bundles and restart.** Then judge the screenshot. Run this command: `docker exec db-infra-nopcommerce rm -rf /app/wwwroot/bundles/* && docker restart db-infra-nopcommerce`. Stale bundles are the #1 false result.
 3. **One surface per deploy.** A surface = header, product grid, PDP, cart, or footer. Viewport bugs hide when you change two surfaces at once.
 4. **`!important` has exactly one legal use.** Kill DefaultClean PNG background images on the exact selector that injects them. This makes room for the Lucide SVG replacement. See THEME-GUIDE lesson 2–3. Every other `!important` goes on the audit list (Section 6).
@@ -94,7 +95,7 @@ Ordered, small, each item shippable alone. No big-bang refactors.
 ## 7. What This Plan Does NOT Change
 
 - The hot-copy deploy loop. It stays the 30-second feedback cycle.
-- The modular file split. Six `arity.*.css` files stay as-is.
+- The modular file split. Keep one concern per `arity.*.css` or `arity.*.js` file. Register page-only assets in the owning view.
 - The fallback/override doctrine. Views still override by copy. Core stays untouched.
 - The blog post's tutorial path. It remains valid documentation for onboarding. It is Phase-0 knowledge. Our production wiring (bundling via `Head.cshtml`) supersedes its `asp-append-version` link-tag approach.
 

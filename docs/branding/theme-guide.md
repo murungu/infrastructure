@@ -94,6 +94,8 @@ nopCommerce provides **150+ widget zones** where you can inject content via plug
 
 Full list: `src/Presentation/Nop.Web.Framework/Infrastructure/PublicWidgetZones.cs`
 
+> **Homepage exception:** ArityTheme does not render `home_page_top`. Its `Views/Home/Index.cshtml` renders `_ArityHomepageHero.cshtml` instead. The remaining homepage zones are available.
+
 ## Activating Your Theme
 
 1. Build the solution
@@ -166,15 +168,25 @@ Grid cards benefit from a **closed/joined button bar** because the card is small
 
 ## Modular CSS Architecture
 
-To ensure the theme remains maintainable and direction-aware (LTR/RTL), we use a modular CSS system. All custom Arity styles live in `Themes/ArityTheme/Content/css/` and are registered in `Head.cshtml`.
+ArityTheme uses modular CSS for maintainability and LTR/RTL support. Shared CSS modules load through `Head.cshtml`. Homepage assets load through `Views/Home/Index.cshtml`.
 
-### File Structure
+### CSS Files
 
-- `arity.tokens.css`: Brand DNA (Colors, Fonts, Spacing variables).
-- `arity.base.css`: Global overrides for body, typography, and links.
-- `arity.nav.css`: Header, Search, and Mega Menu styles.
-- `arity.products.css`: Catalog components (Product cards, Category grids).
-- `arity.footer.css`: Black-branded Arity footer.
+- `arity.tokens.css`: Colors, fonts, and spacing variables.
+- `arity.base.css`: Global body, typography, and link styles.
+- `arity.nav.css`: Header and responsive category-menu styles.
+- `arity.autocomplete.css`: Search-suggestion layout and focus states.
+- `arity.hero.css`: Responsive homepage-hero layout. This file loads only on the homepage.
+- `arity.icons.css`: Lucide SVG sizing and color overrides.
+- `arity.products.css`: Product cards, category grids, and product details.
+- `arity.footer.css`: Black Arity footer.
+- `arity.forms.css`: Login, register, and shared form styles.
+- `arity.custom.css`: Small isolated overrides.
+
+### JavaScript Files
+
+- `arity.menu.js`: Responsive category-menu behavior. `_Root.Head.cshtml` registers this shared file.
+- `arity.hero.js`: Manual homepage-hero controls. `Views/Home/Index.cshtml` registers this page-only file.
 
 ### Direction-Aware Styling (RTL Support)
 

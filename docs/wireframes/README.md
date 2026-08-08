@@ -60,6 +60,7 @@ If not → iterate.
 
 | # | File | Page | Issue | Viewports |
 |---|---|---|---|---|
+| 00 | [template.html](00-template.html) | Template | Starting point for a current/proposed review | 375/768/1280px |
 | 01 | [category-page.html](01-category-page.html) | Category | Sidebar blocks products | 375px |
 | 02 | [product-card-actions.html](02-product-card-actions.html) | Product Grid | Tiny touch targets | 375px |
 | 03 | [pdp-variants.html](03-pdp-variants.html) | Product Detail | Dense variant selectors | 375px |
@@ -70,10 +71,16 @@ If not → iterate.
 | 08 | [footer.html](08-footer.html) | All pages | Wrong store name, no WhatsApp | 375px |
 | 09 | [product-detail-full.html](09-product-detail-full.html) | Product Detail | Generic layout, no specs | 375px |
 | 10 | [wishlist.html](10-wishlist.html) | Wishlist | Small buttons, no stock info | 375px |
+| 11 | [login-form-modern.html](11-login-form-modern.html) | Login | Legacy form compared with modern form styling | Responsive |
+| 12 | [form-modern-target.html](12-form-modern-target.html) | Forms | Target label and field layout | 375/768/1280px |
+| 13 | [side-by-side-comparison.html](13-side-by-side-comparison.html) | Login | Wireframe compared with implementation | 375/1280px |
+| 14 | [register-desktop-comparison.html](14-register-desktop-comparison.html) | Register | Desktop wireframe compared with implementation | 1280px |
 | 15 | [header-layout.html](15-header-layout.html) | Header | Single-row markup overflows on mobile | 375/768/1280px |
 | 16 | [search-autocomplete.html](16-search-autocomplete.html) | Header search | Fixed-width autocomplete does not match responsive search | 375/768/1280px |
 | 17 | [menu-navigation.html](17-menu-navigation.html) | Main menu | Ambiguous mobile disclosure and undersized desktop dropdown | 375/768/1280px |
 | 18 | [homepage-banner-slider.html](18-homepage-banner-slider.html) | Homepage hero | Image-only promotion is unreadable on mobile and lacks safe carousel controls | 375/768/1280px |
+
+Wireframe 18 is implemented in ArityTheme. See `Views/Home/Index.cshtml`, `Views/Home/_ArityHomepageHero.cshtml`, `Content/css/arity.hero.css`, and `Content/js/arity.hero.js`.
 
 ---
 
@@ -134,4 +141,4 @@ Use it for any new page.
 
 *Part of the Arity Shop mobile-first design system.*
 *See [viewport-plan.md](../branding/viewport-plan.md) for breakpoint rules.*
-*Last updated: 2026-08-02*
+*Last updated: 2026-08-08*
