@@ -6,7 +6,7 @@
 
 ## Rules
 
-1. **Never commit to `main` or `develop` directly.** Use feature branches. PR → review → merge.
+1. **Never commit to `main` directly.** Use a feature branch, pull request, review, and merge.
 2. **Never edit core nopCommerce files.** Only edit files inside `Themes/ArityTheme/`.
 3. **One surface per deploy.** Change only one thing at a time: header, or product grid, or cart — not all three.
 4. **Screenshot at 3 widths before calling work done.** 375px / 768px / 1280px.
@@ -37,14 +37,14 @@ Every layout change follows this order:
 
 ```bash
 cd ~/Developer/infrastructure/nopcommerce-src
-git checkout develop
-git pull origin develop
+git switch main
+git pull origin main
 
 # For wireframe-only changes (docs branch)
-git checkout -b docs/wireframes/what-you-are-designing
+git switch -c docs/wireframes/what-you-are-designing
 
-# For CSS/view changes (theme branch)
-git checkout -b fix/theme/something-short
+# For CSS, JavaScript, or view changes (theme branch)
+git switch -c fix/theme/something-short
 ```
 
 ### Make the change
@@ -52,7 +52,8 @@ git checkout -b fix/theme/something-short
 Edit files inside `Themes/ArityTheme/` only:
 
 - CSS: `Content/css/arity.XXX.css`
-- Views: `Views/Shared/XXX.cshtml`
+- JavaScript: `Content/js/arity.XXX.js`
+- Views: `Views/XXX.cshtml`
 
 ### Build
 
@@ -86,13 +87,13 @@ Or manually in Chrome DevTools:
 
 ```bash
 git add src/Presentation/Nop.Web/Themes/ArityTheme/
-git commit -m "theme: what you changed and why"
-git push origin fix/theme/something-short
+git commit -m "feat(theme): what you changed and why"
+git push -u origin HEAD
 ```
 
 ### Open PR
 
-On GitHub, open a PR to merge into `develop`. Request review. Merge after approval.
+On GitHub, open a pull request against `main`. Request a review. Merge after approval.
 
 ---
 

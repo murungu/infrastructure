@@ -54,20 +54,31 @@ src/Presentation/Nop.Web/Themes/ArityTheme/
 │   │   ├── styles.css                  ← Main stylesheet (DefaultClean base + Arity overrides)
 │   │   ├── styles.rtl.css              ← RTL mirror (must stay in sync with styles.css)
 │   │   ├── print.css                   ← Print stylesheet
-│   │   ├── arity.tokens.css            ← BRAND DNA: colors, fonts, spacing variables
+│   │   ├── arity.tokens.css            ← Brand colors, fonts, spacing variables
 │   │   ├── arity.base.css              ← Global body, typography, link overrides
-│   │   ├── arity.nav.css               ← Header, search, mega menu
+│   │   ├── arity.nav.css               ← Header and category menu
+│   │   ├── arity.autocomplete.css      ← Search suggestions
+│   │   ├── arity.hero.css              ← Homepage hero (homepage only)
+│   │   ├── arity.icons.css             ← Lucide SVG icon overrides
 │   │   ├── arity.products.css          ← Product cards, category grids, PDP
 │   │   ├── arity.footer.css            ← Black Arity footer
-│   │   └── arity.icons.css             ← Lucide SVG icon overrides
+│   │   ├── arity.forms.css             ← Login, register, and shared forms
+│   │   └── arity.custom.css            ← Small isolated overrides
+│   ├── js/
+│   │   ├── arity.menu.js               ← Responsive category-menu behavior
+│   │   └── arity.hero.js               ← Manual homepage-hero behavior
 │   └── images/
-│       ├── logo.png                    ← Arity Shop logo
-│       └── ...                         ← Icons, favicons, sprites
+│       ├── hero/                        ← Responsive homepage media
+│       ├── logo.png                     ← Arity Shop logo
+│       └── ...                          ← Icons, favicons, sprites
 ├── Views/
 │   ├── _ViewImports.cshtml             ← @using directives for Razor
-│   ├── _Root.cshtml                    ← Master layout (wrapper divs, widget zones)
+│   ├── Home/
+│   │   ├── Index.cshtml                ← Homepage override and page-only assets
+│   │   └── _ArityHomepageHero.cshtml   ← Homepage hero markup
 │   ├── Shared/
-│   │   ├── Head.cshtml                 ← CSS injection point (registers all CSS files)
+│   │   ├── _Root.cshtml                ← Master layout (wrapper divs, widget zones)
+│   │   ├── Head.cshtml                 ← CSS injection point (registers shared CSS files)
 │   │   ├── _Root.Head.cshtml           ← Page <head> skeleton (meta, title, scripts)
 │   │   ├── _Header.cshtml              ← Site header (logo, search, cart, nav)
 │   │   ├── _ProductBox.cshtml          ← Product card (grid listing)
@@ -84,9 +95,9 @@ src/Presentation/Nop.Web/Themes/ArityTheme/
 │       └── Wishlist.cshtml
 ```
 
-**What exists already:** Phases 0–2 are complete. The theme exists. The brand identity is set. The global layout is done.
+**What exists already:** The theme includes responsive header, search, menu, forms, product surfaces, footer, and homepage hero modules.
 
-**What is next:** Homepage, product pages, category pages, and cart. Match these to your design prototypes.
+**What is next:** Improve the remaining category, product, cart, and content gaps. Use the wireframe library as the specification.
 
 ---
 
@@ -135,10 +146,14 @@ grep -rn "widgetZone" Views/Shared/_Root.cshtml
 # Edit the right modular file
 # - Colors/spacing → arity.tokens.css
 # - Typography/base → arity.base.css
-# - Header/nav → arity.nav.css
+# - Header/menu → arity.nav.css
+# - Search suggestions → arity.autocomplete.css
+# - Homepage hero → arity.hero.css
 # - Products/cards → arity.products.css
 # - Footer → arity.footer.css
+# - Forms → arity.forms.css
 # - Icons → arity.icons.css
+# - Small isolated overrides → arity.custom.css
 # - Legacy overrides → styles.css (bottom of file is safest)
 ```
 
@@ -199,8 +214,8 @@ node ~/.pi/agent/npm/node_modules/@howaboua/pi-skill-chrome-cdp/skills/chrome-cd
 
 ```bash
 git add src/Presentation/Nop.Web/Themes/ArityTheme/
-git commit -m "theme: customize [what you changed]"
-git push origin develop
+git commit -m "feat(theme): customize [what you changed]"
+git push -u origin HEAD
 ```
 
 ---
@@ -215,27 +230,36 @@ Instead of one large `styles.css`, we split by concern:
 |------|---------|-------------|
 | `arity.tokens.css` | Brand colors, fonts, spacing variables | You need a new color, font, or spacing token |
 | `arity.base.css` | Global resets, body typography, link styles | You want to change base font, link color, or scrollbar |
-| `arity.nav.css` | Header, search bar, menu, mobile nav | Header changes, menu styling, or search tweaks |
+| `arity.nav.css` | Header and responsive category menu | Header or menu changes |
+| `arity.autocomplete.css` | Search-suggestion layout and focus states | Search-result changes |
+| `arity.hero.css` | Responsive homepage hero | Homepage-campaign changes |
+| `arity.icons.css` | Lucide SVG icon sizing and color | Icon replacements or sizing |
 | `arity.products.css` | Product cards, category grids, PDP layout | Product listings, detail pages, or cart items |
 | `arity.footer.css` | Footer layout and styling | Footer changes |
-| `arity.icons.css` | Lucide SVG icon sizing, color overrides | Icon replacements or sizing |
-| `styles.css` | Legacy DefaultClean base (8500+ lines) + overrides at bottom | You cannot find a modular hook for an override |
+| `arity.forms.css` | Login, register, and shared forms | Form layout or control changes |
+| `arity.custom.css` | Small isolated overrides | A change does not belong to another module |
+| `styles.css` | Legacy DefaultClean base (8500+ lines) and overrides | You cannot find a modular hook for an override |
 
 ### How CSS Gets Loaded
 
 ```
-Head.cshtml registers files in this order:
+Head.cshtml registers shared files in this order:
   1. Google Fonts (Inter)
   2. styles.css (or styles.rtl.css)
   3. arity.tokens.css
   4. arity.base.css
   5. arity.nav.css
-  6. arity.icons.css
-   7. arity.products.css
-  8. arity.footer.css
+  6. arity.autocomplete.css
+  7. arity.icons.css
+  8. arity.products.css
+  9. arity.footer.css
+ 10. arity.forms.css
+ 11. arity.custom.css
 ```
 
-Later files override earlier files (if selectors have equal specificity). Our modular files win over `styles.css`.
+Later files override earlier files when selectors have equal specificity. The modular files win over `styles.css`.
+
+`Views/Home/Index.cshtml` registers `arity.hero.css` and `arity.hero.js`. These assets load only on the homepage. `_Root.Head.cshtml` registers the shared `arity.menu.js` file.
 
 ### The Specificity Trap
 
@@ -352,19 +376,20 @@ Widget zones are no-code injection points. You can drop content into them from t
 
 ```razor
 <!-- In any .cshtml file, add a widget zone -->
-@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomePageTop })
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBottom })
 ```
 
 Key zones:
 
-- `PublicWidgetZones.HomePageTop` — above homepage content
-- `PublicWidgetZones.HomePageBottom` — below homepage content
+- `PublicWidgetZones.HomepageBottom` — below homepage content
 - `PublicWidgetZones.ContentBefore` — before main content on any page
 - `PublicWidgetZones.ContentAfter` — after main content on any page
 - `PublicWidgetZones.ProductDetailsTop` — top of product page
 - `PublicWidgetZones.ProductDetailsBottom` — bottom of product page
 
 Full list: `src/Presentation/Nop.Web.Framework/Infrastructure/PublicWidgetZones.cs`
+
+> **ArityTheme homepage ownership:** `Views/Home/Index.cshtml` replaces the image-only `HomepageTop` Swiper with `_ArityHomepageHero.cshtml`. Do not restore `HomepageTop` unless you remove or redesign the theme-owned hero. The other homepage widget zones remain available.
 
 ---
 

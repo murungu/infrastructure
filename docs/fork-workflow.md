@@ -1,108 +1,113 @@
 # nopCommerce Fork Workflow
 
-This guide shows you how to pull upstream updates from `nopSolutions/nopCommerce` without merge conflicts.
+This guide explains how to add custom work and pull updates from `nopSolutions/nopCommerce`.
 
 ## Repositories
 
-| Repo | URL | Purpose |
-|------|-----|---------|
-| **Your fork (origin)** | `git@github.com:Arity-Solutions/arity.nopCommerce.shop.git` | Where you push your changes |
-| **Official (upstream)** | `https://github.com/nopSolutions/nopCommerce.git` | Source of truth for updates |
+| Repository | URL | Purpose |
+| --- | --- | --- |
+| **Arity fork (`origin`)** | `git@github.com:Arity-Solutions/arity.nopCommerce.shop.git` | Stores Arity changes |
+| **Official repository (`upstream`)** | `https://github.com/nopSolutions/nopCommerce.git` | Supplies nopCommerce updates |
 
 ## Golden Rule
 
-> **Never commit directly to `develop`.** Always work on feature branches.
->
-> This keeps `develop` clean. It also allows fast-forward merges from upstream.
+> **Never commit directly to `main`.** Create a feature branch and open a pull request against `main`.
+
+The official nopCommerce repository uses `develop` for active development. Arity uses `main` as its protected integration branch.
 
 ## Daily Workflow
 
-### 1. Start a new feature
+### 1. Start a feature
 
 ```bash
 cd nopcommerce-src
-git checkout develop
-git pull origin develop
-git checkout -b feature/my-plugin
+git switch main
+git pull origin main
+git switch -c feature/my-plugin
 ```
 
-Make your changes. Then commit and push:
+Make the change. Then commit and push the feature branch:
 
 ```bash
 git add .
 git commit -m "feat: add custom payment plugin"
-git push origin feature/my-plugin
+git push -u origin HEAD
 ```
 
-Open a PR on GitHub to merge into `develop`.
+Open a pull request against `main`. Merge after review and approval.
 
-### 2. Pull upstream updates (weekly or monthly)
+### 2. Pull upstream updates
+
+Create a branch for the upstream merge. Do not merge upstream changes directly into `main`.
 
 ```bash
 cd nopcommerce-src
+git switch main
+git pull origin main
 git fetch upstream
-git checkout develop
+git switch -c chore/sync-upstream-YYYY-MM-DD
 git merge upstream/develop
 ```
 
-If `develop` is clean, this is a fast-forward merge.
-
-If there are conflicts, resolve them. Then push:
+Resolve conflicts on this branch. Then push the branch:
 
 ```bash
-git push origin develop
+git push -u origin HEAD
 ```
 
-### 3. Rebuild after upstream merge
+Open a pull request against `main`. Merge after the build and review are complete.
+
+### 3. Rebuild after the pull request merges
 
 ```bash
+cd nopcommerce-src
+git switch main
+git pull origin main
 cd ..
 make tag IMAGE_TAG=before-upstream-merge
 make up
 ```
 
-The `make tag` command creates a safety net. The `make up` command rebuilds from the updated source.
+The image tag is a rollback point. The `make up` command rebuilds the application from the updated source.
 
-### 4. If the build breaks
+### 4. Roll back a failed build
 
 ```bash
 make rollback IMAGE_TAG=before-upstream-merge
 ```
 
-## What Happens If You Commit to `develop`?
+## If a Commit Reaches `main` Directly
 
-If you commit directly to `develop`, future `git merge upstream/develop` can create a merge commit. This is not a problem. Resolve any conflicts during the merge.
+Do not add more commits to `main`. Create the next change on a feature branch. Use pull requests for all later work.
 
-For all future custom work, use feature branches:
+## Historical Dockerfile Fix
 
-```bash
-git checkout -b feature/custom-theme
-git commit -m "feat: add dark mode theme"
-git push origin feature/custom-theme
-```
+The fork contains a `Dockerfile` fix that creates `wwwroot/images/3d`. An upstream change can conflict with this fix.
 
-Then open a PR and merge to `develop`.
-
-## Keeping the Dockerfile Fix Separate
-
-The `Dockerfile` fix (`mkdir -p wwwroot/images/3d`) is on `develop` and pushed to origin. If upstream fixes this too, you will get a trivial merge conflict. Resolve the conflict by accepting upstream's version and deleting yours.
+If a conflict occurs, compare both versions. Keep the upstream version when it provides the same behavior.
 
 ## Cheat Sheet
 
 ```bash
 # New feature
-git checkout develop && git pull origin develop
-git checkout -b feature/xxx
-# ... edit ...
-git commit && git push origin feature/xxx
+git switch main
+git pull origin main
+git switch -c feature/xxx
+# Edit files.
+git commit
+git push -u origin HEAD
+# Open a pull request against main.
 
 # Upstream update
+git switch main
+git pull origin main
 git fetch upstream
-git checkout develop
+git switch -c chore/sync-upstream-YYYY-MM-DD
 git merge upstream/develop
-git push origin develop
+git push -u origin HEAD
+# Open a pull request against main.
 
-# Rebuild infrastructure
+# Rebuild infrastructure after merge
 make tag IMAGE_TAG=safe-point
 make up
 ```

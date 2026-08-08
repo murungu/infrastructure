@@ -1,6 +1,7 @@
 # Arity Documentation Audit — STE Compliance & Housekeeping
 
 > **Date:** 2026-08-01
+> **Status:** Historical snapshot. The duplicate-file cleanup is complete, so the file inventory is not current.
 > **Scope:** All `.md` files in `infrastructure/` and `nopcommerce-src/`
 > **Tool:** ASD-STE100 Simplified Technical English linter (`ste_lint.py`)
 > **Mode:** Pragmatic (structural rules applied; domain vocabulary retained)

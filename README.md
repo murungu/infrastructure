@@ -154,8 +154,8 @@ nopcommerce-src/               ← YOUR FORK (gitignored, not in this repo)
 
 **CI/CD separation:**
 
-- The **fork** builds and pushes the Docker image to `registry.arity.co.za/nopcommerce` on every push to `develop`
-- The **infrastructure** repo pulls the image and runs it — never builds
+- The **fork workflow** builds on pushes to `main` or `develop` and on manual dispatch. It publishes `latest` from `main` and a commit-SHA tag for every build.
+- The **infrastructure workflow** validates Compose on pushes to `main` and pull requests that target `main`. It does not build the application.
 
 ```
 ┌────────────────────────┐        ┌────────────────────────┐
@@ -203,11 +203,13 @@ Same as a fork, just without the GitHub "forked from" badge:
 
 ```bash
 cd nopcommerce-src
+git switch main
+git pull origin main
 git fetch upstream
-git checkout develop
+git switch -c chore/sync-upstream-YYYY-MM-DD
 git merge upstream/develop
-# Resolve conflicts, then push to origin
-git push origin develop
+# Resolve conflicts, push this branch, and open a pull request against main.
+git push -u origin HEAD
 ```
 
 ### Already Set Up
@@ -233,18 +235,20 @@ cd nopcommerce-src
     git remote add upstream https://github.com/nopSolutions/nopCommerce.git
 cd ..
 
-# Day 2+: develop
-make up                          # Build from source & start
-# ... edit plugins in nopcommerce-src/src/Plugins/ ...
-# ... edit themes in nopcommerce-src/src/Presentation/Nop.Web/Themes/ ...
+# Day 2+: create a feature branch from main
+cd nopcommerce-src
+git switch main && git pull origin main
+git switch -c feature/my-change
+cd ..
+make up                          # Build from source and start.
+# Edit plugins in nopcommerce-src/src/Plugins/.
+# Edit themes in nopcommerce-src/src/Presentation/Nop.Web/Themes/.
 cd nopcommerce-src && git add -A && git commit -m "feat: add my plugin"
-cd nopcommerce-src && git push origin develop
+cd nopcommerce-src && git push -u origin HEAD
+# Open a pull request against main.
 
-# Pull latest upstream changes (weekly/monthly)
-make update-nopcommerce          # Fetches upstream, merges into your fork
-# Resolve any merge conflicts
-cd nopcommerce-src && git push origin develop
-make up                          # Rebuild with latest upstream + your changes
+# Pull upstream changes on a dedicated branch.
+# See docs/fork-workflow.md for the complete procedure.
 ```
 
 ### What Goes Where
@@ -388,7 +392,7 @@ Then `make down && make up` to restart with caching enabled.
 | "FATAL: database 'nopcommerce' does not exist" | PostgreSQL not healthy or wrong db name | `make status`, check PostgreSQL logs |
 | Installation wizard repeats | Volume was deleted | That is normal — completes once per volume |
 | Red error in wizard | Wrong server name | Use container name (`db-infra-postgres`), not `localhost` |
-| Build fails with .NET errors | Outdated fork | `make update-nopcommerce` then `make up` |
+| Build fails with .NET errors | Outdated fork | Use the upstream-sync procedure in [`docs/fork-workflow.md`](docs/fork-workflow.md). |
 
 ```bash
 # Check logs for specific errors
@@ -406,6 +410,9 @@ All customization happens in your fork at `nopcommerce-src/`.
 
 ```bash
 cd nopcommerce-src
+git switch main
+git pull origin main
+git switch -c feature/your-plugin
 
 # Create plugin directory
 mkdir -p src/Plugins/YourCompany.YourPlugin
@@ -420,7 +427,8 @@ cp -r src/Plugins/Nop.Plugin.Misc.News src/Plugins/YourCompany.YourPlugin
 # Commit
 git add -A
 git commit -m "feat: add YourCompany.YourPlugin"
-git push origin develop
+git push -u origin HEAD
+# Open a pull request against main.
 
 # Rebuild
 cd ..
@@ -431,6 +439,9 @@ make up
 
 ```bash
 cd nopcommerce-src
+git switch main
+git pull origin main
+git switch -c feature/your-theme
 
 # Create theme directory
 mkdir -p src/Presentation/Nop.Web/Themes/YourCompanyTheme
@@ -444,7 +455,8 @@ cp -r src/Presentation/Nop.Web/Themes/DefaultClean/* src/Presentation/Nop.Web/Th
 # Commit
 git add -A
 git commit -m "feat: add YourCompanyTheme"
-git push origin develop
+git push -u origin HEAD
+# Open a pull request against main.
 
 # Rebuild
 cd ..
@@ -466,17 +478,21 @@ make up
 When nopCommerce releases a new version, pull it into your fork:
 
 ```bash
-# Fetch and merge upstream changes
-make update-nopcommerce
-
-# If merge conflicts occur, resolve them in your IDE:
+# Create an upstream-sync branch.
 cd nopcommerce-src
-# ... edit files to resolve conflicts ...
-git add -A
-git commit -m "merge: upstream release-4.90.5"
-git push origin develop
+git switch main
+git pull origin main
+git fetch upstream
+git switch -c chore/sync-upstream-YYYY-MM-DD
+git merge upstream/develop
 
-# Rebuild with latest upstream + your customizations
+# If conflicts occur, resolve them in your IDE.
+git add -A
+git commit -m "chore: sync upstream nopCommerce"
+git push -u origin HEAD
+# Open a pull request against main.
+
+# Rebuild with the latest upstream changes after the pull request merges.
 cd ..
 make up
 ```
@@ -516,7 +532,7 @@ make use-prebuilt
 | `make use-prebuilt` | Start with official image (no source build) |
 | `make down` | Stop all services (data preserved) |
 | `make clean` | Stop and **delete all data** (volumes) |
-| `make update-nopcommerce` | Pull upstream changes into your fork |
+| `make update-nopcommerce` | Merge `upstream/develop` into the current sync branch |
 | `make status` | Show running containers |
 | `make logs` | Follow all logs |
 | `make nop-logs` | Follow nopCommerce logs only |
@@ -738,8 +754,8 @@ docker compose -f docker-compose.external-db.yml up -d
 
 | Repo | Responsibility | Triggers On |
 |------|---------------|-------------|
-| **`nopcommerce-src` (fork)** | **Builds the Docker image** | Every push to `develop` |
-| **`infrastructure` (this repo)** | **Validates compose + deploys** | Every push to `main` |
+| **`nopcommerce-src` (fork)** | **Builds and pushes the Docker image** | Push to `main` or `develop`; manual dispatch |
+| **`infrastructure` (this repo)** | **Validates Compose configuration** | Push to `main`; pull request targeting `main` |
 
 **Why two repos?**
 
@@ -751,8 +767,8 @@ docker compose -f docker-compose.external-db.yml up -d
 │  nopcommerce-src        │         │   infrastructure         │
 │  (your fork)            │         │   (this repo)            │
 │                         │         │                          │
-│  Push plugin/theme      │────────▶│   No build needed        │
-│  to develop ─────┐      │         │   Just pulls image       │
+│  Merge plugin/theme     │────────▶│   No build needed        │
+│  to main ────────┐      │         │   Just pulls image       │
 │                  │      │         │                          │
 │  GitHub Actions  │      │         │   docker-compose         │
 │  builds + pushes │      │         │   references             │
@@ -792,13 +808,16 @@ The workflow lives at `nopcommerce-src/.github/workflows/docker-build.yml` (in y
 
 ```bash
 cd nopcommerce-src
-git checkout develop
-# ... make plugin changes ...
+git switch main
+git pull origin main
+git switch -c feature/new-payment-plugin
+# Make the plugin changes.
 git commit -m "feat: add new payment plugin"
-git push origin develop
+git push -u origin HEAD
+# Open a pull request against main and merge it after approval.
 ```
 
-Then watch the build at:
+After the pull request merges, watch the build at:
 `github.com/Arity-Solutions/arity.nopCommerce.shop/actions`
 
 ### 2. Infrastructure Repo: Validate & Deploy (`infrastructure`)
@@ -840,13 +859,15 @@ make up-external
 ```bash
 # On your dev machine:
 cd nopcommerce-src
-git checkout -b feature/new-plugin
-# ... edit src/Plugins/ ...
+git switch main
+git pull origin main
+git switch -c feature/new-plugin
+# Edit src/Plugins/.
 git commit -m "feat: add new-plugin"
-git push origin feature/new-plugin
-# Open PR → merge to develop
+git push -u origin HEAD
+# Open a pull request against main and merge it after approval.
 
-# CI automatically builds and pushes :latest
+# After the merge, CI automatically builds and pushes :latest.
 
 # On production server:
 cd /opt/nopcommerce
@@ -966,9 +987,10 @@ For a conflict-free workflow when pulling upstream nopCommerce updates, see [`do
 
 **Quick version:**
 
-- `develop` stays clean for upstream merges
-- Custom work happens on `feature/*` branches
-- Tag your image before risky merges: `make tag IMAGE_TAG=safe`
+- `main` stays protected and receives pull requests.
+- Custom work uses `feature/*`, `fix/*`, or `chore/*` branches.
+- Upstream updates merge into a `chore/sync-upstream-*` branch.
+- Tag the image before a risky merge: `make tag IMAGE_TAG=safe`.
 
 ---
 
