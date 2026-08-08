@@ -1,0 +1,1391 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arity Shop — Homepage featured products review</title>
+    <style>
+      :root {
+        --ink: #000;
+        --canvas: #fff;
+        --canvas-soft: #f9f9f9;
+        --canvas-soft-2: #f5f5f5;
+        --body: #4d4d4d;
+        --mute: #888;
+        --hairline: #ebebeb;
+        --hairline-strong: #a1a1a1;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-width: 320px;
+        background: var(--canvas-soft-2);
+        color: var(--ink);
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.5;
+      }
+
+      button,
+      a {
+        font: inherit;
+      }
+
+      .page-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        padding: 16px 24px;
+        background: var(--ink);
+        color: var(--canvas);
+      }
+
+      .page-header h1 {
+        font-size: 18px;
+        line-height: 1.25;
+      }
+
+      .page-header p {
+        margin-top: 4px;
+        color: #cfcfcf;
+        font-size: 13px;
+      }
+
+      .tabs {
+        position: sticky;
+        top: 79px;
+        z-index: 9;
+        display: flex;
+        overflow-x: auto;
+        border-bottom: 1px solid var(--hairline);
+        background: var(--canvas);
+        padding-inline: 16px;
+      }
+
+      .tab {
+        min-height: 48px;
+        padding-inline: 20px;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        background: transparent;
+        color: var(--body);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .tab:hover,
+      .tab:focus-visible,
+      .tab.active {
+        border-bottom-color: var(--ink);
+        color: var(--ink);
+        outline: 0;
+      }
+
+      .viewport-panel {
+        display: none;
+        padding: 24px;
+      }
+
+      .viewport-panel.active {
+        display: block;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        max-width: 1480px;
+        margin-inline: auto;
+      }
+
+      .comparison.wide {
+        grid-template-columns: 1fr;
+      }
+
+      .device {
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid #d9d9d9;
+        border-radius: 8px;
+        background: var(--canvas);
+      }
+
+      .device-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 48px;
+        gap: 16px;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--hairline);
+      }
+
+      .device-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .device-label.proposed::before {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-inline-end: 8px;
+        border-radius: 999px;
+        background: var(--ink);
+        content: "";
+      }
+
+      .device-size {
+        color: var(--mute);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px;
+      }
+
+      .screen-shell {
+        overflow-x: auto;
+        padding: 8px;
+        background: var(--canvas-soft-2);
+      }
+
+      .screen {
+        overflow-y: auto;
+        margin-inline: auto;
+        border: 1px solid var(--hairline);
+        background: var(--canvas);
+      }
+
+      .screen.mobile {
+        width: 375px;
+        height: 760px;
+      }
+
+      .screen.tablet {
+        width: 768px;
+        height: 760px;
+      }
+
+      .screen.desktop {
+        width: 1280px;
+        height: 760px;
+      }
+
+      .previous-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        border-bottom: 1px solid var(--hairline);
+        background: var(--canvas-soft);
+        color: var(--mute);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      /* Current section */
+      .current-products {
+        padding: 20px 8px 40px;
+      }
+
+      .current-inner {
+        margin-inline: auto;
+      }
+
+      .current-products.desktop .current-inner {
+        max-width: 980px;
+      }
+
+      .current-heading {
+        margin-bottom: 30px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #d7d7d7;
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 1.2;
+        text-align: center;
+      }
+
+      .legacy-grid {
+        display: grid;
+        gap: 20px 8px;
+      }
+
+      .current-products.mobile .legacy-grid,
+      .current-products.tablet .legacy-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .current-products.desktop .legacy-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .legacy-card {
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        border: 1px solid var(--hairline);
+        background: var(--canvas);
+        padding: 10px;
+      }
+
+      .legacy-image {
+        display: grid;
+        aspect-ratio: 1;
+        margin-bottom: 12px;
+        place-items: center;
+        background: #e6e6e6;
+        color: var(--body);
+        font-size: 11px;
+        text-align: center;
+      }
+
+      .legacy-card h3 {
+        min-height: 38px;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.25;
+      }
+
+      .legacy-rating {
+        min-height: 28px;
+        padding-top: 8px;
+        color: #c8c8c8;
+        font-size: 16px;
+        letter-spacing: 1px;
+        white-space: nowrap;
+      }
+
+      .legacy-rating.has-review {
+        color: #111;
+      }
+
+      .legacy-price {
+        margin-top: 4px;
+        color: var(--body);
+        font-size: 14px;
+      }
+
+      .legacy-actions {
+        display: flex;
+        height: 40px;
+        margin-top: 16px;
+      }
+
+      .legacy-cart,
+      .legacy-icon {
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--ink);
+        font-size: 10px;
+        font-weight: 600;
+      }
+
+      .legacy-cart {
+        min-width: 0;
+        flex: 1;
+        background: var(--ink);
+        color: var(--canvas);
+        text-transform: uppercase;
+      }
+
+      .legacy-icon {
+        width: 40px;
+        border-inline-start: 0;
+        background: var(--canvas);
+        font-size: 16px;
+      }
+
+      .current-products.mobile .legacy-card {
+        padding: 8px;
+      }
+
+      .current-products.mobile .legacy-actions {
+        margin-top: 10px;
+      }
+
+      .current-products.mobile .legacy-cart {
+        font-size: 8px;
+      }
+
+      .current-products.mobile .legacy-icon {
+        width: 32px;
+      }
+
+      /* Proposed section */
+      .featured-section {
+        padding: 32px 16px 40px;
+        background: var(--canvas);
+      }
+
+      .featured-inner {
+        max-width: 1600px;
+        margin-inline: auto;
+      }
+
+      .featured-heading {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 24px;
+      }
+
+      .featured-heading h2 {
+        font-size: 28px;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+      }
+
+      .featured-heading p {
+        max-width: 560px;
+        margin-top: 8px;
+        color: var(--body);
+        font-size: 15px;
+      }
+
+      .view-all {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        flex: 0 0 auto;
+        color: var(--ink);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .product-grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .featured-section.mobile .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .featured-section.tablet .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .featured-section.desktop .product-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .product-card {
+        display: flex;
+        min-width: 0;
+        overflow: hidden;
+        flex-direction: column;
+        border: 1px solid var(--hairline);
+        border-radius: 8px;
+        background: var(--canvas);
+      }
+
+      .product-card:hover {
+        border-color: var(--ink);
+      }
+
+      .product-card:focus-within {
+        border-color: var(--ink);
+      }
+
+      .product-image {
+        display: grid;
+        aspect-ratio: 1;
+        place-items: center;
+        background: var(--canvas-soft-2);
+        color: var(--ink);
+      }
+
+      .product-image:focus-visible,
+      .product-title a:focus-visible,
+      .view-all:focus-visible,
+      .primary-action:focus-visible,
+      .wish-action:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 3px;
+      }
+
+      .product-image svg {
+        width: 74%;
+        height: 74%;
+      }
+
+      .product-body {
+        display: flex;
+        min-width: 0;
+        flex: 1;
+        flex-direction: column;
+        padding: 16px;
+      }
+
+      .product-title {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.35;
+      }
+
+      .product-title a {
+        display: -webkit-box;
+        overflow: hidden;
+        color: var(--ink);
+        text-decoration: none;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+
+      .rating-row {
+        min-height: 20px;
+        margin-top: 8px;
+        color: var(--body);
+        font-size: 12px;
+      }
+
+      .rating-row .star {
+        color: var(--ink);
+      }
+
+      .product-price {
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .product-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 44px;
+        gap: 8px;
+        margin-top: auto;
+        padding-top: 16px;
+      }
+
+      .primary-action,
+      .wish-action {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .primary-action {
+        border: 1px solid var(--ink);
+        background: var(--ink);
+        color: var(--canvas);
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .wish-action {
+        border: 1px solid var(--hairline-strong);
+        background: var(--canvas);
+        color: var(--ink);
+        font-size: 21px;
+      }
+
+      .featured-section.mobile .featured-heading {
+        display: block;
+      }
+
+      .featured-section.mobile .featured-heading p {
+        font-size: 14px;
+      }
+
+      .featured-section.mobile .view-all {
+        margin-top: 12px;
+      }
+
+      .featured-section.mobile .product-card {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+      }
+
+      .featured-section.mobile .product-image {
+        aspect-ratio: auto;
+        min-height: 164px;
+      }
+
+      .featured-section.mobile .product-body {
+        padding: 12px;
+      }
+
+      .featured-section.mobile .product-title {
+        font-size: 14px;
+      }
+
+      .featured-section.mobile .rating-row {
+        min-height: 18px;
+        margin-top: 4px;
+      }
+
+      .featured-section.mobile .product-price {
+        margin-top: 4px;
+        font-size: 14px;
+      }
+
+      .featured-section.mobile .product-actions {
+        padding-top: 8px;
+      }
+
+      .featured-section.tablet {
+        padding: 40px 24px 48px;
+      }
+
+      .featured-section.tablet .featured-heading h2 {
+        font-size: 32px;
+      }
+
+      .featured-section.desktop {
+        padding: 48px 32px 64px;
+      }
+
+      .featured-section.desktop .featured-heading h2 {
+        font-size: 36px;
+      }
+
+      .annotation {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        max-width: 1480px;
+        margin: 24px auto 0;
+      }
+
+      .annotation-card {
+        border: 1px solid var(--hairline);
+        border-radius: 8px;
+        background: var(--canvas);
+        padding: 16px;
+      }
+
+      .annotation-card strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 14px;
+      }
+
+      .annotation-card p {
+        color: var(--body);
+        font-size: 13px;
+      }
+
+      .review-summary,
+      .decisions,
+      .implementation-note {
+        max-width: 1000px;
+        margin: 0 auto 24px;
+        border: 1px solid var(--hairline);
+        border-radius: 8px;
+        background: var(--canvas);
+        padding: 24px;
+      }
+
+      .review-summary h2,
+      .decisions h2,
+      .implementation-note h2 {
+        margin-bottom: 16px;
+        font-size: 24px;
+      }
+
+      .review-summary h3 {
+        margin-top: 20px;
+        font-size: 16px;
+      }
+
+      .review-summary p,
+      .decisions li,
+      .implementation-note p {
+        margin-top: 8px;
+        color: var(--body);
+        font-size: 15px;
+      }
+
+      .decisions ol {
+        padding-inline-start: 20px;
+      }
+
+      .decisions li + li {
+        margin-top: 12px;
+      }
+
+      .approval-list {
+        display: grid;
+        gap: 8px;
+        margin-top: 16px;
+        list-style: none;
+      }
+
+      .approval-list li {
+        padding: 12px 16px;
+        border: 1px solid var(--hairline);
+        border-radius: 4px;
+        color: var(--ink);
+      }
+
+      code {
+        padding: 2px 4px;
+        border-radius: 4px;
+        background: var(--canvas-soft-2);
+        color: var(--ink);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9em;
+      }
+
+      @media (max-width: 900px) {
+        .comparison,
+        .annotation {
+          grid-template-columns: 1fr;
+        }
+
+        .viewport-panel {
+          padding: 16px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .page-header {
+          padding-inline: 16px;
+        }
+
+        .tabs {
+          top: 98px;
+        }
+
+        .viewport-panel {
+          padding-inline: 8px;
+        }
+
+        .screen-shell {
+          padding-inline: 0;
+        }
+
+        .review-summary,
+        .decisions,
+        .implementation-note {
+          padding: 20px 16px;
+          border-inline: 0;
+          border-radius: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Homepage featured products review</h1>
+      <p>
+        Current sample product grid compared with a focused, touch-safe catalog
+        showcase.
+      </p>
+    </header>
+
+    <nav class="tabs" aria-label="Viewport previews" role="tablist">
+      <button
+        id="mobile-tab"
+        class="tab active"
+        type="button"
+        role="tab"
+        aria-controls="mobile-panel"
+        aria-selected="true"
+        data-target="mobile-panel"
+      >
+        Mobile · 375px
+      </button>
+      <button
+        id="tablet-tab"
+        class="tab"
+        type="button"
+        role="tab"
+        aria-controls="tablet-panel"
+        aria-selected="false"
+        data-target="tablet-panel"
+        tabindex="-1"
+      >
+        Tablet · 768px
+      </button>
+      <button
+        id="desktop-tab"
+        class="tab"
+        type="button"
+        role="tab"
+        aria-controls="desktop-panel"
+        aria-selected="false"
+        data-target="desktop-panel"
+        tabindex="-1"
+      >
+        Desktop · 1280px
+      </button>
+    </nav>
+
+    <main>
+      <section
+        id="mobile-panel"
+        class="viewport-panel active"
+        role="tabpanel"
+        aria-labelledby="mobile-tab"
+      >
+        <div class="comparison">
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label">Current</span>
+              <span class="device-size">375 × 760</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen mobile">
+                <div class="previous-section">Shop by solution ends above</div>
+                <section
+                  class="current-products mobile"
+                  data-current-layout="mobile"
+                ></section>
+              </div>
+            </div>
+          </article>
+
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">375 × 760</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen mobile">
+                <div class="previous-section">Shop by solution ends above</div>
+                <section
+                  class="featured-section mobile"
+                  data-featured-layout="mobile"
+                ></section>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-card">
+            <strong>Use compact horizontal cards</strong>
+            <p>
+              One product per row gives titles, prices, and controls room
+              without turning four products into a long image-heavy page.
+            </p>
+          </div>
+          <div class="annotation-card">
+            <strong>Make every action touch-safe</strong>
+            <p>
+              Add to cart and wishlist are at least 44px high. Compare moves out
+              of this conversion-focused homepage section.
+            </p>
+          </div>
+          <div class="annotation-card">
+            <strong>Do not show empty ratings</strong>
+            <p>
+              A rating row appears only when a product has reviews. Empty stars
+              no longer imply poor quality.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="tablet-panel"
+        class="viewport-panel"
+        role="tabpanel"
+        aria-labelledby="tablet-tab"
+        hidden
+      >
+        <div class="comparison wide">
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label">Current</span>
+              <span class="device-size">768 × 760</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen tablet">
+                <div class="previous-section">Shop by solution ends above</div>
+                <section
+                  class="current-products tablet"
+                  data-current-layout="tablet"
+                ></section>
+              </div>
+            </div>
+          </article>
+
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">768 × 760</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen tablet">
+                <div class="previous-section">Shop by solution ends above</div>
+                <section
+                  class="featured-section tablet"
+                  data-featured-layout="tablet"
+                ></section>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-card">
+            <strong>Keep a balanced 2 × 2 grid</strong>
+            <p>
+              Two columns preserve useful image scale while giving each action a
+              full 44px target.
+            </p>
+          </div>
+          <div class="annotation-card">
+            <strong>Connect section and catalog</strong>
+            <p>
+              The left-aligned heading, one-line purpose, and visible “Shop all”
+              route explain what customers can do next.
+            </p>
+          </div>
+          <div class="annotation-card">
+            <strong>Respect catalog behavior</strong>
+            <p>
+              Keep nopCommerce’s existing add, pre-order, rent, and product-page
+              redirect behavior instead of inventing state the card model lacks.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="desktop-panel"
+        class="viewport-panel"
+        role="tabpanel"
+        aria-labelledby="desktop-tab"
+        hidden
+      >
+        <div class="comparison wide">
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label">Current</span>
+              <span class="device-size">1280 × 760</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen desktop">
+                <div class="previous-section">Shop by solution ends above</div>
+                <section
+                  class="current-products desktop"
+                  data-current-layout="desktop"
+                ></section>
+              </div>
+            </div>
+          </article>
+
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">1280 × 760</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen desktop">
+                <div class="previous-section">Shop by solution ends above</div>
+                <section
+                  class="featured-section desktop"
+                  data-featured-layout="desktop"
+                ></section>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-card">
+            <strong>Align to the approved homepage rail</strong>
+            <p>
+              The products use 32px desktop gutters and the same wide container
+              as the hero and categories instead of shrinking to 980px.
+            </p>
+          </div>
+          <div class="annotation-card">
+            <strong>Use flat Arity cards</strong>
+            <p>
+              White cards, hairline borders, 8px radius, and border feedback
+              replace sharp corners and decorative hover shadows.
+            </p>
+          </div>
+          <div class="annotation-card">
+            <strong>Give the primary action priority</strong>
+            <p>
+              A clear black CTA and one secondary wishlist control reduce the
+              current joined three-button toolbar.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="review-summary">
+        <h2>What the live review found</h2>
+
+        <h3>1. The mobile grid is compact but cramped</h3>
+        <p>
+          At 375px, two cards share the row. Product names, prices, ratings, and
+          three actions compete inside a narrow card. The action labels become
+          very small, and the icon controls are difficult to identify.
+        </p>
+
+        <h3>2. Product actions miss the touch-target standard</h3>
+        <p>
+          The current joined action bar is 40px high. It falls below the 44 ×
+          44px minimum used by the Arity accessibility rules, especially for the
+          wishlist and compare buttons.
+        </p>
+
+        <h3>3. Empty stars communicate the wrong thing</h3>
+        <p>
+          Products with no reviews still display five empty stars. The row uses
+          space and can look like a zero-star score. Ratings should appear only
+          when review evidence exists.
+        </p>
+
+        <h3>4. Desktop products use a narrower rail than nearby sections</h3>
+        <p>
+          The hero and approved category section use the expanded homepage
+          content rail. Featured products still sit inside the legacy 980px
+          wrapper, so the page contracts abruptly before expanding again.
+        </p>
+
+        <h3>5. The heading is a default isolated page-title pattern</h3>
+        <p>
+          A centred title over a long divider does not connect the section to
+          the catalog. There is no short explanation and no visible route to
+          browse beyond the four featured items.
+        </p>
+
+        <h3>6. The action hierarchy is too dense</h3>
+        <p>
+          Add to cart, compare, and wishlist receive equal visual treatment in a
+          joined bar. On the homepage, buying is primary and saving is
+          secondary. Detailed comparison remains available deeper in the
+          catalog.
+        </p>
+
+        <h3>7. Product data is still generic sample content</h3>
+        <p>
+          Computers, a phone, and a gift card do not represent Arity Shop. This
+          is an admin-data issue, not a reason to hardcode products into the
+          theme. The wireframe uses renewable-energy examples only to test the
+          intended content shape.
+        </p>
+      </section>
+
+      <section class="decisions">
+        <h2>Recommended direction to approve</h2>
+        <ol>
+          <li>
+            Use a left-aligned “Featured products” heading, one short supporting
+            sentence, and a visible “Shop all products” link.
+          </li>
+          <li>
+            Use the approved homepage rail: 16px mobile gutters, 24px tablet
+            gutters, 32px desktop gutters, and a 1600px wide-screen cap.
+          </li>
+          <li>
+            Use one compact horizontal card per row at 375px, a 2 × 2 grid at
+            768px, and a four-column row at 1280px.
+          </li>
+          <li>
+            Use white cards with 1px hairline borders, 8px radius, no shadows,
+            no decorative red, and a black focus outline.
+          </li>
+          <li>
+            Keep product image and title as clear links. Do not turn the whole
+            card into one link because the card also contains button actions.
+          </li>
+          <li>
+            Render ratings only when <code>AllowCustomerReviews</code> is true
+            and <code>TotalReviews &gt; 0</code>. State the five-point scale and
+            review count rather than relying on stars alone.
+          </li>
+          <li>
+            Use a 44px-plus black primary action and one 44 × 44px wishlist
+            action. Remove compare from homepage cards while retaining it where
+            detailed comparison is useful.
+          </li>
+          <li>
+            Keep CTA behavior driven by fields already available to the card:
+            “Add to cart,” “Pre-order,” or “Rent.” Retain nopCommerce’s existing
+            product-page redirect when a direct catalog add is not possible.
+          </li>
+          <li>
+            Keep names, URLs, images, prices, review counts, availability, and
+            action behavior in nopCommerce. Replace sample products in admin
+            after the layout is approved.
+          </li>
+        </ol>
+
+        <ul class="approval-list">
+          <li>□ Use one horizontal product card per row on mobile.</li>
+          <li>□ Remove compare from homepage cards and keep wishlist.</li>
+          <li>□ Hide the rating row when a product has no reviews.</li>
+          <li>□ Align the section to the expanded homepage content rail.</li>
+        </ul>
+      </section>
+
+      <section class="implementation-note">
+        <h2>Implementation boundary</h2>
+        <p>
+          This file is a wireframe only. No storefront implementation has been
+          changed.
+        </p>
+        <p>
+          After approval, implementation should remain inside ArityTheme. A
+          theme-owned
+          <code>Views/Shared/Components/HomepageProducts/Default.cshtml</code>,
+          a homepage-specific product-card partial, and
+          <code>Content/css/arity.home-products.css</code> can isolate the new
+          layout from category, search, and related-product grids. Use only
+          fields already present on <code>ProductOverviewModel</code>; do not
+          add per-card service lookups or hardcoded category labels. Register
+          the stylesheet in <code>Views/Home/Index.cshtml</code>. nopCommerce
+          core and admin-managed product data stay untouched.
+        </p>
+      </section>
+    </main>
+
+    <template id="current-section-template">
+      <div class="current-inner">
+        <h2 class="current-heading">Featured products</h2>
+        <div class="legacy-grid">
+          <article class="legacy-card">
+            <div class="legacy-image">Computer image</div>
+            <h3>Build your own computer</h3>
+            <div class="legacy-rating" aria-label="No reviews">☆ ☆ ☆ ☆ ☆</div>
+            <p class="legacy-price">$1,200.00</p>
+            <div class="legacy-actions" aria-label="Current product actions">
+              <span class="legacy-cart">Add to cart</span>
+              <span class="legacy-icon" aria-label="Compare">⇄</span>
+              <span class="legacy-icon" aria-label="Wishlist">♡</span>
+            </div>
+          </article>
+          <article class="legacy-card">
+            <div class="legacy-image">Laptop image</div>
+            <h3>Apple MacBook Pro</h3>
+            <div class="legacy-rating" aria-label="No reviews">☆ ☆ ☆ ☆ ☆</div>
+            <p class="legacy-price">$1,800.00</p>
+            <div class="legacy-actions" aria-label="Current product actions">
+              <span class="legacy-cart">Add to cart</span>
+              <span class="legacy-icon" aria-label="Compare">⇄</span>
+              <span class="legacy-icon" aria-label="Wishlist">♡</span>
+            </div>
+          </article>
+          <article class="legacy-card">
+            <div class="legacy-image">Phone image</div>
+            <h3>HTC smartphone</h3>
+            <div
+              class="legacy-rating has-review"
+              aria-label="Four out of five stars"
+            >
+              ★ ★ ★ ★ ☆
+            </div>
+            <p class="legacy-price">$245.00</p>
+            <div class="legacy-actions" aria-label="Current product actions">
+              <span class="legacy-cart">Add to cart</span>
+              <span class="legacy-icon" aria-label="Compare">⇄</span>
+              <span class="legacy-icon" aria-label="Wishlist">♡</span>
+            </div>
+          </article>
+          <article class="legacy-card">
+            <div class="legacy-image">Gift card image</div>
+            <h3>$25 Virtual Gift Card</h3>
+            <div class="legacy-rating" aria-label="No reviews">☆ ☆ ☆ ☆ ☆</div>
+            <p class="legacy-price">$25.00</p>
+            <div class="legacy-actions" aria-label="Current product actions">
+              <span class="legacy-cart">Add to cart</span>
+              <span class="legacy-icon" aria-label="Compare">⇄</span>
+              <span class="legacy-icon" aria-label="Wishlist">♡</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </template>
+
+    <template id="featured-section-template">
+      <div class="featured-inner">
+        <header class="featured-heading">
+          <div>
+            <h2>Featured products</h2>
+            <p>Reliable energy essentials selected for homes and businesses.</p>
+          </div>
+          <a class="view-all" href="#">Shop all products →</a>
+        </header>
+        <div class="product-grid">
+          <article class="product-card">
+            <a
+              class="product-image"
+              href="#"
+              aria-label="View 500W monocrystalline solar panel"
+            >
+              <svg
+                viewBox="0 0 180 180"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                aria-hidden="true"
+              >
+                <path d="M33 45h114l17 78H16l17-78Z"></path>
+                <path
+                  d="M47 45 38 123M70 45l-4 78M93 45v78M116 45l5 78M139 45l10 78M24 84h132"
+                ></path>
+                <path d="M69 123 59 148M113 123l12 25"></path>
+                <circle cx="143" cy="27" r="11"></circle>
+              </svg>
+            </a>
+            <div class="product-body">
+              <h3 class="product-title">
+                <a href="#">500W monocrystalline solar panel</a>
+              </h3>
+              <p
+                class="rating-row"
+                aria-label="Rated 4.8 out of 5 based on 12 reviews"
+              >
+                <span class="star" aria-hidden="true">★</span> 4.8/5 · 12
+                reviews
+              </p>
+              <p class="product-price">US$249.00</p>
+              <div class="product-actions">
+                <button class="primary-action" type="button">
+                  Add to cart
+                </button>
+                <button
+                  class="wish-action"
+                  type="button"
+                  aria-label="Add 500W monocrystalline solar panel to wishlist"
+                >
+                  ♡
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card">
+            <a
+              class="product-image"
+              href="#"
+              aria-label="View 5kWh lithium battery"
+            >
+              <svg
+                viewBox="0 0 180 180"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                aria-hidden="true"
+              >
+                <rect x="42" y="37" width="96" height="106" rx="7"></rect>
+                <path d="M72 27h36v10M146 67v45"></path>
+                <rect
+                  x="55"
+                  y="58"
+                  width="14"
+                  height="62"
+                  fill="currentColor"
+                  stroke="none"
+                ></rect>
+                <rect
+                  x="76"
+                  y="58"
+                  width="14"
+                  height="62"
+                  fill="currentColor"
+                  stroke="none"
+                ></rect>
+                <rect
+                  x="97"
+                  y="58"
+                  width="14"
+                  height="62"
+                  fill="currentColor"
+                  stroke="none"
+                ></rect>
+                <rect x="118" y="58" width="8" height="62"></rect>
+              </svg>
+            </a>
+            <div class="product-body">
+              <h3 class="product-title">
+                <a href="#">5kWh LiFePO₄ battery</a>
+              </h3>
+              <p class="product-price">US$2,950.00</p>
+              <div class="product-actions">
+                <button class="primary-action" type="button">
+                  Add to cart
+                </button>
+                <button
+                  class="wish-action"
+                  type="button"
+                  aria-label="Add 5kWh lithium battery to wishlist"
+                >
+                  ♡
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card">
+            <a
+              class="product-image"
+              href="#"
+              aria-label="View 5kW hybrid inverter"
+            >
+              <svg
+                viewBox="0 0 180 180"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                aria-hidden="true"
+              >
+                <rect x="50" y="22" width="80" height="136" rx="9"></rect>
+                <rect x="67" y="43" width="46" height="24" rx="3"></rect>
+                <path d="M75 56h8l6-7 8 12 6-5h5"></path>
+                <circle cx="90" cy="102" r="13"></circle>
+                <path d="M82 102h16M90 94v16M65 142h12M103 142h12"></path>
+              </svg>
+            </a>
+            <div class="product-body">
+              <h3 class="product-title">
+                <a href="#">5kW hybrid solar inverter</a>
+              </h3>
+              <p class="product-price">US$1,450.00</p>
+              <div class="product-actions">
+                <button class="primary-action" type="button">
+                  Add to cart
+                </button>
+                <button
+                  class="wish-action"
+                  type="button"
+                  aria-label="Add 5kW hybrid solar inverter to wishlist"
+                >
+                  ♡
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card">
+            <a
+              class="product-image"
+              href="#"
+              aria-label="View 60A MPPT charge controller"
+            >
+              <svg
+                viewBox="0 0 180 180"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                aria-hidden="true"
+              >
+                <rect x="34" y="35" width="112" height="100" rx="8"></rect>
+                <rect x="51" y="54" width="78" height="31" rx="4"></rect>
+                <path d="M64 69h19M97 69h19"></path>
+                <circle cx="66" cy="108" r="6"></circle>
+                <circle cx="90" cy="108" r="6"></circle>
+                <circle cx="114" cy="108" r="6"></circle>
+                <path d="M55 135v19M75 135v19M105 135v19M125 135v19"></path>
+              </svg>
+            </a>
+            <div class="product-body">
+              <h3 class="product-title">
+                <a href="#">60A MPPT charge controller</a>
+              </h3>
+              <p class="product-price">US$395.00</p>
+              <div class="product-actions">
+                <button class="primary-action" type="button">
+                  Add to cart
+                </button>
+                <button
+                  class="wish-action"
+                  type="button"
+                  aria-label="Add 60A MPPT charge controller to wishlist"
+                >
+                  ♡
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </template>
+
+    <script>
+      const currentTemplate = document.querySelector(
+        "#current-section-template",
+      );
+      const featuredTemplate = document.querySelector(
+        "#featured-section-template",
+      );
+
+      document
+        .querySelectorAll("[data-current-layout]")
+        .forEach((container) => {
+          container.append(currentTemplate.content.cloneNode(true));
+        });
+
+      document
+        .querySelectorAll("[data-featured-layout]")
+        .forEach((container) => {
+          container.append(featuredTemplate.content.cloneNode(true));
+        });
+
+      const tabs = Array.from(document.querySelectorAll(".tab"));
+      const panels = Array.from(document.querySelectorAll(".viewport-panel"));
+
+      function activateTab(activeTab) {
+        tabs.forEach((tab) => {
+          const isActive = tab === activeTab;
+          tab.classList.toggle("active", isActive);
+          tab.setAttribute("aria-selected", String(isActive));
+          tab.tabIndex = isActive ? 0 : -1;
+        });
+
+        panels.forEach((panel) => {
+          const isActive = panel.id === activeTab.dataset.target;
+          panel.classList.toggle("active", isActive);
+          panel.hidden = !isActive;
+        });
+      }
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => activateTab(tab));
+        tab.addEventListener("keydown", (event) => {
+          let targetIndex;
+          if (event.key === "ArrowRight")
+            targetIndex = (index + 1) % tabs.length;
+          if (event.key === "ArrowLeft")
+            targetIndex = (index - 1 + tabs.length) % tabs.length;
+          if (event.key === "Home") targetIndex = 0;
+          if (event.key === "End") targetIndex = tabs.length - 1;
+          if (targetIndex === undefined) return;
+
+          event.preventDefault();
+          activateTab(tabs[targetIndex]);
+          tabs[targetIndex].focus();
+        });
+      });
+
+      const requestedViewport = new URLSearchParams(window.location.search).get(
+        "viewport",
+      );
+      const requestedTab = tabs.find(
+        (tab) => tab.dataset.target === `${requestedViewport}-panel`,
+      );
+      activateTab(requestedTab ?? tabs[0]);
+    </script>
+  </body>
+</html>
