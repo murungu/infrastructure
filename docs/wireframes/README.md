@@ -79,6 +79,7 @@ If not → iterate.
 | 16 | [search-autocomplete.html](16-search-autocomplete.html) | Header search | Fixed-width autocomplete does not match responsive search | 375/768/1280px |
 | 17 | [menu-navigation.html](17-menu-navigation.html) | Main menu | Ambiguous mobile disclosure and undersized desktop dropdown | 375/768/1280px |
 | 18 | [homepage-banner-slider.html](18-homepage-banner-slider.html) | Homepage hero | Image-only promotion is unreadable on mobile and lacks safe carousel controls | 375/768/1280px |
+| 19 | [homepage-introduction-categories.html](19-homepage-introduction-categories.html) | Homepage categories | Generic welcome copy and sample categories create an off-brand, inefficient catalog entry | 375/768/1280px |
 
 Wireframe 18 is implemented in ArityTheme. See `Views/Home/Index.cshtml`, `Views/Home/_ArityHomepageHero.cshtml`, `Content/css/arity.hero.css`, and `Content/js/arity.hero.js`.
 
