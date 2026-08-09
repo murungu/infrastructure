@@ -1,0 +1,1917 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arity Shop — Category listing review</title>
+    <style>
+      :root {
+        --ink: #000;
+        --canvas: #fff;
+        --canvas-soft: #f9f9f9;
+        --canvas-soft-2: #f5f5f5;
+        --body: #4d4d4d;
+        --mute: #888;
+        --hairline: #ebebeb;
+        --line: #d9d9d9;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-width: 320px;
+        background: var(--canvas-soft-2);
+        color: var(--ink);
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      select,
+      a {
+        font: inherit;
+      }
+
+      .page-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        padding: 16px 24px;
+        background: var(--ink);
+        color: var(--canvas);
+      }
+
+      .page-header h1 {
+        font-size: 18px;
+        line-height: 1.25;
+      }
+
+      .page-header p {
+        margin-top: 4px;
+        color: #cfcfcf;
+        font-size: 13px;
+      }
+
+      .tabs {
+        position: sticky;
+        top: 79px;
+        z-index: 9;
+        display: flex;
+        overflow-x: auto;
+        border-bottom: 1px solid var(--hairline);
+        background: var(--canvas);
+        padding-inline: 16px;
+      }
+
+      .tab {
+        min-height: 48px;
+        padding-inline: 20px;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        background: transparent;
+        color: var(--body);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .tab:hover,
+      .tab:focus-visible,
+      .tab.active {
+        border-bottom-color: var(--ink);
+        color: var(--ink);
+        outline: 0;
+      }
+
+      .viewport-panel {
+        display: none;
+        padding: 24px;
+      }
+
+      .viewport-panel.active {
+        display: block;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        max-width: 1480px;
+        margin-inline: auto;
+      }
+
+      .comparison.stacked {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .device {
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--canvas);
+      }
+
+      .device-header {
+        display: flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--hairline);
+      }
+
+      .device-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .device-label.proposed::before {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-inline-end: 8px;
+        border-radius: 999px;
+        background: var(--ink);
+        content: "";
+      }
+
+      .device-size {
+        color: var(--mute);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px;
+      }
+
+      .screen-shell {
+        overflow-x: auto;
+        padding: 8px;
+        background: var(--canvas-soft-2);
+      }
+
+      .screen {
+        overflow-y: auto;
+        margin-inline: auto;
+        border: 1px solid var(--hairline);
+        background: var(--canvas);
+      }
+
+      .screen.mobile {
+        width: 375px;
+        height: 860px;
+      }
+
+      .screen.tablet {
+        width: 768px;
+        height: 860px;
+      }
+
+      .screen.desktop {
+        width: 1280px;
+        height: 800px;
+      }
+
+      .chrome-bar {
+        display: grid;
+        min-height: 44px;
+        place-items: center;
+        border-bottom: 1px solid var(--hairline);
+        background: var(--canvas-soft);
+        color: var(--mute);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .callout {
+        display: block;
+        margin: 8px 0 0;
+        color: var(--mute);
+        font-size: 11px;
+      }
+
+      /* ---------------------------------------------------------------
+         Current storefront reproduction (measured from localhost:5000)
+      --------------------------------------------------------------- */
+
+      .cur {
+        color: var(--ink);
+        font-size: 14px;
+      }
+
+      .cur-rail {
+        margin-inline: auto;
+      }
+
+      .cur-rail.m {
+        width: 338px;
+      }
+
+      .cur-rail.t {
+        width: 710px;
+      }
+
+      .cur-crumb {
+        padding: 10px 0;
+        color: var(--body);
+        font-size: 13px;
+      }
+
+      .cur-block {
+        margin-bottom: 8px;
+        border-bottom: 1px solid var(--hairline);
+        padding-bottom: 8px;
+      }
+
+      .cur-block > .t {
+        display: flex;
+        min-height: 49px;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .cur-block > .t::after {
+        color: var(--mute);
+        content: "+";
+        font-size: 18px;
+      }
+
+      .cur-title {
+        border-bottom: 1px solid var(--hairline);
+        padding-bottom: 10px;
+        font-size: 30px;
+        font-weight: 400;
+        text-align: center;
+      }
+
+      .cur-selectors {
+        padding: 14px 0;
+        border-bottom: 1px solid var(--hairline);
+      }
+
+      .cur-selector-row {
+        display: flex;
+        min-height: 42px;
+        align-items: center;
+        gap: 8px;
+        color: var(--body);
+        font-size: 14px;
+      }
+
+      .cur-select {
+        height: 32px;
+        border: 1px solid var(--line);
+        background: var(--canvas);
+        padding-inline: 8px;
+        font-size: 13px;
+      }
+
+      .cur-select.sort {
+        width: 155px;
+      }
+
+      .cur-select.size {
+        width: 50px;
+      }
+
+      .cur-viewmode {
+        display: flex;
+        height: 32px;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .cur-viewmode i {
+        width: 32px;
+        height: 32px;
+        background: repeating-linear-gradient(
+          to bottom,
+          var(--mute) 0 4px,
+          transparent 4px 8px
+        );
+      }
+
+      .cur-grid {
+        display: grid;
+        gap: 10px;
+        padding-top: 16px;
+      }
+
+      .cur-grid.one {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .cur-grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .cur-grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .cur-card {
+        border: 1px solid var(--hairline);
+        padding: 16px;
+      }
+
+      .cur-shot {
+        display: grid;
+        place-items: center;
+        aspect-ratio: 1;
+        background: #dfe4ec;
+        color: #6b7280;
+        font-size: 11px;
+      }
+
+      .cur-name {
+        margin-top: 14px;
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .cur-stars {
+        margin-top: 10px;
+        color: var(--line);
+        font-size: 15px;
+        letter-spacing: 2px;
+      }
+
+      .cur-stars.some {
+        color: #e8b923;
+      }
+
+      .cur-price {
+        margin-top: 10px;
+        color: var(--body);
+        font-size: 16px;
+      }
+
+      .cur-buttons {
+        display: flex;
+        height: 40px;
+        margin-top: 16px;
+      }
+
+      .cur-atc {
+        display: grid;
+        flex: 1 1 auto;
+        place-items: center;
+        background: var(--ink);
+        color: var(--canvas);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .cur-icon {
+        display: grid;
+        width: 40px;
+        flex: 0 0 40px;
+        place-items: center;
+        border: 1px solid var(--line);
+        color: var(--body);
+        font-size: 13px;
+      }
+
+      .cur-desktop {
+        display: grid;
+        width: 980px;
+        margin-inline: auto;
+        grid-template-columns: 245px minmax(0, 715px);
+        gap: 20px;
+      }
+
+      .cur-side .cur-block > .t::after {
+        content: "";
+      }
+
+      .cur-side-links {
+        color: var(--body);
+        font-size: 13px;
+        list-style: none;
+      }
+
+      .cur-side-links li {
+        min-height: 22px;
+      }
+
+      /* ---------------------------------------------------------------
+         Proposed listing
+      --------------------------------------------------------------- */
+
+      .pro {
+        --gutter: 16px;
+        color: var(--ink);
+      }
+
+      .pro.t {
+        --gutter: 24px;
+      }
+
+      .pro.d {
+        --gutter: 32px;
+      }
+
+      .pro-rail {
+        max-width: 1600px;
+        margin-inline: auto;
+        padding-inline: var(--gutter);
+      }
+
+      .pro-crumb {
+        display: flex;
+        min-height: 40px;
+        align-items: center;
+        gap: 6px;
+        color: var(--body);
+        font-size: 13px;
+      }
+
+      .pro-crumb a {
+        color: var(--body);
+      }
+
+      .pro-head {
+        padding-block: 8px 16px;
+      }
+
+      .pro-head h1 {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        line-height: 1.15;
+      }
+
+      .pro.d .pro-head h1 {
+        font-size: 34px;
+      }
+
+      .pro-count {
+        margin-top: 4px;
+        color: var(--body);
+        font-size: 13px;
+      }
+
+      .pro-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        border-block: 1px solid var(--hairline);
+        padding-block: 12px;
+      }
+
+      .pro-control {
+        display: flex;
+        min-height: 44px;
+        flex: 1 1 0;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        border: 1px solid var(--ink);
+        background: var(--canvas);
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        padding-inline: 14px;
+      }
+
+      .pro-control::after {
+        color: var(--body);
+        content: "⌄";
+        font-size: 16px;
+      }
+
+      .pro-control.ghost {
+        border-color: var(--line);
+        font-weight: 500;
+      }
+
+      .pro-control.static::after {
+        content: "";
+      }
+
+      .pro-toolbar.desk {
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .pro-toolbar.desk .pro-control {
+        flex: 0 0 auto;
+      }
+
+      .pro-toolbar-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .pro-viewmode {
+        display: flex;
+        gap: 4px;
+      }
+
+      .pro-viewmode span {
+        display: grid;
+        width: 44px;
+        height: 44px;
+        place-items: center;
+        border: 1px solid var(--line);
+        color: var(--body);
+        font-size: 13px;
+      }
+
+      .pro-viewmode span.on {
+        border-color: var(--ink);
+        background: var(--ink);
+        color: var(--canvas);
+      }
+
+      .pro-layout {
+        display: grid;
+        gap: 32px;
+        padding-block: 20px;
+        grid-template-columns: 260px minmax(0, 1fr);
+      }
+
+      .pro-side h2 {
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .pro-side-group {
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--hairline);
+        padding-bottom: 16px;
+      }
+
+      .pro-side-links {
+        list-style: none;
+      }
+
+      .pro-side-links li a {
+        display: flex;
+        min-height: 36px;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--body);
+        font-size: 14px;
+        text-decoration: none;
+      }
+
+      .pro-side-links li a.on {
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      .pro-side-links li a span {
+        color: var(--mute);
+        font-size: 12px;
+      }
+
+      .pro-grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .pro-grid.t {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .pro-grid.d {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .pro-card {
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        border: 1px solid var(--hairline);
+        background: var(--canvas);
+        padding: 12px;
+      }
+
+      .pro-shot {
+        display: grid;
+        aspect-ratio: 1;
+        place-items: center;
+        background: var(--canvas-soft-2);
+        color: var(--mute);
+        font-size: 11px;
+      }
+
+      .pro-card h3 {
+        margin-top: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+
+      .pro.d .pro-card h3 {
+        font-size: 16px;
+      }
+
+      .pro-card h3 a {
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      .pro-meta {
+        margin-top: 4px;
+        color: var(--mute);
+        font-size: 12px;
+      }
+
+      .pro-rating {
+        margin-top: 6px;
+        color: #e8b923;
+        font-size: 13px;
+        letter-spacing: 1px;
+      }
+
+      .pro-rating span {
+        color: var(--body);
+        font-size: 12px;
+        letter-spacing: 0;
+      }
+
+      .pro-price {
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .pro-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: auto;
+        padding-top: 12px;
+      }
+
+      .pro-atc {
+        display: grid;
+        min-height: 44px;
+        flex: 1 1 auto;
+        place-items: center;
+        border: 1px solid var(--ink);
+        background: var(--ink);
+        color: var(--canvas);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        padding-inline: 8px;
+      }
+
+      .pro-wish {
+        display: grid;
+        width: 44px;
+        min-height: 44px;
+        flex: 0 0 44px;
+        place-items: center;
+        border: 1px solid var(--line);
+        background: var(--canvas);
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 15px;
+      }
+
+      .pro-media {
+        position: relative;
+      }
+
+      .pro-wish.float {
+        position: absolute;
+        inset-block-start: 8px;
+        inset-inline-end: 8px;
+        background: rgba(255, 255, 255, 0.92);
+      }
+
+      .pro-secondary {
+        margin-top: 24px;
+        border-top: 1px solid var(--hairline);
+        padding-top: 16px;
+      }
+
+      .pro-disclosure {
+        display: flex;
+        width: 100%;
+        min-height: 44px;
+        align-items: center;
+        justify-content: space-between;
+        border: 0;
+        border-bottom: 1px solid var(--hairline);
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        text-align: start;
+      }
+
+      .pro-disclosure::after {
+        color: var(--body);
+        content: "＋";
+        font-weight: 400;
+      }
+
+      .pro-pager {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 24px;
+      }
+
+      .pro-pager span {
+        display: grid;
+        min-width: 44px;
+        min-height: 44px;
+        place-items: center;
+        border: 1px solid var(--line);
+        font-size: 14px;
+      }
+
+      .pro-pager span.on {
+        border-color: var(--ink);
+        background: var(--ink);
+        color: var(--canvas);
+      }
+
+      /* ---------------------------------------------------------------
+         Prose sections
+      --------------------------------------------------------------- */
+
+      .review-summary,
+      .decisions,
+      .implementation-note,
+      .measurements {
+        max-width: 900px;
+        margin: 24px auto 0;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--canvas);
+        padding: 24px;
+      }
+
+      .review-summary h2,
+      .decisions h2,
+      .implementation-note h2,
+      .measurements h2 {
+        font-size: 20px;
+      }
+
+      .review-summary h3 {
+        margin-top: 20px;
+        font-size: 15px;
+      }
+
+      .review-summary p,
+      .implementation-note p {
+        margin-top: 6px;
+        color: var(--body);
+        font-size: 14px;
+      }
+
+      .decisions ol {
+        margin-top: 12px;
+        padding-inline-start: 20px;
+      }
+
+      .decisions li,
+      .approval-list li {
+        color: var(--body);
+        font-size: 14px;
+      }
+
+      .decisions li + li {
+        margin-top: 10px;
+      }
+
+      .approval-list {
+        margin-top: 20px;
+        border-top: 1px solid var(--hairline);
+        padding-top: 16px;
+        list-style: none;
+      }
+
+      .approval-list li {
+        min-height: 32px;
+      }
+
+      table {
+        width: 100%;
+        margin-top: 12px;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--hairline);
+        padding: 8px 6px;
+        text-align: start;
+      }
+
+      th {
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      td {
+        color: var(--body);
+      }
+
+      code {
+        background: var(--canvas-soft-2);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+        padding-inline: 4px;
+      }
+
+      @media (max-width: 1100px) {
+        .comparison {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="page-header">
+      <h1>Category listing review</h1>
+      <p>
+        Current nopCommerce category page compared with an Arity listing that
+        finds, compares, and buys faster on every screen.
+      </p>
+    </header>
+
+    <nav class="tabs" aria-label="Viewport previews" role="tablist">
+      <button
+        id="mobile-tab"
+        class="tab active"
+        type="button"
+        role="tab"
+        aria-controls="mobile-panel"
+        aria-selected="true"
+        data-target="mobile-panel"
+      >
+        Mobile · 375px
+      </button>
+      <button
+        id="tablet-tab"
+        class="tab"
+        type="button"
+        role="tab"
+        aria-controls="tablet-panel"
+        aria-selected="false"
+        data-target="tablet-panel"
+        tabindex="-1"
+      >
+        Tablet · 768px
+      </button>
+      <button
+        id="desktop-tab"
+        class="tab"
+        type="button"
+        role="tab"
+        aria-controls="desktop-panel"
+        aria-selected="false"
+        data-target="desktop-panel"
+        tabindex="-1"
+      >
+        Desktop · 1280px
+      </button>
+    </nav>
+
+    <main>
+      <!-- ============================ MOBILE ============================ -->
+      <section
+        id="mobile-panel"
+        class="viewport-panel active"
+        role="tabpanel"
+        aria-labelledby="mobile-tab"
+      >
+        <div class="comparison">
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label">Current</span>
+              <span class="device-size">375 × 860</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen mobile">
+                <div class="chrome-bar">Header and search</div>
+                <div class="cur">
+                  <div class="cur-rail m">
+                    <div class="cur-crumb">Home / Computers / Desktops</div>
+
+                    <section class="cur-block">
+                      <h2 class="t">Manufacturers</h2>
+                    </section>
+                    <section class="cur-block">
+                      <h2 class="t">Popular tags</h2>
+                    </section>
+
+                    <h1 class="cur-title">Desktops</h1>
+
+                    <div class="cur-selectors">
+                      <div class="cur-selector-row">
+                        <span>Sort by</span>
+                        <span class="cur-select sort">Position</span>
+                      </div>
+                      <div class="cur-selector-row">
+                        <span>Display</span>
+                        <span class="cur-select size">6</span>
+                        <span>per page</span>
+                      </div>
+                    </div>
+
+                    <div class="cur-grid one">
+                      <article class="cur-card">
+                        <div class="cur-shot">304 × 304 image</div>
+                        <h2 class="cur-name">Build your own computer</h2>
+                        <div class="cur-stars">★★★★★</div>
+                        <div class="cur-price">$1,200.00</div>
+                        <div class="cur-buttons">
+                          <span class="cur-atc">Add to cart</span>
+                          <span class="cur-icon" aria-hidden="true">⇄</span>
+                          <span class="cur-icon" aria-hidden="true">♡</span>
+                        </div>
+                      </article>
+                      <article class="cur-card">
+                        <div class="cur-shot">304 × 304 image</div>
+                        <h2 class="cur-name">
+                          Digital Storm VANQUISH Custom Performance PC
+                        </h2>
+                        <div class="cur-stars some">★★★★★</div>
+                        <div class="cur-price">$1,259.00</div>
+                        <div class="cur-buttons">
+                          <span class="cur-atc">Add to cart</span>
+                          <span class="cur-icon" aria-hidden="true">⇄</span>
+                          <span class="cur-icon" aria-hidden="true">♡</span>
+                        </div>
+                      </article>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="callout" style="padding: 0 16px 12px">
+              Measured: 338px rail at 19px gutters, filter blocks above the
+              title, 32px selects, 40px actions, 485px per card.
+            </p>
+          </article>
+
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">375 × 860</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen mobile">
+                <div class="chrome-bar">Header and search</div>
+                <div class="pro">
+                  <div class="pro-rail">
+                    <nav class="pro-crumb" aria-label="Breadcrumb">
+                      <a href="#">Home</a> / <a href="#">Solar</a> /
+                      <strong>Solar panels</strong>
+                    </nav>
+
+                    <div class="pro-head">
+                      <h1>Solar panels</h1>
+                      <p class="pro-count">12 products</p>
+                    </div>
+
+                    <div class="pro-toolbar">
+                      <button class="pro-control" type="button">Refine</button>
+                      <button class="pro-control ghost" type="button">
+                        Sort: Position
+                      </button>
+                    </div>
+
+                    <div style="padding-block: 16px">
+                      <div class="pro-grid">
+                        <article class="pro-card">
+                          <div class="pro-media">
+                            <div class="pro-shot">Square image</div>
+                            <button
+                              class="pro-wish float"
+                              type="button"
+                              aria-label="Add to wishlist"
+                            >
+                              ♡
+                            </button>
+                          </div>
+                          <h3><a href="#">450W monocrystalline panel</a></h3>
+                          <p class="pro-meta">SOL-450W-001</p>
+                          <p class="pro-price">$189.00</p>
+                          <div class="pro-actions">
+                            <button class="pro-atc" type="button">
+                              Add to cart
+                            </button>
+                          </div>
+                        </article>
+                        <article class="pro-card">
+                          <div class="pro-media">
+                            <div class="pro-shot">Square image</div>
+                            <button
+                              class="pro-wish float"
+                              type="button"
+                              aria-label="Add to wishlist"
+                            >
+                              ♡
+                            </button>
+                          </div>
+                          <h3><a href="#">550W bifacial panel</a></h3>
+                          <p class="pro-meta">SOL-550W-002</p>
+                          <div class="pro-rating">★★★★☆ <span>(6)</span></div>
+                          <p class="pro-price">$236.00</p>
+                          <div class="pro-actions">
+                            <button class="pro-atc" type="button">
+                              Add to cart
+                            </button>
+                          </div>
+                        </article>
+                        <article class="pro-card">
+                          <div class="pro-media">
+                            <div class="pro-shot">Square image</div>
+                            <button
+                              class="pro-wish float"
+                              type="button"
+                              aria-label="Add to wishlist"
+                            >
+                              ♡
+                            </button>
+                          </div>
+                          <h3><a href="#">400W panel, 4-pack</a></h3>
+                          <p class="pro-meta">SOL-400W-004</p>
+                          <p class="pro-price">$690.00</p>
+                          <div class="pro-actions">
+                            <button class="pro-atc" type="button">
+                              Add to cart
+                            </button>
+                          </div>
+                        </article>
+                        <article class="pro-card">
+                          <div class="pro-media">
+                            <div class="pro-shot">Square image</div>
+                            <button
+                              class="pro-wish float"
+                              type="button"
+                              aria-label="Add to wishlist"
+                            >
+                              ♡
+                            </button>
+                          </div>
+                          <h3><a href="#">Portable 200W folding panel</a></h3>
+                          <p class="pro-meta">SOL-200W-P01</p>
+                          <p class="pro-price">$145.00</p>
+                          <div class="pro-actions">
+                            <button class="pro-atc" type="button">
+                              Add to cart
+                            </button>
+                          </div>
+                        </article>
+                      </div>
+
+                      <div class="pro-pager">
+                        <span class="on">1</span><span>2</span><span>›</span>
+                      </div>
+
+                      <section class="pro-secondary">
+                        <button class="pro-disclosure" type="button">
+                          Browse categories
+                        </button>
+                        <button class="pro-disclosure" type="button">
+                          Brands
+                        </button>
+                        <button class="pro-disclosure" type="button">
+                          Popular tags
+                        </button>
+                      </section>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="callout" style="padding: 0 16px 12px">
+              343px rail at 16px gutters, title first, 44px controls, two-up
+              grid, full-width “Add to cart” with a 44px wishlist button on the
+              image corner, category navigation below the products.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============================ TABLET ============================ -->
+      <section
+        id="tablet-panel"
+        class="viewport-panel"
+        role="tabpanel"
+        aria-labelledby="tablet-tab"
+      >
+        <div class="comparison stacked">
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label">Current</span>
+              <span class="device-size">768 × 860</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen tablet">
+                <div class="chrome-bar">Header and search</div>
+                <div class="cur">
+                  <div class="cur-rail t">
+                    <div class="cur-crumb">Home / Computers / Desktops</div>
+                    <section class="cur-block">
+                      <h2 class="t">Manufacturers</h2>
+                    </section>
+                    <section class="cur-block">
+                      <h2 class="t">Popular tags</h2>
+                    </section>
+                    <h1 class="cur-title">Desktops</h1>
+                    <div class="cur-selectors">
+                      <div class="cur-selector-row">
+                        <span>Sort by</span>
+                        <span class="cur-select sort">Position</span>
+                        <span>Display</span>
+                        <span class="cur-select size">6</span>
+                        <span>per page</span>
+                      </div>
+                    </div>
+                    <div class="cur-grid two">
+                      <article class="cur-card">
+                        <div class="cur-shot">314 × 314 image</div>
+                        <h2 class="cur-name">Build your own computer</h2>
+                        <div class="cur-stars">★★★★★</div>
+                        <div class="cur-price">$1,200.00</div>
+                        <div class="cur-buttons">
+                          <span class="cur-atc">Add to cart</span>
+                          <span class="cur-icon" aria-hidden="true">⇄</span>
+                          <span class="cur-icon" aria-hidden="true">♡</span>
+                        </div>
+                      </article>
+                      <article class="cur-card">
+                        <div class="cur-shot">314 × 314 image</div>
+                        <h2 class="cur-name">
+                          Digital Storm VANQUISH Custom Performance PC
+                        </h2>
+                        <div class="cur-stars some">★★★★★</div>
+                        <div class="cur-price">$1,259.00</div>
+                        <div class="cur-buttons">
+                          <span class="cur-atc">Add to cart</span>
+                          <span class="cur-icon" aria-hidden="true">⇄</span>
+                          <span class="cur-icon" aria-hidden="true">♡</span>
+                        </div>
+                      </article>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="callout" style="padding: 0 16px 12px">
+              Measured: 710px rail at 29px gutters, two-up 348px cards, category
+              navigation still hidden, selects still 32px.
+            </p>
+          </article>
+
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">768 × 860</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen tablet">
+                <div class="chrome-bar">Header and search</div>
+                <div class="pro t">
+                  <div class="pro-rail">
+                    <nav class="pro-crumb" aria-label="Breadcrumb">
+                      <a href="#">Home</a> / <a href="#">Solar</a> /
+                      <strong>Solar panels</strong>
+                    </nav>
+                    <div class="pro-head">
+                      <h1>Solar panels</h1>
+                      <p class="pro-count">12 products</p>
+                    </div>
+                    <div class="pro-toolbar desk">
+                      <button class="pro-control" type="button">Refine</button>
+                      <div class="pro-toolbar-right">
+                        <button class="pro-control ghost" type="button">
+                          Sort: Position
+                        </button>
+                      </div>
+                    </div>
+                    <div style="padding-block: 16px">
+                      <div class="pro-grid t">
+                        <article class="pro-card">
+                          <div class="pro-shot">Square image</div>
+                          <h3><a href="#">450W monocrystalline panel</a></h3>
+                          <p class="pro-meta">SOL-450W-001</p>
+                          <p class="pro-price">$189.00</p>
+                          <div class="pro-actions">
+                            <button class="pro-atc" type="button">
+                              Add to cart
+                            </button>
+                            <button
+                              class="pro-wish"
+                              type="button"
+                              aria-label="Add to wishlist"
+                            >
+                              ♡
+                            </button>
+                          </div>
+                        </article>
+                        <article class="pro-card">
+                          <div class="pro-shot">Square image</div>
+                          <h3><a href="#">550W bifacial panel</a></h3>
+                          <p class="pro-meta">SOL-550W-002</p>
+                          <div class="pro-rating">★★★★☆ <span>(6)</span></div>
+                          <p class="pro-price">$236.00</p>
+                          <div class="pro-actions">
+                            <button class="pro-atc" type="button">
+                              Add to cart
+                            </button>
+                            <button
+                              class="pro-wish"
+                              type="button"
+                              aria-label="Add to wishlist"
+                            >
+                              ♡
+                            </button>
+                          </div>
+                        </article>
+                        <article class="pro-card">
+                          <div class="pro-shot">Square image</div>
+                          <h3><a href="#">400W panel, 4-pack</a></h3>
+                          <p class="pro-meta">SOL-400W-004</p>
+                          <p class="pro-price">$690.00</p>
+                          <div class="pro-actions">
+                            <button class="pro-atc" type="button">
+                              Add to cart
+                            </button>
+                            <button
+                              class="pro-wish"
+                              type="button"
+                              aria-label="Add to wishlist"
+                            >
+                              ♡
+                            </button>
+                          </div>
+                        </article>
+                        <article class="pro-card">
+                          <div class="pro-shot">Square image</div>
+                          <h3><a href="#">Portable 200W folding panel</a></h3>
+                          <p class="pro-meta">SOL-200W-P01</p>
+                          <p class="pro-price">$145.00</p>
+                          <div class="pro-actions">
+                            <button class="pro-atc" type="button">
+                              Add to cart
+                            </button>
+                            <button
+                              class="pro-wish"
+                              type="button"
+                              aria-label="Add to wishlist"
+                            >
+                              ♡
+                            </button>
+                          </div>
+                        </article>
+                        <article class="pro-card">
+                          <div class="pro-shot">Square image</div>
+                          <h3><a href="#">Roof mounting rail kit</a></h3>
+                          <p class="pro-meta">SOL-MNT-R10</p>
+                          <p class="pro-price">$78.00</p>
+                          <div class="pro-actions">
+                            <button class="pro-atc" type="button">
+                              Add to cart
+                            </button>
+                            <button
+                              class="pro-wish"
+                              type="button"
+                              aria-label="Add to wishlist"
+                            >
+                              ♡
+                            </button>
+                          </div>
+                        </article>
+                        <article class="pro-card">
+                          <div class="pro-shot">Square image</div>
+                          <h3><a href="#">330W polycrystalline panel</a></h3>
+                          <p class="pro-meta">SOL-330W-003</p>
+                          <p class="pro-price">$132.00</p>
+                          <div class="pro-actions">
+                            <button class="pro-atc" type="button">
+                              Add to cart
+                            </button>
+                            <button
+                              class="pro-wish"
+                              type="button"
+                              aria-label="Add to wishlist"
+                            >
+                              ♡
+                            </button>
+                          </div>
+                        </article>
+                      </div>
+                      <div class="pro-pager">
+                        <span class="on">1</span><span>2</span><span>›</span>
+                      </div>
+                      <section class="pro-secondary">
+                        <button class="pro-disclosure" type="button">
+                          Browse categories
+                        </button>
+                        <button class="pro-disclosure" type="button">
+                          Brands
+                        </button>
+                      </section>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="callout" style="padding: 0 16px 12px">
+              720px rail at 24px gutters, three-up grid, 44px controls, six
+              products visible in the space that previously held two.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============================ DESKTOP ============================ -->
+      <section
+        id="desktop-panel"
+        class="viewport-panel"
+        role="tabpanel"
+        aria-labelledby="desktop-tab"
+      >
+        <div class="comparison stacked">
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label">Current</span>
+              <span class="device-size">1280 × 800</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen desktop">
+                <div class="chrome-bar">Header and search</div>
+                <div class="cur" style="padding-block: 16px">
+                  <div class="cur-desktop">
+                    <aside class="cur-side">
+                      <section class="cur-block">
+                        <h2 class="t">Categories</h2>
+                        <ul class="cur-side-links">
+                          <li>Computers</li>
+                          <li>Electronics</li>
+                          <li>Apparel</li>
+                        </ul>
+                      </section>
+                      <section class="cur-block">
+                        <h2 class="t">Manufacturers</h2>
+                        <ul class="cur-side-links">
+                          <li>Apple</li>
+                          <li>HP</li>
+                        </ul>
+                      </section>
+                      <section class="cur-block">
+                        <h2 class="t">Popular tags</h2>
+                      </section>
+                    </aside>
+                    <section>
+                      <h1 class="cur-title">Desktops</h1>
+                      <div class="cur-selectors">
+                        <div class="cur-selector-row">
+                          <span>Sort by</span>
+                          <span class="cur-select sort">Position</span>
+                          <span>Display</span>
+                          <span class="cur-select size">6</span>
+                          <span>per page</span>
+                          <span
+                            class="cur-viewmode"
+                            style="margin-inline-start: auto"
+                          >
+                            <i></i><i></i>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="cur-grid three">
+                        <article class="cur-card">
+                          <div class="cur-shot">197 × 197</div>
+                          <h2 class="cur-name">Build your own computer</h2>
+                          <div class="cur-stars">★★★★★</div>
+                          <div class="cur-price">$1,200.00</div>
+                          <div class="cur-buttons">
+                            <span class="cur-atc">Add</span>
+                            <span class="cur-icon" aria-hidden="true">⇄</span>
+                            <span class="cur-icon" aria-hidden="true">♡</span>
+                          </div>
+                        </article>
+                        <article class="cur-card">
+                          <div class="cur-shot">197 × 197</div>
+                          <h2 class="cur-name">Digital Storm VANQUISH</h2>
+                          <div class="cur-stars some">★★★★★</div>
+                          <div class="cur-price">$1,259.00</div>
+                          <div class="cur-buttons">
+                            <span class="cur-atc">Add</span>
+                            <span class="cur-icon" aria-hidden="true">⇄</span>
+                            <span class="cur-icon" aria-hidden="true">♡</span>
+                          </div>
+                        </article>
+                        <article class="cur-card">
+                          <div class="cur-shot">197 × 197</div>
+                          <h2 class="cur-name">Lenovo IdeaCentre</h2>
+                          <div class="cur-stars">★★★★★</div>
+                          <div class="cur-price">$500.00</div>
+                          <div class="cur-buttons">
+                            <span class="cur-atc">Add</span>
+                            <span class="cur-icon" aria-hidden="true">⇄</span>
+                            <span class="cur-icon" aria-hidden="true">♡</span>
+                          </div>
+                        </article>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="callout" style="padding: 0 16px 12px">
+              Measured: 980px wrapper centred at x=150, 245px sidebar, 715px
+              main column, 231px cards with 197px images, 32px selects.
+            </p>
+          </article>
+
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">1280 × 800</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen desktop">
+                <div class="chrome-bar">Header and search</div>
+                <div class="pro d">
+                  <div class="pro-rail">
+                    <nav class="pro-crumb" aria-label="Breadcrumb">
+                      <a href="#">Home</a> / <a href="#">Solar</a> /
+                      <strong>Solar panels</strong>
+                    </nav>
+                    <div class="pro-head">
+                      <h1>Solar panels</h1>
+                      <p class="pro-count">12 products</p>
+                    </div>
+                    <div class="pro-toolbar desk">
+                      <span class="pro-control static ghost"
+                        >Showing 1–6 of 12</span
+                      >
+                      <div class="pro-toolbar-right">
+                        <button class="pro-control ghost" type="button">
+                          Sort: Position
+                        </button>
+                        <button class="pro-control ghost" type="button">
+                          Show: 6
+                        </button>
+                        <span class="pro-viewmode">
+                          <span class="on" aria-hidden="true">▦</span>
+                          <span aria-hidden="true">☰</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="pro-layout">
+                      <aside class="pro-side">
+                        <section class="pro-side-group">
+                          <h2>Categories</h2>
+                          <ul class="pro-side-links">
+                            <li>
+                              <a class="on" href="#"
+                                >Solar panels <span>12</span></a
+                              >
+                            </li>
+                            <li>
+                              <a href="#">Batteries <span>9</span></a>
+                            </li>
+                            <li>
+                              <a href="#">Inverters <span>7</span></a>
+                            </li>
+                            <li>
+                              <a href="#">Charge controllers <span>5</span></a>
+                            </li>
+                          </ul>
+                        </section>
+                        <section class="pro-side-group">
+                          <h2>Brands</h2>
+                          <ul class="pro-side-links">
+                            <li><a href="#">Brand A</a></li>
+                            <li><a href="#">Brand B</a></li>
+                          </ul>
+                        </section>
+                        <section class="pro-side-group">
+                          <h2>Popular tags</h2>
+                          <ul class="pro-side-links">
+                            <li><a href="#">Off-grid</a></li>
+                            <li><a href="#">Hybrid</a></li>
+                          </ul>
+                        </section>
+                      </aside>
+
+                      <section>
+                        <div class="pro-grid d">
+                          <article class="pro-card">
+                            <div class="pro-shot">Square image, ~273px</div>
+                            <h3><a href="#">450W monocrystalline panel</a></h3>
+                            <p class="pro-meta">SOL-450W-001</p>
+                            <p class="pro-price">$189.00</p>
+                            <div class="pro-actions">
+                              <button class="pro-atc" type="button">
+                                Add to cart
+                              </button>
+                              <button
+                                class="pro-wish"
+                                type="button"
+                                aria-label="Add to wishlist"
+                              >
+                                ♡
+                              </button>
+                            </div>
+                          </article>
+                          <article class="pro-card">
+                            <div class="pro-shot">Square image, ~273px</div>
+                            <h3><a href="#">550W bifacial panel</a></h3>
+                            <p class="pro-meta">SOL-550W-002</p>
+                            <div class="pro-rating">★★★★☆ <span>(6)</span></div>
+                            <p class="pro-price">$236.00</p>
+                            <div class="pro-actions">
+                              <button class="pro-atc" type="button">
+                                Add to cart
+                              </button>
+                              <button
+                                class="pro-wish"
+                                type="button"
+                                aria-label="Add to wishlist"
+                              >
+                                ♡
+                              </button>
+                            </div>
+                          </article>
+                          <article class="pro-card">
+                            <div class="pro-shot">Square image, ~273px</div>
+                            <h3><a href="#">400W panel, 4-pack</a></h3>
+                            <p class="pro-meta">SOL-400W-004</p>
+                            <p class="pro-price">$690.00</p>
+                            <div class="pro-actions">
+                              <button class="pro-atc" type="button">
+                                Add to cart
+                              </button>
+                              <button
+                                class="pro-wish"
+                                type="button"
+                                aria-label="Add to wishlist"
+                              >
+                                ♡
+                              </button>
+                            </div>
+                          </article>
+                        </div>
+                        <div class="pro-pager">
+                          <span class="on">1</span><span>2</span><span>›</span>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="callout" style="padding: 0 16px 12px">
+              1216px rail at 32px gutters with a 1600px cap, 260px sidebar,
+              three-up 297px cards with 273px images, 44px controls, result
+              range beside the sort controls.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============================ FINDINGS ============================ -->
+      <section class="measurements">
+        <h2>Measured on localhost:5000/desktops</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>375px</th>
+              <th>768px</th>
+              <th>1280px</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Content rail</td>
+              <td>338px (19px gutters)</td>
+              <td>710px (29px gutters)</td>
+              <td>980px wrapper</td>
+            </tr>
+            <tr>
+              <td>Main column</td>
+              <td>338px</td>
+              <td>710px</td>
+              <td>715px</td>
+            </tr>
+            <tr>
+              <td>Sidebar</td>
+              <td>full width, above title</td>
+              <td>full width, above title</td>
+              <td>245px</td>
+            </tr>
+            <tr>
+              <td>Category navigation</td>
+              <td>display: none</td>
+              <td>display: none</td>
+              <td>visible</td>
+            </tr>
+            <tr>
+              <td>Columns / card width</td>
+              <td>1 / 338px</td>
+              <td>2 / 348px</td>
+              <td>3 / 231px</td>
+            </tr>
+            <tr>
+              <td>Product image</td>
+              <td>304px</td>
+              <td>314px</td>
+              <td>197px</td>
+            </tr>
+            <tr>
+              <td>Sort select</td>
+              <td>155 × 32</td>
+              <td>155 × 32</td>
+              <td>155 × 32</td>
+            </tr>
+            <tr>
+              <td>Per-page select</td>
+              <td>50 × 32</td>
+              <td>50 × 32</td>
+              <td>50 × 32</td>
+            </tr>
+            <tr>
+              <td>Card actions</td>
+              <td>204 × 40, 40 × 40, 40 × 40</td>
+              <td>214 × 40, 40 × 40, 40 × 40</td>
+              <td>101 × 40, 38 × 40, 38 × 40</td>
+            </tr>
+            <tr>
+              <td>Horizontal overflow</td>
+              <td>none</td>
+              <td>none</td>
+              <td>none</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="review-summary">
+        <h2>What the live review found</h2>
+
+        <h3>1. Secondary blocks push the page title below the fold</h3>
+        <p>
+          At 375px and 768px the “Manufacturers” and “Popular tags” blocks
+          render at y=301 and y=351, while the “Desktops” heading starts at
+          y=451. Customers meet supporting navigation before they know which
+          category they opened. The layout places the whole
+          <code>side-2</code> column before <code>center-2</code> in source
+          order.
+        </p>
+
+        <h3>2. Category navigation disappears below 1001px</h3>
+        <p>
+          The Categories block is <code>display: none</code> at 375px and 768px.
+          On phones, the only way to reach a sibling category is the header menu
+          or the browser back button. The listing itself offers no lateral
+          movement.
+        </p>
+
+        <h3>
+          3. Sort and per-page controls are below the touch-target standard
+        </h3>
+        <p>
+          Both selects are 32px high at every viewport. The per-page select is
+          50px wide. Arity uses a 44px minimum for interactive controls, applied
+          already in the header, homepage, and footer work.
+        </p>
+
+        <h3>4. Mobile spends 1,715px of scrolling on three products</h3>
+        <p>
+          The single-column grid gives each card a 304px image and a 485px total
+          height. A customer comparing panels or batteries must scroll a full
+          screen per product, and cannot see two prices at once.
+        </p>
+
+        <h3>5. Empty ratings appear on products with no reviews</h3>
+        <p>
+          Every card renders a five-star row. Products with no reviews show five
+          empty stars with the title “0 review(s),” which reads as a poor score
+          rather than as missing data. Wireframe 20 already resolved this on the
+          homepage: show ratings only when reviews exist.
+        </p>
+
+        <h3>6. The compare action is still on every card</h3>
+        <p>
+          Each card carries a compare button beside “Add to cart.” The homepage
+          product card dropped compare during Wireframe 20 because Arity Shop
+          has no compare journey. The listing page should match.
+        </p>
+
+        <h3>7. Desktop uses the legacy 980px wrapper</h3>
+        <p>
+          The catalog page is capped at 980px while the approved rail is 1216px
+          at 1280px with a 1600px cap on wide screens. The consequence is
+          visible: product images shrink to 197px on a 1280px screen, smaller
+          than they are on a phone.
+        </p>
+
+        <h3>8. There is no result count and no result range</h3>
+        <p>
+          Nothing on the page states how many products the category contains.
+          <code>CatalogProductsModel</code> already derives from
+          <code>BasePageableModel</code>, so <code>TotalItems</code> is
+          available without new server code.
+        </p>
+
+        <h3>9. Page gutters do not match the rest of the storefront</h3>
+        <p>
+          The catalog rail uses 19px mobile and 29px tablet gutters. The header,
+          hero, homepage categories, homepage products, and footer all use 16px,
+          24px, and 32px. The listing looks visually misaligned against every
+          section above and below it.
+        </p>
+
+        <h3>10. “Add to cart” renders uppercase</h3>
+        <p>
+          The theme uppercases the catalog button, while the rest of the
+          approved work uses sentence case. The resource string is already “Add
+          to cart”; only the presentation differs.
+        </p>
+
+        <h3>11. Sample catalog data remains generic</h3>
+        <p>
+          The page still shows Computers, Desktops, IBM, and Lenovo. This is an
+          admin data problem, not a theme problem, and it should be corrected in
+          nopCommerce administration rather than in markup.
+        </p>
+      </section>
+
+      <section class="decisions">
+        <h2>Recommended direction to approve</h2>
+        <ol>
+          <li>
+            Put the category title first on every viewport, followed by a
+            product count, the toolbar, and then the product grid. Move the
+            supporting blocks below the grid on mobile and tablet.
+          </li>
+          <li>
+            Use the approved rail: 16px mobile gutters, 24px tablet gutters,
+            32px desktop gutters, and a 1600px cap. On a 1280px screen this
+            gives a 1216px rail instead of 980px.
+          </li>
+          <li>
+            Use two columns at 375px, three columns at 768px, and three columns
+            beside the desktop sidebar. Product images grow from 197px to about
+            273px on desktop.
+          </li>
+          <li>
+            Give every control a 44px minimum height: sort, per-page, view mode,
+            pager links, “Add to cart,” and the wishlist button.
+          </li>
+          <li>
+            Show the per-page selector and the grid/list view mode only from the
+            desktop layout, where they are useful. Keep sort available at every
+            width.
+          </li>
+          <li>
+            On mobile and tablet, expose categories, brands, and tags as
+            accessible accordion buttons below the grid. Keep them as an
+            always-visible sidebar on desktop.
+          </li>
+          <li>
+            Keep “Add to cart” plus wishlist on the card. In the two-up mobile
+            grid, give “Add to cart” the full card width and place the 44px
+            wishlist button on the image corner, so the label never wraps.
+            Remove compare from the listing card, matching the approved homepage
+            card.
+          </li>
+          <li>
+            Render ratings only when a product has at least one review. Never
+            show an empty five-star row.
+          </li>
+          <li>
+            Show “12 products” under the title, and “Showing 1–6 of 12” beside
+            the desktop sort controls, both from <code>TotalItems</code> and the
+            existing paging model.
+          </li>
+          <li>
+            Use sentence case, Inter, black and white surfaces, hairline greys,
+            square corners, no shadows, no gradients, and no decorative colour.
+          </li>
+          <li>
+            Keep subcategory grids, featured products, category descriptions,
+            filters, widget zones, AJAX paging, and view-mode switching
+            model-driven. Correct catalog content in admin, not in the theme.
+          </li>
+        </ol>
+
+        <ul class="approval-list">
+          <li>□ Title and count first, supporting blocks after the grid.</li>
+          <li>□ Two columns mobile, three columns tablet and desktop.</li>
+          <li>□ 1216px desktop rail with a 1600px cap.</li>
+          <li>□ 44px minimum on every listing control.</li>
+          <li>□ Remove compare; keep Add to cart and wishlist.</li>
+          <li>□ Ratings only when reviews exist.</li>
+          <li>□ Per-page and view mode on desktop only.</li>
+        </ul>
+      </section>
+
+      <section class="implementation-note">
+        <h2>Implementation boundary</h2>
+        <p>
+          This file is a wireframe only. No storefront implementation has been
+          changed.
+        </p>
+        <p>
+          After approval, implementation stays inside
+          <code>src/Presentation/Nop.Web/Themes/ArityTheme</code>. The likely
+          theme-owned overrides are
+          <code
+            >Views/Catalog/CategoryTemplate.ProductsInGridOrLines.cshtml</code
+          >, <code>Views/Catalog/_CatalogSelectors.cshtml</code>,
+          <code>Views/Catalog/_ProductsInGridOrLines.cshtml</code>, and a new
+          <code>Content/css/arity.catalog.css</code> registered for catalog
+          pages only. The existing theme
+          <code>Views/Shared/_ProductBox.cshtml</code>
+          already owns the card, so the compare removal and the review-count
+          condition belong there.
+        </p>
+        <p>
+          Source order matters. <code>_ColumnsTwo.cshtml</code> renders
+          <code>side-2</code> before <code>center-2</code>. Prefer a CSS
+          ordering solution in the catalog stylesheet over a theme copy of the
+          shared layout, so other two-column pages keep their current behavior.
+          If a layout copy proves necessary, it must live in the theme.
+        </p>
+        <p>
+          Keep nopCommerce behavior intact: AJAX product loading through
+          <code>CatalogProducts</code>, the sort, per-page, and view-mode change
+          handlers, pager handlers, filter partials, subcategory and featured
+          product sections, and every widget zone. Do not modify nopCommerce
+          core. Do not hardcode category names, product data, brand names, or
+          counts.
+        </p>
+      </section>
+    </main>
+
+    <script>
+      const tabs = Array.from(document.querySelectorAll(".tab"));
+      const panels = Array.from(document.querySelectorAll(".viewport-panel"));
+
+      function activate(tab) {
+        tabs.forEach((t) => {
+          const on = t === tab;
+          t.classList.toggle("active", on);
+          t.setAttribute("aria-selected", String(on));
+          t.tabIndex = on ? 0 : -1;
+        });
+        panels.forEach((p) => {
+          p.classList.toggle("active", p.id === tab.dataset.target);
+        });
+      }
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => activate(tab));
+        tab.addEventListener("keydown", (event) => {
+          if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+          event.preventDefault();
+          const next =
+            event.key === "ArrowRight"
+              ? tabs[(index + 1) % tabs.length]
+              : tabs[(index - 1 + tabs.length) % tabs.length];
+          activate(next);
+          next.focus();
+        });
+      });
+    </script>
+  </body>
+</html>

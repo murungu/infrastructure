@@ -82,8 +82,15 @@ If not → iterate.
 | 19 | [homepage-introduction-categories.html](19-homepage-introduction-categories.html) | Homepage categories | Generic welcome copy and sample categories create an off-brand, inefficient catalog entry | 375/768/1280px |
 | 20 | [homepage-featured-products.html](20-homepage-featured-products.html) | Homepage featured products | Cramped mobile cards, undersized actions, empty ratings, and a narrow legacy desktop rail weaken product discovery | 375/768/1280px |
 | 21 | [responsive-footer.html](21-responsive-footer.html) | All pages | Generic store identity, inaccessible mobile disclosures, undersized controls, and mismatched desktop rails weaken the footer | 375/768/1280px |
+| 22 | [category-listing.html](22-category-listing.html) | Category / PLP | Supporting blocks precede the title, category navigation is hidden on phones, controls are 32px, ratings show with no reviews, and the desktop rail is capped at 980px | 375/768/1280px |
 
-Wireframes 18, 19, and 20 are implemented in ArityTheme. See `Views/Home/Index.cshtml`, `Views/Home/_ArityHomepageHero.cshtml`, `Views/Shared/Components/HomepageCategories/Default.cshtml`, `Views/Shared/Components/HomepageProducts/Default.cshtml`, and their homepage-only CSS/JS modules.
+Wireframes 18, 19, and 20 are implemented in ArityTheme. See `Views/Home/Index.cshtml`, `Views/Home/_ArityHomepageHero.cshtml`, `Views/Shared/Components/HomepageCategories/Default.cshtml`, `Views/Shared/Components/HomepageProducts/Default.cshtml`, and their homepage-only CSS/JS modules. Wireframe 21 is implemented in the theme footer overrides.
+
+## Implementation Plans
+
+Approved wireframes that are handed to another agent carry a plan file beside them.
+
+- Wireframe 22 → [22-category-listing-implementation-plan.md](22-category-listing-implementation-plan.md) — approved, implementation not started.
 
 ---
 

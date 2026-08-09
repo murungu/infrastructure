@@ -42,6 +42,8 @@ tools/**/.ruff_cache/
 # Pi session artifacts
 pi-session-*.html
 .antigravitycli/
+.pi-subagents/
+.pi-lens/
 
 # Pi memory and workspace files
 MEMORY.md
