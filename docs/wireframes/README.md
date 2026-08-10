@@ -83,14 +83,15 @@ If not → iterate.
 | 20 | [homepage-featured-products.html](20-homepage-featured-products.html) | Homepage featured products | Cramped mobile cards, undersized actions, empty ratings, and a narrow legacy desktop rail weaken product discovery | 375/768/1280px |
 | 21 | [responsive-footer.html](21-responsive-footer.html) | All pages | Generic store identity, inaccessible mobile disclosures, undersized controls, and mismatched desktop rails weaken the footer | 375/768/1280px |
 | 22 | [category-listing.html](22-category-listing.html) | Category / PLP | Supporting blocks precede the title, category navigation is hidden on phones, controls are 32px, ratings show with no reviews, and the desktop rail is capped at 980px | 375/768/1280px |
+| 23 | [category-panel-navigation.html](23-category-panel-navigation.html) | Category / PLP | The supporting category tree is mechanically sound but too tall, has no current-page state, and does not match the approved storefront taxonomy | 375/768/1280px |
 
-Wireframes 18, 19, and 20 are implemented in ArityTheme. See `Views/Home/Index.cshtml`, `Views/Home/_ArityHomepageHero.cshtml`, `Views/Shared/Components/HomepageCategories/Default.cshtml`, `Views/Shared/Components/HomepageProducts/Default.cshtml`, and their homepage-only CSS/JS modules. Wireframe 21 is implemented in the theme footer overrides.
+Wireframes 18 through 22 are implemented in ArityTheme. See the theme-owned homepage, footer, and catalog views plus their scoped CSS/JS modules.
 
 ## Implementation Plans
 
 Approved wireframes that are handed to another agent carry a plan file beside them.
 
-- Wireframe 22 → [22-category-listing-implementation-plan.md](22-category-listing-implementation-plan.md) — approved, implementation not started.
+- Wireframe 22 → [22-category-listing-implementation-plan.md](22-category-listing-implementation-plan.md) — approved handoff plan; implementation shipped.
 
 ---
 
