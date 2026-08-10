@@ -1,0 +1,1244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arity Shop — Category panel navigation review</title>
+    <style>
+      :root {
+        --ink: #000;
+        --canvas: #fff;
+        --canvas-soft: #f9f9f9;
+        --canvas-soft-2: #f5f5f5;
+        --body: #4d4d4d;
+        --mute: #888;
+        --hairline: #ebebeb;
+        --line: #d9d9d9;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-width: 320px;
+        background: var(--canvas-soft-2);
+        color: var(--ink);
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.5;
+      }
+
+      button,
+      a {
+        font: inherit;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .page-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        padding: 16px 24px;
+        background: var(--ink);
+        color: var(--canvas);
+      }
+
+      .page-header h1 {
+        font-size: 18px;
+        line-height: 1.25;
+      }
+
+      .page-header p {
+        margin-top: 4px;
+        color: #cfcfcf;
+        font-size: 13px;
+      }
+
+      .tabs {
+        position: sticky;
+        top: 79px;
+        z-index: 9;
+        display: flex;
+        overflow-x: auto;
+        border-bottom: 1px solid var(--hairline);
+        background: var(--canvas);
+        padding-inline: 16px;
+      }
+
+      .tab {
+        min-height: 48px;
+        padding-inline: 20px;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        background: transparent;
+        color: var(--body);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .tab:hover,
+      .tab:focus-visible,
+      .tab.active {
+        border-bottom-color: var(--ink);
+        color: var(--ink);
+        outline: 0;
+      }
+
+      .viewport-panel {
+        display: none;
+        padding: 24px;
+      }
+
+      .viewport-panel.active {
+        display: block;
+      }
+
+      .comparison {
+        display: grid;
+        max-width: 1480px;
+        margin-inline: auto;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .comparison.stacked {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .device {
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--canvas);
+      }
+
+      .device-header {
+        display: flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        border-bottom: 1px solid var(--hairline);
+        padding: 10px 16px;
+      }
+
+      .device-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .device-label.proposed::before {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-inline-end: 8px;
+        border-radius: 999px;
+        background: var(--ink);
+        content: "";
+      }
+
+      .device-size {
+        color: var(--mute);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px;
+      }
+
+      .screen-shell {
+        overflow-x: auto;
+        padding: 8px;
+        background: var(--canvas-soft-2);
+      }
+
+      .screen {
+        overflow-y: auto;
+        margin-inline: auto;
+        border: 1px solid var(--hairline);
+        background: var(--canvas);
+      }
+
+      .screen.mobile {
+        width: 375px;
+        min-height: 760px;
+      }
+
+      .screen.tablet {
+        width: 768px;
+        min-height: 680px;
+      }
+
+      .screen.desktop {
+        width: 1280px;
+        min-height: 720px;
+      }
+
+      .context-bar {
+        display: grid;
+        min-height: 44px;
+        place-items: center;
+        border-bottom: 1px solid var(--hairline);
+        background: var(--canvas-soft);
+        color: var(--mute);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .context-products {
+        display: grid;
+        gap: 12px;
+        padding: 16px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .context-products.three {
+        padding-inline: 24px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .context-card {
+        display: grid;
+        min-height: 116px;
+        place-items: center;
+        border: 1px solid var(--hairline);
+        background: var(--canvas);
+        color: var(--mute);
+        font-size: 11px;
+      }
+
+      .support-rail {
+        margin-inline: 16px;
+      }
+
+      .support-rail.tablet {
+        margin-inline: 24px;
+      }
+
+      .current-panel,
+      .proposed-panel {
+        background: var(--canvas);
+      }
+
+      .current-title,
+      .proposed-title {
+        display: flex;
+        width: 100%;
+        min-height: 50px;
+        align-items: center;
+        justify-content: space-between;
+        border: 0;
+        border-bottom: 1px solid var(--hairline);
+        background: var(--canvas-soft);
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 700;
+        padding-inline: 10px;
+        text-align: start;
+      }
+
+      .current-title::after,
+      .proposed-title::after {
+        color: var(--body);
+        content: "−";
+        font-size: 18px;
+        font-weight: 400;
+      }
+
+      [aria-expanded="false"].current-title::after,
+      [aria-expanded="false"].proposed-title::after {
+        content: "+";
+      }
+
+      .current-list,
+      .proposed-list {
+        list-style: none;
+      }
+
+      .current-list a {
+        position: relative;
+        display: flex;
+        min-height: 46px;
+        align-items: center;
+        color: var(--body);
+        font-size: 15px;
+        padding-inline: 20px 12px;
+        text-decoration: none;
+      }
+
+      .current-list a::before {
+        position: absolute;
+        inset-inline-start: 5px;
+        width: 5px;
+        height: 5px;
+        background: var(--line);
+        content: "";
+      }
+
+      .current-list .child a {
+        min-height: 54px;
+        padding-inline-start: 35px;
+      }
+
+      .current-list .child a::before {
+        inset-inline-start: 20px;
+      }
+
+      .adjacent-title {
+        display: flex;
+        width: 100%;
+        min-height: 50px;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 4px;
+        border: 0;
+        border-bottom: 1px solid var(--hairline);
+        background: var(--canvas-soft);
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 700;
+        padding-inline: 10px;
+        text-align: start;
+      }
+
+      .adjacent-title::after {
+        color: var(--body);
+        content: "+";
+        font-size: 18px;
+        font-weight: 400;
+      }
+
+      .proposed-panel {
+        border-block: 1px solid var(--hairline);
+      }
+
+      .proposed-title {
+        min-height: 48px;
+        padding-inline: 12px;
+      }
+
+      .proposed-list > li + li {
+        border-top: 1px solid var(--hairline);
+      }
+
+      .proposed-list a {
+        position: relative;
+        display: flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--body);
+        font-size: 14px;
+        padding-inline: 16px;
+        text-decoration: none;
+      }
+
+      .proposed-list a::after {
+        color: var(--mute);
+        content: "→";
+        font-size: 16px;
+      }
+
+      .proposed-list a[aria-current="page"],
+      .proposed-list a[aria-current="location"] {
+        border-inline-start: 3px solid var(--ink);
+        background: var(--canvas-soft);
+        color: var(--ink);
+        font-weight: 700;
+        padding-inline-start: 13px;
+      }
+
+      .proposed-list a[aria-current="page"]::after,
+      .proposed-list a[aria-current="location"]::after {
+        color: var(--ink);
+        content: "Current";
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      .proposed-list a:hover,
+      .proposed-list a:focus-visible,
+      .current-list a:focus-visible {
+        background: var(--canvas-soft-2);
+        color: var(--ink);
+        outline: 2px solid var(--ink);
+        outline-offset: -2px;
+      }
+
+      .mobile-note {
+        margin: 12px 16px 16px;
+        color: var(--mute);
+        font-size: 12px;
+      }
+
+      .tablet-proposed-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .tablet-proposed-list > li {
+        border-top: 1px solid var(--hairline);
+      }
+
+      .tablet-proposed-list > li:nth-child(even) {
+        border-inline-start: 1px solid var(--hairline);
+      }
+
+      .desktop-layout {
+        display: grid;
+        width: calc(100% - 64px);
+        max-width: 1600px;
+        margin-inline: auto;
+        padding-block: 24px;
+        grid-template-columns: 260px minmax(0, 1fr);
+        gap: 32px;
+      }
+
+      .desktop-current .current-panel {
+        padding-bottom: 8px;
+      }
+
+      .desktop-current .current-title,
+      .desktop-proposed .proposed-title {
+        min-height: 40px;
+        background: var(--canvas);
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        padding-inline: 0;
+        text-transform: uppercase;
+      }
+
+      .desktop-current .current-title::after,
+      .desktop-proposed .proposed-title::after {
+        display: none;
+      }
+
+      .desktop-current .current-list a {
+        min-height: 46px;
+        padding-inline-start: 20px;
+      }
+
+      .desktop-current .current-list .child a {
+        min-height: 45px;
+        padding-inline-start: 35px;
+      }
+
+      .desktop-proposed .proposed-panel {
+        border-block: 0;
+      }
+
+      .desktop-proposed .proposed-list {
+        border-bottom: 1px solid var(--hairline);
+      }
+
+      .desktop-proposed .proposed-list a {
+        min-height: 44px;
+        padding-inline: 12px 8px;
+      }
+
+      .desktop-proposed .proposed-list a[aria-current="page"] {
+        padding-inline-start: 9px;
+      }
+
+      .desktop-products {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .desktop-card {
+        min-height: 420px;
+        border: 1px solid var(--hairline);
+        padding: 12px;
+      }
+
+      .desktop-shot {
+        display: grid;
+        aspect-ratio: 1;
+        place-items: center;
+        background: var(--canvas-soft-2);
+        color: var(--mute);
+        font-size: 11px;
+      }
+
+      .desktop-card h3 {
+        margin-top: 12px;
+        font-size: 15px;
+        line-height: 1.3;
+      }
+
+      .desktop-card p {
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .desktop-card span {
+        display: grid;
+        min-height: 44px;
+        margin-top: 48px;
+        place-items: center;
+        background: var(--ink);
+        color: var(--canvas);
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .measure {
+        border-top: 1px solid var(--hairline);
+        color: var(--mute);
+        font-size: 12px;
+        padding: 12px 16px;
+      }
+
+      .review-summary,
+      .decisions,
+      .implementation-note,
+      .measurements {
+        max-width: 920px;
+        margin: 24px auto 0;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--canvas);
+        padding: 24px;
+      }
+
+      .review-summary h2,
+      .decisions h2,
+      .implementation-note h2,
+      .measurements h2 {
+        font-size: 20px;
+      }
+
+      .review-summary h3 {
+        margin-top: 20px;
+        font-size: 15px;
+      }
+
+      .review-summary p,
+      .implementation-note p {
+        margin-top: 6px;
+        color: var(--body);
+        font-size: 14px;
+      }
+
+      .decisions ol {
+        margin-top: 12px;
+        padding-inline-start: 20px;
+      }
+
+      .decisions li,
+      .approval-list li {
+        color: var(--body);
+        font-size: 14px;
+      }
+
+      .decisions li + li {
+        margin-top: 10px;
+      }
+
+      .approval-list {
+        margin-top: 20px;
+        border-top: 1px solid var(--hairline);
+        padding-top: 16px;
+        list-style: none;
+      }
+
+      .approval-list li {
+        min-height: 32px;
+      }
+
+      table {
+        width: 100%;
+        margin-top: 12px;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--hairline);
+        padding: 8px 6px;
+        text-align: start;
+      }
+
+      th {
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      td {
+        color: var(--body);
+      }
+
+      code {
+        background: var(--canvas-soft-2);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+        padding-inline: 4px;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      @media (max-width: 1100px) {
+        .comparison {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="page-header">
+      <h1>Category panel navigation review</h1>
+      <p>
+        The shipped category listing works. This review narrows the supporting
+        Categories panel so it matches the new storefront hierarchy on mobile,
+        tablet, and desktop.
+      </p>
+    </header>
+
+    <nav class="tabs" aria-label="Viewport previews" role="tablist">
+      <button
+        id="mobile-tab"
+        class="tab active"
+        type="button"
+        role="tab"
+        aria-controls="mobile-panel"
+        aria-selected="true"
+        data-target="mobile-panel"
+      >
+        Mobile · 375px
+      </button>
+      <button
+        id="tablet-tab"
+        class="tab"
+        type="button"
+        role="tab"
+        aria-controls="tablet-panel"
+        aria-selected="false"
+        data-target="tablet-panel"
+        tabindex="-1"
+      >
+        Tablet · 768px
+      </button>
+      <button
+        id="desktop-tab"
+        class="tab"
+        type="button"
+        role="tab"
+        aria-controls="desktop-panel"
+        aria-selected="false"
+        data-target="desktop-panel"
+        tabindex="-1"
+      >
+        Desktop · 1280px
+      </button>
+    </nav>
+
+    <main>
+      <section
+        id="mobile-panel"
+        class="viewport-panel active"
+        role="tabpanel"
+        aria-labelledby="mobile-tab"
+      >
+        <div class="comparison">
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label">Current</span>
+              <span class="device-size">375 × 760</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen mobile">
+                <div class="context-bar">After the product grid</div>
+                <div class="context-products">
+                  <div class="context-card">Product card tail</div>
+                  <div class="context-card">Product card tail</div>
+                </div>
+                <div class="support-rail">
+                  <section class="current-panel">
+                    <button
+                      class="current-title disclosure"
+                      type="button"
+                      aria-controls="current-mobile-categories"
+                      aria-expanded="true"
+                    >
+                      Categories
+                    </button>
+                    <ul
+                      id="current-mobile-categories"
+                      class="current-list disclosure-panel"
+                    >
+                      <li><a href="#">Computers</a></li>
+                      <li class="child"><a href="#">Desktops</a></li>
+                      <li class="child"><a href="#">Notebooks</a></li>
+                      <li class="child"><a href="#">Software</a></li>
+                      <li><a href="#">Electronics</a></li>
+                      <li><a href="#">Apparel</a></li>
+                      <li><a href="#">Digital downloads</a></li>
+                      <li><a href="#">Books</a></li>
+                      <li><a href="#">Jewelry</a></li>
+                      <li><a href="#">Gift Cards</a></li>
+                    </ul>
+                  </section>
+                  <button
+                    class="adjacent-title disclosure"
+                    type="button"
+                    aria-controls="current-mobile-manufacturers"
+                    aria-expanded="false"
+                  >
+                    Manufacturers
+                  </button>
+                  <div id="current-mobile-manufacturers" hidden></div>
+                  <button
+                    class="adjacent-title disclosure"
+                    type="button"
+                    aria-controls="current-mobile-tags"
+                    aria-expanded="false"
+                  >
+                    Popular tags
+                  </button>
+                  <div id="current-mobile-tags" hidden></div>
+                </div>
+              </div>
+            </div>
+            <p class="measure">
+              Measured on <code>/desktops</code>: 343px wide, 50px collapsed,
+              about 607px open, ten links, and no visible current-page state.
+            </p>
+          </article>
+
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">375 × 760</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen mobile">
+                <div class="context-bar">After the product grid</div>
+                <div class="context-products">
+                  <div class="context-card">Product card tail</div>
+                  <div class="context-card">Product card tail</div>
+                </div>
+                <div class="support-rail">
+                  <nav class="proposed-panel" aria-label="Shop categories">
+                    <button
+                      class="proposed-title disclosure"
+                      type="button"
+                      aria-controls="proposed-mobile-categories"
+                      aria-expanded="true"
+                    >
+                      Shop categories
+                    </button>
+                    <ul
+                      id="proposed-mobile-categories"
+                      class="proposed-list disclosure-panel"
+                    >
+                      <li>
+                        <a href="#" aria-current="page">Solar panels</a>
+                      </li>
+                      <li><a href="#">Batteries</a></li>
+                      <li><a href="#">Inverters</a></li>
+                      <li><a href="#">Charge controllers</a></li>
+                      <li><a href="#">Accessories</a></li>
+                    </ul>
+                  </nav>
+                  <button
+                    class="adjacent-title disclosure"
+                    type="button"
+                    aria-controls="proposed-mobile-brands"
+                    aria-expanded="false"
+                  >
+                    Brands
+                  </button>
+                  <div id="proposed-mobile-brands" hidden></div>
+                  <button
+                    class="adjacent-title disclosure"
+                    type="button"
+                    aria-controls="proposed-mobile-tags"
+                    aria-expanded="false"
+                  >
+                    Popular tags
+                  </button>
+                  <div id="proposed-mobile-tags" hidden></div>
+                </div>
+                <p class="mobile-note">
+                  Closed by default after the grid. Open here to compare the
+                  contents. Links stay dynamic and admin-managed.
+                </p>
+              </div>
+            </div>
+            <p class="measure">
+              One 48px disclosure and five 48px routes. The active category is
+              explicit, bullets disappear, and the panel mirrors the full header
+              taxonomy. The homepage remains a curated four-route subset.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="tablet-panel"
+        class="viewport-panel"
+        role="tabpanel"
+        aria-labelledby="tablet-tab"
+      >
+        <div class="comparison stacked">
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label">Current</span>
+              <span class="device-size">768 × 680</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen tablet">
+                <div class="context-bar">
+                  After the three-column product grid
+                </div>
+                <div class="context-products three">
+                  <div class="context-card">Product card tail</div>
+                  <div class="context-card">Product card tail</div>
+                  <div class="context-card">Product card tail</div>
+                </div>
+                <div class="support-rail tablet">
+                  <section class="current-panel">
+                    <button
+                      class="current-title disclosure"
+                      type="button"
+                      aria-controls="current-tablet-categories"
+                      aria-expanded="true"
+                    >
+                      Categories
+                    </button>
+                    <ul
+                      id="current-tablet-categories"
+                      class="current-list disclosure-panel"
+                    >
+                      <li><a href="#">Computers</a></li>
+                      <li class="child"><a href="#">Desktops</a></li>
+                      <li class="child"><a href="#">Notebooks</a></li>
+                      <li class="child"><a href="#">Software</a></li>
+                      <li><a href="#">Electronics</a></li>
+                      <li><a href="#">Apparel</a></li>
+                      <li><a href="#">Digital downloads</a></li>
+                      <li><a href="#">Books</a></li>
+                      <li><a href="#">Jewelry</a></li>
+                      <li><a href="#">Gift Cards</a></li>
+                    </ul>
+                  </section>
+                </div>
+              </div>
+            </div>
+            <p class="measure">
+              The tablet panel repeats the phone list at 720px wide. The links
+              remain in one long column even though two touch-safe columns fit.
+            </p>
+          </article>
+
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">768 × 680</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen tablet">
+                <div class="context-bar">
+                  After the three-column product grid
+                </div>
+                <div class="context-products three">
+                  <div class="context-card">Product card tail</div>
+                  <div class="context-card">Product card tail</div>
+                  <div class="context-card">Product card tail</div>
+                </div>
+                <div class="support-rail tablet">
+                  <nav class="proposed-panel" aria-label="Shop categories">
+                    <button
+                      class="proposed-title disclosure"
+                      type="button"
+                      aria-controls="proposed-tablet-categories"
+                      aria-expanded="true"
+                    >
+                      Shop categories
+                    </button>
+                    <ul
+                      id="proposed-tablet-categories"
+                      class="proposed-list tablet-proposed-list disclosure-panel"
+                    >
+                      <li>
+                        <a href="#" aria-current="page">Solar panels</a>
+                      </li>
+                      <li><a href="#">Batteries</a></li>
+                      <li><a href="#">Inverters</a></li>
+                      <li><a href="#">Charge controllers</a></li>
+                      <li><a href="#">Accessories</a></li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+            <p class="measure">
+              Five top-level routes use two touch-safe columns. The compact odd
+              final row is acceptable here; unlike the homepage, these are text
+              routes rather than large image cards.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="desktop-panel"
+        class="viewport-panel"
+        role="tabpanel"
+        aria-labelledby="desktop-tab"
+      >
+        <div class="comparison stacked">
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label">Current</span>
+              <span class="device-size">1280 × 720</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen desktop">
+                <div class="context-bar">Shipped 1216px category rail</div>
+                <div class="desktop-layout desktop-current">
+                  <aside>
+                    <section class="current-panel">
+                      <h2 class="current-title">Categories</h2>
+                      <ul class="current-list">
+                        <li><a href="#">Computers</a></li>
+                        <li class="child"><a href="#">Desktops</a></li>
+                        <li class="child"><a href="#">Notebooks</a></li>
+                        <li class="child"><a href="#">Software</a></li>
+                        <li><a href="#">Electronics</a></li>
+                        <li><a href="#">Apparel</a></li>
+                        <li><a href="#">Digital downloads</a></li>
+                        <li><a href="#">Books</a></li>
+                        <li><a href="#">Jewelry</a></li>
+                        <li><a href="#">Gift Cards</a></li>
+                      </ul>
+                    </section>
+                  </aside>
+                  <section class="desktop-products" aria-label="Products">
+                    <article class="desktop-card">
+                      <div class="desktop-shot">Product image</div>
+                      <h3>Build your own computer</h3>
+                      <p>$1,200.00</p>
+                      <span>Add to cart</span>
+                    </article>
+                    <article class="desktop-card">
+                      <div class="desktop-shot">Product image</div>
+                      <h3>Digital Storm VANQUISH</h3>
+                      <p>$1,259.00</p>
+                      <span>Add to cart</span>
+                    </article>
+                    <article class="desktop-card">
+                      <div class="desktop-shot">Product image</div>
+                      <h3>Lenovo IdeaCentre</h3>
+                      <p>$500.00</p>
+                      <span>Add to cart</span>
+                    </article>
+                  </section>
+                </div>
+              </div>
+            </div>
+            <p class="measure">
+              Measured: 260px wide and about 530px tall. Tiny square markers and
+              indentation carry the hierarchy. “Desktops” is not visibly marked
+              as the current page.
+            </p>
+          </article>
+
+          <article class="device">
+            <header class="device-header">
+              <span class="device-label proposed">Proposed</span>
+              <span class="device-size">1280 × 720</span>
+            </header>
+            <div class="screen-shell">
+              <div class="screen desktop">
+                <div class="context-bar">
+                  Keep the shipped 1216px category rail
+                </div>
+                <div class="desktop-layout desktop-proposed">
+                  <aside>
+                    <nav class="proposed-panel" aria-label="Shop categories">
+                      <h2 class="proposed-title">Shop categories</h2>
+                      <ul class="proposed-list">
+                        <li>
+                          <a href="#" aria-current="page">Solar panels</a>
+                        </li>
+                        <li><a href="#">Batteries</a></li>
+                        <li><a href="#">Inverters</a></li>
+                        <li><a href="#">Charge controllers</a></li>
+                        <li><a href="#">Accessories</a></li>
+                      </ul>
+                    </nav>
+                  </aside>
+                  <section class="desktop-products" aria-label="Products">
+                    <article class="desktop-card">
+                      <div class="desktop-shot">Product image</div>
+                      <h3>450W monocrystalline panel</h3>
+                      <p>$189.00</p>
+                      <span>Add to cart</span>
+                    </article>
+                    <article class="desktop-card">
+                      <div class="desktop-shot">Product image</div>
+                      <h3>550W bifacial panel</h3>
+                      <p>$236.00</p>
+                      <span>Add to cart</span>
+                    </article>
+                    <article class="desktop-card">
+                      <div class="desktop-shot">Product image</div>
+                      <h3>400W panel, 4-pack</h3>
+                      <p>$690.00</p>
+                      <span>Add to cart</span>
+                    </article>
+                  </section>
+                </div>
+              </div>
+            </div>
+            <p class="measure">
+              Keep the 260px sidebar and the shipped product grid. Replace the
+              full legacy tree with five full-row links, an explicit current
+              state, and the same full taxonomy used by the header menu.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="measurements">
+        <h2>Measured baseline</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Viewport</th>
+              <th>Current</th>
+              <th>Recommendation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>375px</td>
+              <td>343px × ~607px open; 10 links</td>
+              <td>343px × ~288px open; 5 routes</td>
+            </tr>
+            <tr>
+              <td>768px</td>
+              <td>720px; one long link column</td>
+              <td>720px; two-column grid with 5 routes</td>
+            </tr>
+            <tr>
+              <td>1280px</td>
+              <td>260px × ~530px; full legacy tree</td>
+              <td>Keep 260px; compact contextual route list</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="review-summary">
+        <h2>What the live review found</h2>
+
+        <h3>1. The implementation is mechanically sound</h3>
+        <p>
+          The panel does not overflow. Its disclosure is a real button, mobile
+          and tablet links meet the 44px target, and the supporting blocks
+          remain correctly below the product grid. This is a hierarchy
+          refinement, not a repair of Wireframe 22.
+        </p>
+
+        <h3>2. The panel still speaks the sample-catalog language</h3>
+        <p>
+          “Categories,” Computers, Apparel, Books, and Gift Cards do not align
+          with “Shop categories,” “Shop by solution,” or the renewable-energy
+          routes approved for the menu and homepage. Category names must still
+          come from nopCommerce administration, not theme markup.
+        </p>
+
+        <h3>3. The active page is not visible</h3>
+        <p>
+          On <code>/desktops</code>, the Desktops link has no visual emphasis
+          and no <code>aria-current="page"</code>. The tree shows where the page
+          sits, but not which route is active.
+        </p>
+
+        <h3>4. The desktop hierarchy consumes too much attention</h3>
+        <p>
+          Ten 44–54px rows make the 260px panel about 530px tall. Tiny square
+          bullets and indentation communicate structure weakly while competing
+          with the product cards. The new header and homepage already provide
+          broad catalog discovery; this panel should provide compact lateral
+          movement.
+        </p>
+
+        <h3>5. Tablet wastes available width</h3>
+        <p>
+          The 720px open panel uses one long column. A two-column touch grid can
+          preserve 48px routes while reducing scroll depth and matching the
+          tablet menu pattern.
+        </p>
+
+        <h3>6. Adjacent naming is inconsistent</h3>
+        <p>
+          The listing says “Manufacturers,” while Wireframe 22 and the
+          storefront direction use “Brands.” Rename the resource/admin label
+          consistently; do not patch only this page.
+        </p>
+      </section>
+
+      <section class="decisions">
+        <h2>Recommended direction to approve</h2>
+        <ol>
+          <li>
+            Keep Categories, Brands, and Popular tags below the product grid on
+            mobile and tablet. Keep the category panel in the desktop sidebar.
+          </li>
+          <li>
+            Rename the panel “Shop categories” so it matches the header trigger.
+            Use “Shop by solution” only for the image-led homepage section.
+          </li>
+          <li>
+            Mirror the header menu’s full top-level taxonomy: Solar panels,
+            Batteries, Inverters, Charge controllers, and Accessories. The
+            homepage can remain a curated four-route subset. Keep all names and
+            URLs model-driven from nopCommerce.
+          </li>
+          <li>
+            Mark the current category with <code>aria-current="page"</code>,
+            semibold text, a soft structural background, and a 3px black edge.
+            Do not use red as an active-state decoration.
+          </li>
+          <li>
+            Remove decorative square bullets. Make the full row the link and
+            keep every route at least 44px high with a visible black focus ring.
+          </li>
+          <li>
+            Keep the phone disclosure closed by default. At 768px, render the
+            top-level routes in two touch-safe columns. On desktop, use one
+            compact vertical list.
+          </li>
+          <li>
+            Keep this panel top-level only. If the exact current page is a
+            top-level category, use <code>aria-current="page"</code>. On nested
+            category pages, mark its top-level ancestor as the current section
+            with <code>aria-current="location"</code>; the breadcrumb owns the
+            exact path. Do not add a second descendant disclosure tree here.
+          </li>
+          <li>
+            Do not add “Shop all products” unless a real all-products route
+            exists. If the existing search route is used, label it “Search
+            products,” matching the shipped homepage behavior.
+          </li>
+          <li>
+            Rename “Manufacturers” to “Brands” through the shared localization
+            or admin resource so the header, listing, search, and footer do not
+            drift apart.
+          </li>
+        </ol>
+
+        <ul class="approval-list">
+          <li>□ Use “Shop categories” on this panel.</li>
+          <li>□ Mirror the five-route header taxonomy.</li>
+          <li>□ Add a visible and semantic current-category state.</li>
+          <li>□ Use a two-column tablet grid and compact desktop list.</li>
+          <li>□ Rename Manufacturers to Brands consistently.</li>
+        </ul>
+      </section>
+
+      <section class="implementation-note">
+        <h2>Implementation boundary</h2>
+        <p>
+          This is a wireframe proposal only. No storefront implementation has
+          changed.
+        </p>
+        <p>
+          After approval, keep changes inside
+          <code>src/Presentation/Nop.Web/Themes/ArityTheme</code>. Prefer a
+          theme-owned override of the category navigation component plus scoped
+          rules in <code>Content/css/arity.catalog.css</code> and the existing
+          disclosure behavior in <code>Content/js/arity.catalog.js</code>. Do
+          not modify nopCommerce core.
+        </p>
+        <p>
+          The category list, hierarchy, links, and active category must remain
+          model-driven. Render visible top-level entries from
+          <code>CategoryNavigationModel</code>, not fixed theme slots or the
+          separately curated homepage component. Keep its ordering and names
+          aligned with the header’s <code>MenuModel</code> through shared admin
+          category data. Replace Computers, Apparel, and other sample data in
+          nopCommerce administration. The five labels in this wireframe
+          represent that target admin data; do not hardcode them in the theme.
+          Preserve ACL, store mapping, published-state, customer-role, and
+          category nesting behavior.
+        </p>
+        <p>
+          Do not add per-category product counts unless the existing view model
+          can provide correct counts after ACL, store mapping, and filters. A
+          compact truthful list is better than plausible-looking stale numbers.
+        </p>
+      </section>
+    </main>
+
+    <script>
+      const tabs = Array.from(document.querySelectorAll(".tab"));
+      const panels = Array.from(document.querySelectorAll(".viewport-panel"));
+
+      function activate(tab) {
+        tabs.forEach((item) => {
+          const active = item === tab;
+          item.classList.toggle("active", active);
+          item.setAttribute("aria-selected", String(active));
+          item.tabIndex = active ? 0 : -1;
+        });
+        panels.forEach((panel) => {
+          panel.classList.toggle("active", panel.id === tab.dataset.target);
+        });
+      }
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => activate(tab));
+        tab.addEventListener("keydown", (event) => {
+          if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+          event.preventDefault();
+          const next =
+            event.key === "ArrowRight"
+              ? tabs[(index + 1) % tabs.length]
+              : tabs[(index - 1 + tabs.length) % tabs.length];
+          activate(next);
+          next.focus();
+        });
+      });
+
+      document.querySelectorAll(".disclosure").forEach((button) => {
+        const panel = document.getElementById(
+          button.getAttribute("aria-controls"),
+        );
+        button.addEventListener("click", () => {
+          const open = button.getAttribute("aria-expanded") === "true";
+          button.setAttribute("aria-expanded", String(!open));
+          panel.hidden = open;
+        });
+      });
+    </script>
+  </body>
+</html>
