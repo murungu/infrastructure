@@ -34,10 +34,12 @@ services:
       - sqlserver_data:/var/opt/mssql
     healthcheck:
       test:
-        [
-          "CMD-SHELL",
-          '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${MSSQL_SA_PASSWORD}" -Q "SELECT 1" -C || /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${MSSQL_SA_PASSWORD}" -Q "SELECT 1" -C',
-        ]
+        - CMD-SHELL
+        - >-
+          /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa
+          -P "${MSSQL_SA_PASSWORD}" -Q "SELECT 1" -C ||
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U sa
+          -P "${MSSQL_SA_PASSWORD}" -Q "SELECT 1" -C
       interval: 15s
       timeout: 5s
       retries: 10
@@ -49,7 +51,14 @@ services:
     container_name: db-infra-redis
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
-    command: redis-server --requirepass ${REDIS_PASSWORD} --maxmemory 512mb --maxmemory-policy allkeys-lru
+    command:
+      - redis-server
+      - --requirepass
+      - ${REDIS_PASSWORD}
+      - --maxmemory
+      - 512mb
+      - --maxmemory-policy
+      - allkeys-lru
     ports:
       - "6379:6379"
     volumes:
@@ -80,12 +89,25 @@ services:
     container_name: db-infra-nopcommerce
     ports:
       - "8080:80"
-    # Redis disabled during installation to avoid FlushDatabaseAsync crash
-    # After installation completes, you can re-enable Redis caching
-    # environment:
-    #   DistributedCacheConfig__Enabled: "${REDIS_CACHE_ENABLED:-false}"
-    #   DistributedCacheConfig__DistributedCacheType: "${REDIS_CACHE_TYPE:-Redis}"
-    #   DistributedCacheConfig__ConnectionString: "${REDIS_CONNECTION_STRING}"
+    environment:
+      # Keep the database target outside the container writable layer so a
+      # replacement container can attach to a restored database immediately.
+      ConnectionStrings__ConnectionString: >-
+        Host=postgres;Port=5432;
+        Database=${NOPCOMMERCE_DB:-nopcommerce_local};
+        Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};
+        Pooling=true;Trust Server Certificate=true;
+      ConnectionStrings__DataProvider: "postgresql"
+      # Redis remains disabled by default to avoid the installation-time
+      # FlushDatabaseAsync crash documented in the README.
+      DistributedCacheConfig__Enabled: "${REDIS_CACHE_ENABLED:-false}"
+      DistributedCacheConfig__DistributedCacheType: "${REDIS_CACHE_TYPE:-Redis}"
+      DistributedCacheConfig__ConnectionString: >-
+        ${REDIS_CONNECTION_STRING:-}
+    volumes:
+      # Persist only cryptographic keys. Mounting an empty volume over all of
+      # App_Data hides files shipped in the image and can break nopCommerce.
+      - nopcommerce_keys:/app/App_Data/DataProtectionKeys
     depends_on:
       postgres:
         condition: service_healthy
@@ -99,4 +121,7 @@ volumes:
   sqlserver_data:
     driver: local
   redis_data:
+    driver: local
+  nopcommerce_keys:
+    name: ${NOPCOMMERCE_KEYS_VOLUME:-infrastructure_nopcommerce_keys}
     driver: local

@@ -1,6 +1,7 @@
 .PHONY: up down status logs psql sqlcmd redis-cli nop-logs \
         clone-nopcommerce update-nopcommerce use-prebuilt clean help \
-        tag rollback list-tags build-image push up-external
+        tag rollback list-tags build-image push up-external backup \
+        verify-backup restore-backup
 
 # ════════════════════════════════════════════════════════
 #  CONFIGURATION — change this to your private repo URL
@@ -12,15 +13,16 @@
 # SSH is required for private repos.
 # ════════════════════════════════════════════════════════
 NOPCOMMERCE_REPO ?= git@github.com:Arity-Solutions/arity.nopCommerce.shop.git
+NOPCOMMERCE_DB ?= nopcommerce_local
 
 ## Start/Stop (builds from source)
 up:
 	@echo "═══════════════════════════════════════════════════════════════"
-	@if [ ! -d "nopcommerce-src" ]; then \
+	@test -d "nopcommerce-src" || { \
 		echo "❌ nopcommerce-src/ not found. Run: make clone-nopcommerce"; \
 		echo "═══════════════════════════════════════════════════════════════"; \
 		exit 1; \
-	fi
+	}
 	@echo "Building nopCommerce from source (this takes 5–10 minutes)..."
 	@echo "═══════════════════════════════════════════════════════════════"
 	@docker compose up -d --build
@@ -37,10 +39,10 @@ up:
 ## Tag the current nopCommerce image (for easy rollback)
 ## Usage: make tag IMAGE_TAG=v1.0.0
 tag:
-	@if [ -z "$(IMAGE_TAG)" ]; then \
+	@test -n "$(IMAGE_TAG)" || { \
 		echo "❌ Usage: make tag IMAGE_TAG=v1.0.0"; \
 		exit 1; \
-	fi
+	}
 	@docker tag infrastructure-nopcommerce:latest infrastructure-nopcommerce:$(IMAGE_TAG)
 	@echo "✅ Tagged: infrastructure-nopcommerce:latest → infrastructure-nopcommerce:$(IMAGE_TAG)"
 	@echo ""
@@ -57,14 +59,14 @@ list-tags:
 ## Rollback to a previously tagged image
 ## Usage: make rollback IMAGE_TAG=v1.0.0
 rollback:
-	@if [ -z "$(IMAGE_TAG)" ]; then \
+	@test -n "$(IMAGE_TAG)" || { \
 		echo "❌ Usage: make rollback IMAGE_TAG=v1.0.0"; \
 		exit 1; \
-	fi
-	@if ! docker images | grep -q "infrastructure-nopcommerce.*$(IMAGE_TAG)"; then \
+	}
+	@docker images | grep -q "infrastructure-nopcommerce.*$(IMAGE_TAG)" || { \
 		echo "❌ Image tag '$(IMAGE_TAG)' not found. Run 'make list-tags' to see available tags."; \
 		exit 1; \
-	fi
+	}
 	@echo "═══════════════════════════════════════════════════════════════"
 	@echo "  Rolling back to tag: $(IMAGE_TAG)"
 	@echo "═══════════════════════════════════════════════════════════════"
@@ -89,10 +91,10 @@ build-image:
 ## Push image to private registry
 ## Usage: make push REGISTRY=registry.arity.co.za IMAGE_TAG=latest
 push:
-	@if [ -z "$(REGISTRY)" ]; then \
+	@test -n "$(REGISTRY)" || { \
 		echo "❌ Usage: make push REGISTRY=registry.arity.co.za IMAGE_TAG=latest"; \
 		exit 1; \
-	fi
+	}
 	@echo "═══════════════════════════════════════════════════════════════"
 	@echo "  Tagging and pushing to $(REGISTRY)/nopcommerce:$(IMAGE_TAG)..."
 	@echo "═══════════════════════════════════════════════════════════════"
@@ -133,18 +135,36 @@ use-prebuilt:
 down:
 	@docker compose down
 
+## Create a portable backup of NOPCOMMERCE_DB (defaults to nopcommerce_local)
+backup:
+	@./scripts/backup-postgres.sh
+
+## Restore the latest backup in isolation and smoke-test nopCommerce
+## Usage: make verify-backup [BACKUP=backups/postgres/example.dump]
+verify-backup:
+	@./scripts/verify-postgres-backup.sh "$(BACKUP)"
+
+## Restore into a separate database in the current PostgreSQL container
+## Usage: make restore-backup BACKUP=... TARGET_DB=nopcommerce_recovery
+restore-backup:
+	@test -n "$(BACKUP)" -a -n "$(TARGET_DB)" || { \
+		echo "Usage: make restore-backup BACKUP=... TARGET_DB=..."; \
+		exit 1; \
+	}
+	@./scripts/restore-postgres.sh "$(BACKUP)" "$(TARGET_DB)"
+
 clean:
 	@docker compose down -v
 	@echo "Removed containers and volumes."
 
 ## Clone your nopCommerce fork (run once)
 clone-nopcommerce:
-	@if [ -d "nopcommerce-src" ]; then \
+	@test ! -d "nopcommerce-src" || { \
 		echo "✅ nopcommerce-src/ already exists."; \
 		echo "   To update: make update-nopcommerce"; \
 		echo "   To re-clone: rm -rf nopcommerce-src && make clone-nopcommerce"; \
 		exit 0; \
-	fi
+	}
 	@echo "Cloning nopCommerce from: $(NOPCOMMERCE_REPO)"
 	@git clone $(NOPCOMMERCE_REPO) nopcommerce-src
 	@echo ""
@@ -163,10 +183,10 @@ clone-nopcommerce:
 
 ## Pull latest upstream changes into your fork
 update-nopcommerce:
-	@if [ ! -d "nopcommerce-src" ]; then \
+	@test -d "nopcommerce-src" || { \
 		echo "❌ nopcommerce-src/ not found. Run: make clone-nopcommerce"; \
 		exit 1; \
-	fi
+	}
 	@echo "═══════════════════════════════════════════════════════════════"
 	@echo "  Updating nopCommerce from upstream..."
 	@echo "═══════════════════════════════════════════════════════════════"
@@ -198,7 +218,8 @@ logs:
 
 ## Quick Connect (no local clients needed)
 psql:
-	@docker exec -it db-infra-postgres psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+	@docker exec -it db-infra-postgres sh -c \
+		'psql -U "$$POSTGRES_USER" -d "$(NOPCOMMERCE_DB)"'
 
 sqlcmd:
 	@docker exec -it db-infra-sqlserver sh -c '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -C || /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD"'
@@ -223,6 +244,11 @@ help:
 	@echo "  make up                  Build from source & start all services"
 	@echo "  make down                Stop all services (data preserved)"
 	@echo "  make clean               Stop and delete all data (volumes)"
+	@echo ""
+	@echo "BACKUP & RECOVERY:"
+	@echo "  make backup              Back up nopcommerce_local"
+	@echo "  make verify-backup       Restore-test the latest backup"
+	@echo "  make restore-backup BACKUP=... TARGET_DB=..."
 	@echo ""
 	@echo "PRODUCTION:"
 	@echo "  make build-image         Build Docker image only"
