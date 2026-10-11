@@ -6,12 +6,24 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   validate-compose:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout infrastructure repo
-        uses: actions/checkout@v4
+        # actions/checkout v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Prepare validation environment
+        run: cp .env.example .env
+
+      - name: Validate backup scripts
+        run: bash -n scripts/*.sh scripts/lib/*.sh
 
       - name: Validate docker-compose.yml
         run: docker compose config > /dev/null
@@ -24,5 +36,8 @@ jobs:
 
       - name: Check registry image exists
         run: |
-          echo "Checking if registry.arity.co.za/nopcommerce:latest is available..."
-          docker manifest inspect registry.arity.co.za/nopcommerce:latest || echo "Note: Image not yet pushed. First build triggers from nopcommerce-src push."
+          echo "Checking whether the nopCommerce registry image is available."
+          image="registry.arity.co.za/nopcommerce:latest"
+          if ! docker manifest inspect "${image}"; then
+            echo "Image not found. The first application build will publish it."
+          fi

@@ -22,6 +22,10 @@ Thumbs.db
 /tmp/
 .pi/
 
+# Local backups contain customer data and must never be committed.
+/backups/*
+!/backups/.gitkeep
+
 # Generated build artifacts
 tools/csharp-console/bin/
 tools/csharp-console/obj/

@@ -104,13 +104,15 @@ cp .env.example .env
 |----------|-------------|------------|
 | `POSTGRES_USER` | PostgreSQL username | `docker-compose.yml`, `Makefile` (`make psql`) |
 | `POSTGRES_PASSWORD` | PostgreSQL password | `docker-compose.yml`, `Makefile` |
-| `POSTGRES_DB` | PostgreSQL database name | `docker-compose.yml`, `Makefile` |
+| `POSTGRES_DB` | Database created when PostgreSQL initializes | `docker-compose.yml` |
+| `NOPCOMMERCE_DB` | Active store database and backup target | Compose and backup scripts |
 | `MSSQL_SA_PASSWORD` | SQL Server `sa` password | `docker-compose.yml`, `Makefile` (`make sqlcmd`) |
 | `MSSQL_PID` | SQL Server edition (`Developer`/`Express`) | `docker-compose.yml` |
 | `REDIS_PASSWORD` | Redis AUTH password | `docker-compose.yml`, `Makefile` (`make redis-cli`) |
 | `REDIS_CACHE_ENABLED` | Enable Redis distributed cache | `docker-compose.prebuilt.yml` |
 | `REDIS_CACHE_TYPE` | Cache provider type | `docker-compose.prebuilt.yml` |
-| `REDIS_CONNECTION_STRING` | Full Redis connection string | `docker-compose.prebuilt.yml` |
+| `REDIS_CONNECTION_STRING` | Full Redis connection string | nopCommerce Compose files |
+| `NOPCOMMERCE_KEYS_VOLUME` | Persistent data-protection key volume | nopCommerce Compose files |
 
 ### Changing passwords
 
@@ -894,22 +896,30 @@ make push REGISTRY=registry.arity.co.za IMAGE_TAG=latest
 
 ## Backups
 
-### Docker Volumes (local dev)
+The backup tools explicitly protect `NOPCOMMERCE_DB`, which defaults to
+`nopcommerce_local`. They do not back up the empty maintenance database in
+`POSTGRES_DB`, SQL Server, Redis cache data, or the external `arity_store_db`.
 
 ```bash
-# Backup all data (passwords read from .env automatically)
-docker exec db-infra-postgres pg_dump -U "${POSTGRES_USER}" "${POSTGRES_DB}" > backup-postgres.sql
-docker exec db-infra-sqlserver sh -c '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -Q "BACKUP DATABASE [nopcommerce] TO DISK = N/var/opt/mssql/backup/nopcommerce.bak"' -C
-docker exec db-infra-redis redis-cli -a "${REDIS_PASSWORD}" SAVE
+# Create a compressed PostgreSQL dump, checksum, and manifest.
+make backup
+
+# Restore the latest dump into temporary PostgreSQL and smoke-test nopCommerce.
+make verify-backup
+
+# Restore a selected dump into a separate local recovery database.
+make restore-backup \
+  BACKUP=backups/postgres/nopcommerce_local_YYYYMMDDTHHMMSSZ.dump \
+  TARGET_DB=nopcommerce_recovery
 ```
 
-### Production
+Local backup files are excluded from Git because they contain customer and
+order data. The off-machine storage destination decision is explicitly
+deferred; local backups do not protect against loss of the Docker host.
 
-Use your cloud provider's automated backup:
-
-- Azure SQL: Point-in-time restore (built-in)
-- AWS RDS: Automated daily backups + snapshots
-- PostgreSQL: `pg_dump` via cron + object storage (S3)
+See [Backup and Disaster Recovery](docs/backup-and-disaster-recovery.md) for
+the decision record, proposed retention, isolated restore tests, and
+new-machine recovery.
 
 ---
 
@@ -927,8 +937,14 @@ make up           # fresh start
 | `postgres_data` | PostgreSQL database files |
 | `sqlserver_data` | SQL Server database files |
 | `redis_data` | Redis RDB snapshots |
+| `nopcommerce_keys` | ASP.NET Core data-protection keys |
 
-> **Note:** `App_Data` is **not** mounted as a volume. Mounting it causes a known nopCommerce bug where `ThemeProvider` crashes with `NullReferenceException` before the install wizard can load. The official nopCommerce Docker setup also does not mount `App_Data`.
+> **Warning:** A Docker volume is persistence, not a backup. `make clean`
+> deletes these volumes. Create and verify a portable backup before using it.
+>
+> The Compose files mount only `App_Data/DataProtectionKeys`. Do not mount an
+> empty volume over all of `App_Data`; that can hide application files and
+> prevent nopCommerce from starting.
 
 ---
 
@@ -1002,13 +1018,25 @@ For a conflict-free workflow when pulling upstream nopCommerce updates, see [`do
 
 **Cause:** The `StackExchange.Redis.FlushDatabaseAsync` call during installation crashes under Rosetta 2 on Apple Silicon.
 
-**Fix:** Redis distributed caching is **disabled by default** in `docker-compose.yml`. After installation completes, uncomment the `environment` section under `nopcommerce` to enable it. See [Re-enable Redis](#5-re-enable-redis-optional).
+**Fix:** Redis distributed caching is **disabled by default** in
+`docker-compose.yml`. After installation, set `REDIS_CACHE_ENABLED=true` and a
+valid `REDIS_CONNECTION_STRING` in `.env`, then recreate the application
+container. See [Re-enable Redis](#5-re-enable-redis-optional).
 
 ### nopCommerce shows "Installation" page after restart
 
-This happens only when the container was recreated. For example, `make clean` recreates the container. The wizard stores its config in `App_Data/dataSettings.json` inside the container. Since `App_Data` is not mounted as a volume, container recreation wipes the config and shows the wizard again.
+Confirm that `.env` contains `NOPCOMMERCE_DB=nopcommerce_local` and that the
+Compose environment includes both of these settings:
 
-To preserve your setup, **never** use `make clean` unless you want a complete reset. Use `make down` instead (stops containers but keeps volumes).
+```text
+ConnectionStrings__ConnectionString
+ConnectionStrings__DataProvider=postgresql
+```
+
+Then confirm that the restored database is reachable and contains the
+`MigrationVersionInfo` table. Follow the isolated restore procedure in
+[Backup and Disaster Recovery](docs/backup-and-disaster-recovery.md) instead of
+running the installer against an existing store.
 
 ### SQL Server will not start on Apple Silicon
 
@@ -1029,15 +1057,13 @@ System.NullReferenceException at Nop.Services.Themes.ThemeProvider.ThemeExistsAs
 
 **Cause:** Mounting `nopcommerce_data:/app/App_Data` as a Docker volume overwrites the image's built-in `App_Data` files. The `ThemeProvider` middleware crashes before the install wizard can load.
 
-**Fix:** Remove the `App_Data` volume mount from `docker-compose.yml`. The official nopCommerce Docker setup does not mount `App_Data`.
+**Fix:** Remove the whole-directory `App_Data` mount. Supply the database
+connection through environment variables and mount only the data-protection
+key directory:
 
-**For production persistence:** After completing the install wizard, copy `App_Data` out of the container:
-
-```bash
-docker cp db-infra-nopcommerce:/app/App_Data ./nopcommerce-app-data
-# Then mount the host directory instead:
-# volumes:
-#   - ./nopcommerce-app-data:/app/App_Data
+```yaml
+volumes:
+  - nopcommerce_keys:/app/App_Data/DataProtectionKeys
 ```
 
 ### Port already in use
