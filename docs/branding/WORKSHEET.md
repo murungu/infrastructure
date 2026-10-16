@@ -1,6 +1,8 @@
 # Arity Shop — Production Worksheet
 
-> **Living document:** Scope, sequence, and status of all work needed before Zimbabwe production launch.
+> **Retired worksheet:** Historical launch planning, not a current work queue or launch-readiness assessment.
+> Its payment assumptions and priorities do not define Meridian's requirements.
+> See [current direction](README.md). Meridian is active. ArityTheme is paused.
 > **Last updated:** 2026-08-02
 > **Launch market:** Zimbabwe (first), with USD pricing
 > **Store name:** Arity Shop

@@ -1,6 +1,8 @@
 # Arity Shop — Social Media Presence
 
-> Social accounts needed for Arity Shop brand. Current status: none created.
+> **Historical reference:** Account status and recommendations below are not revalidated.
+> They are not a current backlog or permission to edit the paused ArityTheme.
+> See [current direction](README.md). Meridian is active. ArityTheme is paused.
 
 ---
 
@@ -265,7 +267,7 @@ Replace placeholder social links with real URLs:
 
 - [WORKSHEET.md](WORKSHEET.md) — Social links task (BR4)
 - [ui-gaps.md](ui-gaps.md) — Footer social icons gap
-- [CONTRIBUTING.md](CONTRIBUTING.md) — How to edit `_Footer.cshtml`
+- [Development reference](../../nopcommerce-src/HARNESS-REFERENCE.md) — Current checks and approval boundaries
 
 ---
 

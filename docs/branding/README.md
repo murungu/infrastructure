@@ -1,256 +1,50 @@
-# Arity Shop — Project Context (Start Here)
+# Storefront Themes — Start Here
 
-> **If you are an AI agent or a human jumping in:** Read this file first. It tells you what we are building, where we are, and how to work on it without asking questions.
+## Current direction
 
----
+The owner selected **Meridian as the active theme** on 2026-10-16.
+**ArityTheme is paused**, not deleted. DefaultClean remains the upstream reference theme.
+This decision changes development priorities, not the active theme in any running store.
 
-## What We Are Building
+Both custom themes remain in `nopcommerce-src/src/Presentation/Nop.Web/Themes/`.
+The application uses nopCommerce 5.00. Use its `global.json` for the SDK requirement.
 
-A **renewable energy e-commerce store** for Arity Solutions. Products: solar panels, batteries, inverters, charge controllers.
+## Start the next session
 
-- **Launch market:** Zimbabwe (first), with USD pricing
-- **Currency:** USD (primary transactional currency in Zimbabwe)
-- **Platform:** nopCommerce 4.x (forked), running in Docker
-- **Theme:** ArityTheme — custom theme, modular CSS, mobile-first
-- **Database:** PostgreSQL (local dev), managed PostgreSQL (production)
-- **Deployment:** Docker image built by GitHub Actions, pushed to `registry.arity.co.za/nopcommerce`
+1. Read the application [scope and safety rules](../../nopcommerce-src/AGENTS.md).
+2. Read the [current plan](../../nopcommerce-src/.agent/plan.md).
+3. Review the [known issues](../../nopcommerce-src/docs/theme/known-issues.md).
+4. Agree on one Meridian requirement and its acceptance criteria before implementation.
 
----
+No implementation task is selected. Previous backlogs do not define the next task.
 
-## Current State (August 2026)
+## Maintained documentation
 
-| Layer | Status | What it means |
-|---|---|---|
-| **Platform** | ✅ Done | Docker Compose runs PostgreSQL + Redis + nopCommerce. Builds from source. |
-| **Theme structure** | ✅ Done | Modular CSS and JavaScript, RTL-safe logical properties, Lucide SVG icons, theme-owned views, sticky header, and black footer. |
-| **Responsive base** | ✅ Done | Header, search, menu, forms, and homepage hero are verified at 375/768/1280px. |
-| **Products in DB** | 🔄 Partial | 50 items exist but names/descriptions/images are generic sample data (iPhones, MacBooks). |
-| **Mobile UX polish** | 🔄 Partial | Header, search, menu, and hero are complete. Category, product, and cart improvements remain. See [mobile-first-audit.md](mobile-first-audit.md). |
-| **Branding** | 🔄 Partial | Logo, colors, footer are custom. But "Powered by nopCommerce" still shows. |
-| **Legal pages** | ❌ Missing | Privacy Policy is a 404. Terms of Use exists but is default nopCommerce text. |
-| **Content** | ❌ Missing | Homepage welcome text is default nopCommerce. Product descriptions are IBM copy. Reviews are sample data. |
+| Need | Reference |
+| --- | --- |
+| Application documentation | [Index](../../nopcommerce-src/docs/README.md) |
+| Theme structure | [Architecture](../../nopcommerce-src/docs/theme/architecture.md) |
+| Existing overrides | [Override register](../../nopcommerce-src/docs/theme/override-register.md) |
+| Checks and approved runtime procedures | [Development reference](../../nopcommerce-src/HARNESS-REFERENCE.md) |
+| Infrastructure and backups | [Infrastructure README](../../README.md) |
 
-**Launch readiness:** ~70%.
+These application links require the separate private `nopcommerce-src` checkout.
+This public repository does not contain the application source.
 
----
+## Retained references, not a backlog
 
-## How to Make a Theme Change (The 30-Second Loop)
+- [ArityTheme wireframes](../wireframes/README.md) remain historical design references for the paused theme.
+- The design rules, viewport plan, worksheet, social notes, and dated audits in this directory are historical ArityTheme references.
+- Their state tables, estimates, priorities, and runtime commands are not current instructions or Meridian requirements.
+- Meridian uses its own Figtree/red-commerce design. ArityTheme's Inter/black-action rules do not replace that design.
+- Screenshots, diagnostic evidence, and milestone records remain intact. Retirement does not mean that their findings are resolved.
 
-```bash
-# 1. Edit a CSS, JavaScript, or view file
-#    CSS:        ~/Developer/infrastructure/nopcommerce-src/src/Presentation/Nop.Web/Themes/ArityTheme/Content/css/arity.XXX.css
-#    JavaScript: ~/Developer/infrastructure/nopcommerce-src/src/Presentation/Nop.Web/Themes/ArityTheme/Content/js/arity.XXX.js
-#    Views:      ~/Developer/infrastructure/nopcommerce-src/src/Presentation/Nop.Web/Themes/ArityTheme/Views/XXX.cshtml
+The companion Meridian design records remain on the local infrastructure branch `feat/meridian-stage0` at `0fdf477c13ed1d768891fca57a0098012d998f4b`.
+They are absent from infrastructure `main`. Publication to this public repository still needs explicit owner approval.
 
-# 2. Build
-cd ~/Developer/infrastructure/nopcommerce-src
-dotnet build src/NopCommerce.sln
+## Removed duplicate instructions
 
-# 3. Hot copy to running container (30 seconds)
-dotnet publish src/Presentation/Nop.Web/Nop.Web.csproj -c Release -o /tmp/nop-publish
-docker cp /tmp/nop-publish/Themes/ArityTheme db-infra-nopcommerce:/app/Themes/ArityTheme
-docker exec db-infra-nopcommerce rm -rf /app/wwwroot/bundles/*
-docker restart db-infra-nopcommerce
+The duplicate theme guide, theme playbook, contribution guide, and old deployment guide are removed.
+The application guides above replace them. Their previous contents remain in infrastructure Git history at `d1a2b71ff839e2fec1f029e3d94b67536d38d119`.
 
-# 4. Screenshot at 3 widths
-npx playwright open http://localhost:8080
-#    DevTools → Toggle device toolbar → iPhone X (375px)
-#    DevTools → iPad (768px)
-#    DevTools → Responsive 1280px
-
-# 5. Commit on a feature branch
-git switch -c fix/theme/something
-git add src/Presentation/Nop.Web/Themes/ArityTheme/
-git commit -m "theme: what you changed and why"
-git push origin fix/theme/something
-# Open PR → merge to main
-```
-
-**Never edit `Views/` (core nopCommerce). Never edit `Themes/DefaultClean/`.**
-
----
-
-## What to Work On Next (Priority Order)
-
-| Priority | Task | Why | Doc | Effort |
-|---|---|---|---|---|
-| 🔴 P0 | Fix store name + copyright in admin | "Your store" in titles, "Arty Store" in footer | [ui-gaps.md](ui-gaps.md) | 10 min |
-| 🔴 P0 | Remove "Powered by nopCommerce" | Footer branding | [ui-gaps.md](ui-gaps.md) | 15 min |
-| 🔴 P0 | Create Privacy Policy page | 404 on footer link. Legal requirement. | [ui-gaps.md](ui-gaps.md) | 30 min |
-| 🟡 P1 | Move sidebar below products on mobile category | #1 mobile UX blocker | [mobile-first-audit.md](mobile-first-audit.md) | 1 h |
-| 🟡 P1 | Increase touch targets on product cards | 72 elements fail 44×44px | [mobile-first-audit.md](mobile-first-audit.md) | 1 h |
-| 🟡 P1 | Make PDP variant selectors more tappable | Dense radios/dropdowns on 375px | [mobile-first-audit.md](mobile-first-audit.md) | 1 h |
-| 🟡 P1 | Write Arity homepage welcome text | Default nopCommerce text visible | [ui-gaps.md](ui-gaps.md) | 1 h |
-| 🟢 P2 | Rename categories to solar/renewable terms | "Electronics" → "Solar Panels" etc. | [ui-gaps.md](ui-gaps.md) | 30 min |
-| 🟢 P2 | Generate Arity product images | Use nano-banana-images skill | [ui-gaps.md](ui-gaps.md) | 3 h |
-| 🟢 P2 | Write Arity product descriptions | Use nopcommerce-product-descriptions skill | [ui-gaps.md](ui-gaps.md) | 3 h |
-
----
-
-## Documentation Index
-
-Read these in order if you need depth on a topic:
-
-| # | Document | Read when you need to... |
-|---|---|---|
-| 1 | **[mobile-first-audit.md](mobile-first-audit.md)** | Find the remaining mobile errors. |
-| 2 | **[ui-gaps.md](ui-gaps.md)** | Find the full UI, brand, and content backlog. |
-| 3 | **[Wireframe library](../wireframes/README.md)** | Review the approved current and proposed layouts. |
-| 4 | **[viewport-plan.md](viewport-plan.md)** | Use the breakpoint and screenshot rules. |
-| 5 | **[theme-playbook.md](theme-playbook.md)** | Make a theme change and select the correct file. |
-| 6 | **[DESIGN.md](DESIGN.md)** | Use the color, type, and spacing rules. |
-| 7 | **[SOCIAL.md](SOCIAL.md)** | Create social accounts and update footer links. |
-| 8 | **[theme-guide.md](theme-guide.md)** | Understand the CSS architecture, specificity, and RTL rules. |
-| 9 | **[deployment.md](deployment.md)** | Deploy the application through the Docker pipeline. |
-| 10 | **[backup-restore.md](backup-restore.md)** | Back up or restore the database. |
-| 11 | **[CONTRIBUTING.md](CONTRIBUTING.md)** | Use the contribution, PR, and test rules. |
-| 12 | **[doc-audit-ste.md](doc-audit-ste.md)** | Review the documentation audit. |
-
----
-
-## Project Structure (Where Everything Lives)
-
-### Repos
-
-| Repo | Path | Purpose |
-|---|---|---|
-| **Infrastructure** | `~/Developer/infrastructure/` | Docker Compose, docs, automation. **This doc lives here.** |
-| **nopCommerce source** | `~/Developer/infrastructure/nopcommerce-src/` | Application code. Theme files live here. |
-
-### Key Files
-
-```
-# Design system (source of truth)
-~/Developer/infrastructure/nopcommerce-src/src/Presentation/Nop.Web/Themes/ArityTheme/Design.md
-
-# Theme CSS (edit these for styling)
-~/Developer/infrastructure/nopcommerce-src/src/Presentation/Nop.Web/Themes/ArityTheme/Content/css/
-├── arity.tokens.css       # Colors, fonts, spacing variables
-├── arity.base.css         # Body, typography, links
-├── arity.nav.css          # Header and category menu
-├── arity.autocomplete.css # Search suggestions
-├── arity.hero.css         # Homepage hero
-├── arity.icons.css        # Lucide SVG overrides
-├── arity.products.css     # Product cards, grids, PDP
-├── arity.footer.css       # Footer
-├── arity.forms.css        # Login, register, and shared forms
-└── arity.custom.css       # Small isolated overrides
-
-# Theme JavaScript
-~/Developer/infrastructure/nopcommerce-src/src/Presentation/Nop.Web/Themes/ArityTheme/Content/js/
-├── arity.menu.js          # Responsive category-menu behavior
-└── arity.hero.js          # Manual homepage-hero behavior
-
-# Theme views (edit these for HTML structure)
-~/Developer/infrastructure/nopcommerce-src/src/Presentation/Nop.Web/Themes/ArityTheme/Views/
-├── Home/
-│   ├── Index.cshtml                 # Homepage override and page-only assets
-│   └── _ArityHomepageHero.cshtml    # Hero markup and campaign content
-└── Shared/
-    ├── Head.cshtml                  # Shared CSS loading order
-    ├── _Header.cshtml               # Site header
-    ├── _ProductBox.cshtml           # Product card
-    └── _ArityIcon.cshtml            # Lucide icon helper
-
-# Docker / deployment
-~/Developer/infrastructure/docker-compose.yml
-~/Developer/infrastructure/nopcommerce-src/Dockerfile
-~/Developer/infrastructure/nopcommerce-src/.github/workflows/docker-build.yml
-
-# Docs (this directory)
-~/Developer/infrastructure/docs/branding/
-```
-
-### Test URLs
-
-| Instance | URL | Database | Products | When to use |
-|---|---|---|---|---|
-| **Infrastructure** | <http://localhost:8080> | PostgreSQL `nopcommerce_infra` | 50 (Arity renewable energy) | Primary test instance |
-| **Electronics** | <http://localhost:8083> | PostgreSQL `nopcommerce_electronics` | Sample data | Fallback / comparison |
-
-### Admin Access
-
-- **URL:** <http://localhost:8080/Admin>
-- **Email:** `admin@arity.shop`
-- **Password:** *(ask project owner — not stored in docs)*
-
----
-
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Platform | nopCommerce 4.x (.NET 10) |
-| Theme CSS | Vanilla CSS with custom properties (design tokens) |
-| Icons | Lucide SVG (inline, no icon font) |
-| Database | PostgreSQL 16 (dev), managed PostgreSQL (prod) |
-| Cache | Redis (optional, disabled during install) |
-| Container | Docker + Docker Compose |
-| CI/CD | GitHub Actions → `registry.arity.co.za/nopcommerce` |
-| Screenshots | Playwright Chromium |
-
----
-
-## Screenshot Archive
-
-All screenshots live in `~/Developer/infrastructure/docs/screenshots/YYYY-MM-DD/`.
-
-```
-docs/screenshots/
-├── 2026-08-01/          # Initial UI review
-│   ├── review-homepage.png
-│   ├── review-category.png
-│   ├── review-product-detail.png
-│   ├── review-cart.png
-│   ├── review-login.png
-│   ├── check-homepage-{375,768,1280}.png
-│   ├── infra-{375,768,1280}.png
-│   └── electronics-{375,768,1280}.png
-└── 2026-08-02/          # Mobile-first audit
-    ├── mobile-test-homepage-{mobile,tablet,desktop}.png
-    ├── mobile-test-category-{mobile,tablet,desktop}.png
-    ├── mobile-test-product-detail-{mobile,tablet,desktop}.png
-    ├── mobile-test-cart-{mobile,tablet,desktop}.png
-    └── mobile-test-login-{mobile,tablet,desktop}.png
-```
-
-**Naming convention:**
-
-- `review-{page}.png` — Full page type coverage
-- `mobile-test-{page}-{viewport}.png` — Mobile audit at specific width
-- `check-homepage-{width}.png` — Viewport verification
-
-**When to add new screenshots:**
-
-- After every CSS change that affects layout
-- Before/after PR merges
-- When verifying breakpoint behavior
-
----
-
-## Custom Pi Skills
-
-These are pre-built skills for generating Arity content:
-
-| Skill | File | Purpose |
-|---|---|---|
-| `nopcommerce-product-descriptions` | `~/.pi/agent/skills/nopcommerce-product-descriptions/SKILL.md` | Generate SEO-rich descriptions for solar/battery/inverter products |
-| `nano-banana-images` | `~/.pi/agent/skills/nano-banana-images/SKILL.md` | Generate product photos via Nano Banana API |
-| `ste-writer` | `~/.pi/agent/skills/ste-writer/SKILL.md` | Check docs for ASD-STE100 compliance |
-
----
-
-## Rules for This Project
-
-1. **Never commit to `main` directly.** Use a feature branch, pull request, review, and merge.
-2. **Never edit core nopCommerce files.** Only edit files inside `Themes/ArityTheme/`.
-3. **One surface per deploy.** Change only one thing at a time (header, or product grid, or cart — not all three).
-4. **Screenshot at 3 widths before calling work done.** 375px / 768px / 1280px. No exceptions.
-5. **Mobile-first.** New CSS has no media query by default. Then add `min-width` blocks for desktop.
-6. **RTL-safe.** Use `margin-inline-start`, not `margin-left`. Use `text-align: start`, not `left`.
-7. **Clear bundles after CSS changes.** `docker exec db-infra-nopcommerce rm -rf /app/wwwroot/bundles/*`
-8. **Keep docs in STE100 Simplified Technical English.** Short sentences. No contractions. Imperative voice for procedures.
-
----
-
-*Last updated: 2026-08-08*
+No theme code, runtime, database, or stored evidence changed during this cleanup.

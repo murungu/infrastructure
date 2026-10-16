@@ -1,58 +1,14 @@
-# Wireframe-First Workflow
+# ArityTheme Wireframe Library — Historical Reference
 
-> Use wireframes before writing any CSS. Review them at every viewport. Then implement.
+**ArityTheme is paused. Meridian is the active focus.**
+This library preserves ArityTheme design comparisons and handoffs, not a current implementation queue.
+Labels such as CURRENT and PROPOSED describe the original review, not today's storefront.
 
-## How to Use Wireframes
+See the [current direction](../branding/README.md) and application [current plan](../../nopcommerce-src/.agent/plan.md).
+A new Meridian task needs its own scope and acceptance criteria.
+These wireframes do not replace Meridian's design or authorize theme edits, runtime changes, or deployment.
 
-### Step 1: Identify the Problem
-
-Find the issue in [mobile-first-audit.md](../branding/mobile-first-audit.md) or [ui-gaps.md](../branding/ui-gaps.md).
-
-### Step 2: Create or Open the Wireframe
-
-Every wireframe shows **CURRENT** (red) vs **PROPOSED** (green) at **three viewports**:
-
-| Viewport | Size | What it represents |
-|---|---|---|
-| Mobile | 375px | Zimbabwe primary market — 55%+ of traffic |
-| Tablet | 768px | iPad, Android tablets |
-| Desktop | 1280px | Laptops and larger screens |
-
-Open any `.html` file in Chrome. Use the viewport tabs at the top:
-
-- Click **Mobile** to see 375px
-- Click **Tablet** to see 768px
-- Click **Desktop** to see 1280px
-
-### Step 3: Review and Decide
-
-Ask at **each viewport**:
-
-- Does the layout work for this screen size?
-- Are touch targets ≥ 44×44px on mobile?
-- Is content readable without zoom?
-- Is the primary action visible without scrolling?
-- Does the layout scale gracefully?
-
-If yes → proceed to Step 4.  
-If no → edit the wireframe HTML, review again.
-
-### Step 4: Implement in Theme
-
-Edit the actual theme files:
-
-```
-nopcommerce-src/src/Presentation/Nop.Web/Themes/ArityTheme/
-```
-
-Follow the hot-copy workflow from [theme-playbook.md](../branding/theme-playbook.md).
-
-### Step 5: Verify with Screenshots
-
-Screenshot at 375/768/1280px. Compare with the wireframe at each viewport.
-
-If the implementation matches the wireframe at all three sizes → commit.  
-If not → iterate.
+The template examples below remain reference material only.
 
 ---
 
@@ -85,11 +41,12 @@ If not → iterate.
 | 22 | [category-listing.html](22-category-listing.html) | Category / PLP | Supporting blocks precede the title, category navigation is hidden on phones, controls are 32px, ratings show with no reviews, and the desktop rail is capped at 980px | 375/768/1280px |
 | 23 | [category-panel-navigation.html](23-category-panel-navigation.html) | Category / PLP | The supporting category tree is mechanically sound but too tall, has no current-page state, and does not match the approved storefront taxonomy | 375/768/1280px |
 
-Wireframes 18 through 22 are implemented in ArityTheme. See the theme-owned homepage, footer, and catalog views plus their scoped CSS/JS modules.
+Wireframes 18 through 23 have ArityTheme implementations. See the theme-owned homepage, footer, catalog, and category-navigation overrides.
+This implementation history does not authorize further work on the paused theme.
 
 ## Implementation Plans
 
-Approved wireframes that are handed to another agent carry a plan file beside them.
+Historical wireframe handoffs remain beside their designs. They are not active tasks.
 
 - Wireframe 22 → [22-category-listing-implementation-plan.md](22-category-listing-implementation-plan.md) — approved handoff plan; implementation shipped.
 
