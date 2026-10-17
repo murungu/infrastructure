@@ -2,7 +2,9 @@
 
 > **Purpose:** One written set of rules for responsive theming. Follow these rules and the theme will not break when nopCommerce, browsers, or our team change things.
 > **Scope:** CSS and views inside `Themes/ArityTheme/` only. No core edits. No new tooling.
-> **Status:** Active.
+> **Status:** Historical ArityTheme reference. ArityTheme is paused. Meridian is active.
+> The commands and remediation queue below are retired, not execution instructions.
+> See [current direction](README.md) for the maintained guides.
 > **Last updated:** 2026-08-08.
 
 ---

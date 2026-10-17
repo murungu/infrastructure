@@ -1,5 +1,8 @@
 # ArityTheme — Mobile-First Audit
 
+> **Historical audit:** The findings and priorities below are not revalidated or queued for implementation.
+> See [current direction](README.md). Meridian is active. ArityTheme is paused.
+
 > **Date:** 2026-08-02
 > **Scope:** 5 pages × 3 viewports (375px / 768px / 1280px)
 > **Tool:** Playwright Chromium + manual visual review
@@ -127,7 +130,7 @@ Or manually in Chrome DevTools:
 
 - [viewport-plan.md](viewport-plan.md) — Breakpoint rules (mobile-first `min-width`, `max-width` only for overrides)
 - [ui-gaps.md](ui-gaps.md) — General UI review (desktop + content + branding gaps)
-- [theme-playbook.md](theme-playbook.md) — How to make theme changes safely
+- [Development reference](../../nopcommerce-src/HARNESS-REFERENCE.md) — Current checks and approval boundaries
 
 ---
 

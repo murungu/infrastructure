@@ -1,7 +1,8 @@
-# Arity Design System
+# ArityTheme Design Reference — Historical
 
-> Token source of truth for colors, typography, spacing, and shapes.
-> The master file lives in the theme directory. This document explains how to use it.
+> **Paused theme:** This is an August 2026 ArityTheme reference, not Meridian's design system.
+> Token counts, typography, and proposed changes below are historical observations, not current instructions.
+> See [current direction](README.md). Meridian is active. ArityTheme is paused.
 
 ---
 
@@ -129,9 +130,9 @@ See [viewport-plan.md](viewport-plan.md) Section 5 for the full token expansion 
 
 ## Related documents
 
-- [theme-guide.md](theme-guide.md) — How the modular CSS system works
-- [viewport-plan.md](viewport-plan.md) — Token source of truth decision
-- [theme-playbook.md](theme-playbook.md) — How to add a new CSS file
+- [Current architecture](../../nopcommerce-src/docs/theme/architecture.md) — Maintained theme structure
+- [viewport-plan.md](viewport-plan.md) — Historical ArityTheme decisions
+- [Development reference](../../nopcommerce-src/HARNESS-REFERENCE.md) — Current checks and approval boundaries
 
 ---
 

@@ -1,5 +1,8 @@
 # ArityTheme — UI Review & Gap Analysis
 
+> **Historical audit:** Preserve the findings as observations from the recorded date, not a current backlog or readiness estimate.
+> See [current direction](README.md). Meridian is active. ArityTheme is paused.
+
 > **Date:** 2026-08-01
 > **URL reviewed:** <http://localhost:8080>
 > **Viewports:** 375px, 768px, 1280px
