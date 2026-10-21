@@ -2,6 +2,10 @@
 
 Local PostgreSQL, SQL Server, Redis, and **[nopCommerce](https://www.nopcommerce.com) built from YOUR FORK** via Docker Compose.
 
+> **Storefront development:** Meridian is active. ArityTheme is paused and retained.
+> Start with the [theme documentation](docs/branding/README.md), not the generic setup examples below.
+> The next Meridian requirement is not selected. Runtime changes, publication, and deployment need separate approval.
+
 > **Why source build?** So you can add your own plugins and themes, while still pulling updates from the main nopCommerce repo.
 >
 > **Not customizing?** Use the pre-built image instead: [`make use-prebuilt`](#quick-start-with-pre-built-image).
